@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load  static %}
+
+{% block content %}
+{% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message}}</li>
+            {% endfor %}
+        </ul>     
+{% endif %}
+<form  method="post">{% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Registrar inventario</button>
+    <button><a href="javascript: history.go(-1)"> Volver</a></button>
+</form>
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#carrera").on("change", getPensum);
+    });
+
+    function getPensum() {
+        var estadoId = $("#carrera").val();
+        if (estadoId) {
+            // Eliminamos las opciones anteriores del select
+            $("#pensum_asig").html("");
+            var request = $.ajax({
+                type: "GET",
+                url: "{% url 'academico_app:update-pensum' %}",
+                data: {
+                    "estado_id": estadoId,
+                },
+                success:  function (response) {
+                    $("#pensum_asig").html(response.malla);
+                    }
+            });
+            request.done(function(response) {
+                // Agregamos los resultados al select
+                $("#pensum_asig").html(response.malla);
+            });
+        } else {
+            $("#pensum_asig").html("<option value='' selected='selected'>---------</option>");
+        }
+    }    
+
+    
+</script>
+{% endblock js %}

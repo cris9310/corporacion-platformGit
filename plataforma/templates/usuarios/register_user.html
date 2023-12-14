@@ -1,0 +1,124 @@
+
+
+{% load  static %}
+
+<div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-user"></i> Nuevo usuario</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <form  method="post" id="dataGeneralForm" action="{% url 'user_app:create-user' %}" >{% csrf_token %}
+            <div id="errores" ></div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.codigo.id_for_label }}" ></div>
+                    <label for="{{ form.codigo.id_for_label }}">Código a asignar:</label>
+                    {{ form.codigo }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.tipe.id_for_label }}" ></div>
+                    <label for="{{ form.tipe.id_for_label }}">Tipo de usuario:</label>
+                    {{ form.tipe }}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.nombres.id_for_label }}" ></div>
+                    <label for="{{ form.nombres.id_for_label }}">Nombre(s) del usuario:</label>
+                    {{ form.nombres }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.apellidos.id_for_label }}" ></div>
+                    <label for="{{ form.apellidos.id_for_label }}">Apellidos del usuario:</label>
+                    {{ form.apellidos }}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.email.id_for_label }}" ></div>
+                    <label for="{{ form.email.id_for_label }}">Email del usuario:</label>
+                    {{ form.email }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.username.id_for_label }}" ></div>
+                    <label for="{{ form.username.id_for_label }}">Username:</label>
+                    {{ form.username }}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.password1.id_for_label }}" ></div>
+                    <label for="{{ form.password1.id_for_label }}">Ingrese la contraseña del usuario:</label>
+                    {{ form.password1 }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.password2.id_for_label }}" ></div>
+                    <label for="{{ form.password2.id_for_label }}">Repita la contraseña:</label>
+                    {{ form.password2 }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 15px;">
+              <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+              </button>
+    
+              <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+                Registrar usuario
+              </button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+      </div> 
+    </div>
+  </div>
+
+
+  
+{% block js %}
+<script type="text/javascript">
+  $("#codigo").val("{{precodigo}}")
+  $("#codigo").prop("readonly", true);
+  function sendUser() {
+    $("#codigo").prop("readonly", false);
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'user_app:create-user' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location = "{% url 'user_app:list-user' %}";
+          mostrarOk();
+          
+          
+        },
+        error: function (error) {
+          $("#codigo").prop("readonly", true);
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarErroresCreacionEditar(error);
+          mostrarError();
+        }
+      });
+    } 
+  }
+
+</script>
+
+{% endblock js %}

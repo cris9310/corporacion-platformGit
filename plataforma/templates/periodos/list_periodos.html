@@ -1,0 +1,52 @@
+
+{% extends "base.html" %}
+{% load  static %}
+{% block content %}
+
+{% if periodos %}
+  <table id="prodlist"class="table table-striped">
+    <thead>
+      <th>Periodo</th>
+      <th>Acciones</th>
+    </thead>
+    <tbody>
+      {% for teach in periodos %}
+        <tr>
+          <td><a>{{teach.periodo}}</a></td>
+          
+          {% if teach.estado == True %}
+          <td><button type="button" class="btn btn-secondary">Inhabilitado</button></td>
+          {% else %}
+          <td><button  onclick="abrir_modal_edicion('{% url 'academico_app:delete-periodo' teach.id %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Eliminar</button></td>
+          {% endif %}
+        </tr>
+        
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+      <p>No hay periodos para mostrar</p>
+      
+  {% endif %}
+      
+  
+</div>
+{% include 'includes\paginator.html' %}
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+</script>
+{% endblock js %}

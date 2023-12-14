@@ -1,0 +1,70 @@
+
+
+
+{% load  static %}
+
+<div class="modal-dialog" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"> <i class="fa-regular fa-user"></i> Eliminación de usuario</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <form  method="POST" id="dataGeneralForm" action="{% url 'user_app:deleted-user' object.pk %}">{% csrf_token %}
+            <div class="cell medium-7">
+                <div >
+                    <div >
+                        <h6>Desea eliminar a:</h6>  
+                      <h6>{{ object.nombres }}, {{ object.apellidos }}</h6>
+                    </div>
+                </div>
+            </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Cargando...
+            </button>
+  
+            <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="deleteUser()" >
+              Eliminar usuario
+            </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+          </div>
+         </form>
+      </div> 
+    </div>
+  </div>
+
+{% block js %}
+<script type="text/javascript">
+
+  function deleteUser() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'user_app:deleted-user' object.pk %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location = "{% url 'user_app:list-user' %}";
+          mostrarOk();
+          
+          
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarError();
+        }
+      });
+    } 
+  }
+
+</script>
+
+{% endblock js %}

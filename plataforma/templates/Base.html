@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/dataquery.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/unique.css' %}" type="text/css">
+    
+    {% block extracss %}
+    {% endblock extracss %}
+    {% load bootstrap4 %}
+	{% bootstrap_css %}
+    {% load bootstrap_icons %}
+    {% load javascript_settings_tags %}
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body id="page-top">
+    {% block content %}
+    {% endblock content %}
+
+    <script type="text/javascript"  src="{% static 'js/bootstrap.js' %}"></script>
+    {% bootstrap_javascript jquery='full' %}
+
+    <script type="text/javascript"  src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/dataqyery.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/js-global.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/alert.js' %}"></script>
+
+    {% block js %}{% endblock js %}
+
+    {% if messages %}
+    
+    {% for m in messages %}
+    <script>
+        Swal.fire({
+            "title": "Excelente",
+            "text": "{{m}}",
+            "icon": "success"
+        })
+    </script>
+        
+    {% endfor %}
+        
+    {% endif %}
+
+    
+    
+  
+</body>
+
+</html>
+
+
+

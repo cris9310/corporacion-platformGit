@@ -1,0 +1,31 @@
+{% load static %}
+
+
+
+<nav class="navbar justify-content-end">
+  <div class="dropdown show">
+    <a class="btn btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Hola {{request.user.nombres}}
+    </a>
+  
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      
+      <a  class="dropdown-item" href="{% url 'user_app:profile'%}">
+        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400 icon"></i>
+        <span class="text nav-text">Perfil</span> 
+      </a>
+      <a  class="dropdown-item" href="#">
+        <i class="fa-solid fa-money-check-dollar mr-2 text-gray-400 icon"></i>
+        <span class="text nav-text">Nómina</span> 
+      </a>
+      
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400 icon"></i>
+        <span class="text nav-text">Salir</span> 
+      </a>
+    </div>
+  </div>
+</nav>
+
+

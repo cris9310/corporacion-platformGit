@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+{% load  static %}
+{% block content %}
+
+<form  method="post" action="{% url 'academico_app:create-periodo' %}" >{% csrf_token %}
+    {{form.as_p}}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Crear</button>
+    </div>
+</form>
+
+{% endblock content %}
+
+
+ 

@@ -1,0 +1,300 @@
+{% load static %} 
+
+
+{% if request.user.tipe.rol == "Administrador"%}
+<nav class="sidebar">
+    <header>
+        
+        <div class="image-text">
+            <span class="image">
+                <img src="{% static 'img/icons/libra.png' %}" alt="logo">
+            </span>
+            <div class="text header-text">
+                <span class="name">
+                    CNE
+                </span>
+                <span class="profession">
+                    Sistema educativo
+                </span>
+            </div>
+            
+
+        </div>
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+
+            <ul class="menu-links">
+                <li class="" title="Dashboard">
+                    <a href="#">
+                        <i class="fa-solid fa-house icon"></i>
+                        <span class="text nav-text">Dashboard</span>
+                        
+                    </a>
+                </li>
+                <li class="" title="Docentes">
+                    <a href="#">
+                        <i class="fa-solid fa-chalkboard-user icon"></i>
+                        <span class="text nav-text">Docentes</span>
+                    </a>
+                </li>
+                <li class="" title="Estudiantes">
+                    <a href="#">
+                        <i class="fa-solid fa-graduation-cap icon"></i>
+                        <span class="text nav-text">Estudiantes</span>
+                    </a>
+                </li>
+                <li class="" title="Financiero">
+                    <a href="#">
+                        <i class="fa-solid fa-dollar-sign icon"></i>
+                        <span class="text nav-text">Financiero</span>
+                    </a>
+                </li>
+                <li class="" title="Usuarios">
+                    <a href="{% url 'user_app:list-user' %}">
+                        <i class="fa-solid fa-user icon"></i>
+                        <span class="text nav-text">Usuarios</span>
+                    </a>
+                </li>
+                <li class="" title="Parámetros">
+                    <a href="#">
+                        <i class="fa-solid fa-gear icon"></i>
+                        <span class="text nav-text">Parámetros</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+         
+    </div>
+    
+</nav>
+{% elif request.user.tipe.rol == "Gestor" %}
+<nav class="sidebar">
+    <header>
+        
+        <div class="image-text">
+            <span class="image">
+                <img src="{% static 'img/icons/libra.png' %}" alt="logo">
+            </span>
+            <div class="text header-text">
+                <span class="name">
+                    CNE
+                </span>
+                <span class="profession">
+                    Sistema educativo
+                </span>
+            </div>
+            
+
+        </div>
+    </header>
+    
+    <div class="menu-bar">
+        <div class="menu">
+
+            <ul class="menu-links">
+                <li class="" title="Dashboard">
+                    <a href="{% url 'academico_app:dashboard' %}">
+                        <i class="fa-solid fa-house icon"></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="" title="Docentes">
+                    <a href="{% url 'academico_app:list-teacher' %}">
+                        <i class="fa-solid fa-chalkboard-user icon"></i>
+                        <span class="text nav-text">Docentes</span>
+                    </a>
+                </li>
+                <li class="" title="Estudiantes">
+                    <a href="{% url 'academico_app:list-student' %}">
+                        <i class="fa-solid fa-graduation-cap icon"></i>
+                        <span class="text nav-text">Estudiantes</span>
+                    </a>
+                </li>
+                <li class="" title="Financiero">
+                    <a href="{% url 'finance_app:finance-list-invoice' %}">
+                        <i class="fa-solid fa-dollar-sign icon"></i>
+                        <span class="text nav-text">Financiero</span>
+                    </a>
+                </li>
+                <li class="" title="Usuarios">
+                    <a href="{% url 'academico_app:list-user' %}">
+                        <i class="fa-solid fa-user icon"></i>
+                        <span class="text nav-text">Usuarios</span>
+                    </a>
+                </li>
+                <li class="" title="Parámetros">
+                    <a href="{% url 'academico_app:config' %}">
+                        <i class="fa-solid fa-gear icon"></i>
+                        <span class="text nav-text">Parámetros</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+         
+    </div>
+    
+</nav>
+{% elif request.user.tipe.rol == "Estudiante" %}
+
+<nav class="sidebar">
+    <header>
+        
+        <div class="image-text">
+            <span class="image">
+                <img src="{% static 'img/icons/libra.png' %}" alt="logo">
+            </span>
+            <div class="text header-text">
+                <span class="name">
+                    CNE
+                </span>
+                <span class="profession">
+                    Sistema educativo
+                </span>
+            </div>
+            
+
+        </div>
+    </header>
+    
+    <div class="menu-bar">
+        <div class="menu">
+
+            <ul class="menu-links">
+                <li class="" title="Dashboard">
+                    <a href="{% url 'academico_app:dashboard' %}">
+                        <i class="fa-solid fa-house icon"></i>
+                        <span class="text nav-text">Mis programas</span>
+                    </a>
+                </li>
+                
+                <li class="" title="Financiero">
+                    <a href="{% url 'finance_app:finance-list-invoice' %}">
+                        <i class="fa-solid fa-dollar-sign icon"></i>
+                        <span class="text nav-text">Mis pagos</span>
+                    </a>
+                </li>
+                <li class="" title="Usuarios">
+                    <a href="#">
+                        <i class="fa-solid fa-user icon"></i>
+                        <span class="text nav-text">Gestiones académicas</span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    
+</nav>
+{% elif request.user.tipe.rol == "Docente" %}
+
+
+<nav class="sidebar">
+    <header>
+        
+        <div class="image-text">
+            <span class="image">
+                <img src="{% static 'img/icons/libra.png' %}" alt="logo">
+            </span>
+            <div class="text header-text">
+                <span class="name">
+                    CNE
+                </span>
+                <span class="profession">
+                    Sistema educativo
+                </span>
+            </div>
+            
+
+        </div>
+    </header>
+    
+    <div class="menu-bar">
+        <div class="menu">
+
+            <ul class="menu-links">
+                <li class="" title="Dashboard">
+                    <a href="{% url 'academico_app:dashboard' %}">
+                        <i class="fa-solid fa-house icon"></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="" title="Usuarios">
+                    <a href="#">
+                        <i class="fa-solid fa-user icon"></i>
+                        <span class="text nav-text">Mis asignaturas</span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    
+</nav>
+{% else %}
+<nav class="sidebar">
+    <header>
+        
+        <div class="image-text">
+            <span class="image">
+                <img src="{% static 'img/icons/libra.png' %}" alt="logo">
+            </span>
+            <div class="text header-text">
+                <span class="name">
+                    CNE
+                </span>
+                <span class="profession">
+                    Sistema educativo
+                </span>
+            </div>
+            
+
+        </div>
+    </header>
+    
+    <div class="menu-bar">
+        <div class="menu">
+
+            <ul class="menu-links">
+                <li class="" title="Dashboard">
+                    <a href="{% url 'academico_app:dashboard' %}">
+                        <i class="fa-solid fa-house icon"></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="" title="Docentes">
+                    <a href="{% url 'academico_app:list-teacher' %}">
+                        <i class="fa-solid fa-chalkboard-user icon"></i>
+                        <span class="text nav-text">Docentes</span>
+                    </a>
+                </li>
+                <li class="" title="Estudiantes">
+                    <a href="{% url 'academico_app:list-student' %}">
+                        <i class="fa-solid fa-graduation-cap icon"></i>
+                        <span class="text nav-text">Estudiantes</span>
+                    </a>
+                </li>
+                <li class="" title="Financiero">
+                    <a href="{% url 'finance_app:finance-list-invoice' %}">
+                        <i class="fa-solid fa-dollar-sign icon"></i>
+                        <span class="text nav-text">Financiero</span>
+                    </a>
+                </li>
+                <li class="" title="Habilitaciones">
+                    <a href="{% url 'academico_app:config' %}">
+                        <i class="fa-solid fa-gear icon"></i>
+                        <span class="text nav-text">Habilitaciones</span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    
+</nav>
+    
+{% endif %}
+
+

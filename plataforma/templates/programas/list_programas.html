@@ -1,0 +1,76 @@
+{% extends "Base.html" %}
+{% load  static %}
+
+{% block content %}
+<div class="grid-x grid-margin-x">
+  <div class="cell small-2">
+    <a href="?order=activos">
+      <span class="label warning">Activos</span>
+    </a>
+  </div>
+  <div class="cell small-2">
+    <a href="?order=inactivos">
+      <span class="label warning">Inactivos</span>
+    </a>
+  </div>
+  <div class="cell small-2">
+    <a href="?order=todos">
+      <span class="label warning">Todos</span>
+    </a>
+  </div>
+  <div>
+    <button  onclick="abrir_modal_edicion('{% url 'academico_app:create-programas' %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Crear</button>
+    
+  </div> 
+  <div class='col-10' style="margin-top: 2em;">
+    
+    {% if programas %}
+    <table class="table table-striped">
+      <thead>
+        <th>Código </th>
+        <th>Nombre del programa</th>
+        <th>acciones</th>
+      </thead>
+      <tbody>
+        {% for programa in programas %}
+          <tr>
+              
+            <td>{{programa.codigo}}</td>
+            <td>{{programa.programa}}</td>
+            <td>
+              <button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-program' programa.pk %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button>  
+              <a href="{% url 'academico_app:update-Program' programa.pk %}" >editar</a>
+              {% if programa.estado == True %}
+              <a href="#" >No Eliminar</a>
+              {% else %}
+              <a href="{% url 'academico_app:delete-Program' programa.pk %}" >eliminar</a> 
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+       <p>No hay programas para mostrar</p>
+        
+    {% endif %}
+        
+    
+  </div>
+  {% include 'includes\paginator.html' %}
+</div>
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+</div>
+{% endblock content %}
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+</script>
+{% endblock js %}

@@ -1,0 +1,185 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Usuarios | Portal CNE{% endblock title %}
+
+
+
+    
+
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-regular fa-user"></i> Usuarios</h1></span>
+        </div>
+        
+    </div>
+    
+  
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+              
+              <div class="col filtro">
+                <span class="text nav-text">Filtrar por:</span>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="todos" onchange="window.location.href='?order=todos'">
+                  <label class="form-check-label" for="todos">
+                    Todos
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="activos" onchange="window.location.href='?order=activos'">
+                  <label class="form-check-label" for="activos">
+                    Activos
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="inactivos" onchange="window.location.href='?order=inactivos'">
+                  <label class="form-check-label" for="inactivos">
+                    Inactivos
+                  </label>
+                </div>
+                
+              </div>
+              <div class="col-7 boton">
+                <button  type="button" title="Crear usuario" class="btn btn-sm" onclick="abrir_modal_general('{% url 'user_app:create-user' %}')">
+                  <a >
+                    <i class="fa-regular fa-user"></i>
+                    &nbsp; Crear usuario
+                  </a>
+                </button>
+              </div>
+            </div>
+          </div>
+      
+      <div class="card-body">
+          <div class="container-fluid" style="">
+            <div  class="row">
+              <div class="conte">
+                <div class ="conteTabla">
+  
+                  {% if users %}
+                  <table id="table_id4"  class="hover" style="width:100%; ">
+                    <thead >
+                      <th>Código</th>
+                      <th>Nombre del usuario</th>
+                      <th>Usuario</th>
+                      <th>Estado</th>
+                      <th>Ult. Conexión</th>
+                      <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                      {% for i in users %}
+                        <tr>
+                          <td >{{i.codigo}}</td>
+                          <td>{{i.apellidos}} {{i.nombres}}</td>
+                          <td>{{i.username}}</td>
+                          {% if i.is_active %}
+                          <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                          {% else %}
+                          <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                          {% endif %}
+                          {% if i.last_login %}
+                          <td>{{i.last_login |date:'d M Y'}}</td>
+                          {% else %}
+                          <td>NC</td>
+                          {% endif %}
+                          <td>
+                            <a  onclick="abrir_modal_edicion('{% url 'user_app:detail-user' i.pk  %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'user_app:update-user' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'user_app:deleted-user' i.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                            {% if i.is_active  %}
+                            <a  onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'inhabilitar')" title="Inhabilitar"><i   class="fa-solid fa-user-xmark iconos"></i></a>
+                            {% else %}
+                            <a onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'habilitar')" title="Habilitar"><i   class="fa-solid fa-user-check iconos"></i></a>
+                            {% endif %}
+                          </td>
+
+                      </tr>
+                        
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table> 
+                {% else %}
+                <table id="table_id4"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre del usuario</th>
+                    <th>Usuario</th>
+                    <th>Creado</th>
+                    <th>Estado</th>
+                    <th>Ult. Conexión</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+                  
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+{% endblock js %}

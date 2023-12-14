@@ -1,0 +1,38 @@
+{% load  static %}
+
+{% if request.resolver_match.url_name == "list-program" %}
+<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="GET">
+  <div class="input-group">
+    <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar por nombre o código" autocomplete= 'off'
+        aria-label="Search" aria-describedby="basic-addon2" id="kword" name="kword" value="{{request.GET.kword}}">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit"  value="Buscar">
+              <i class="fas fa-search fa-sm"></i>
+          </button>
+        </div>
+  </div>
+  
+  
+</form>
+
+{% else %}
+
+<!-- Esta parte del buscador está ok, hay que revisar la parte superior cuando estemos en los programas-->
+<form
+  class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"  method="GET">
+  <div class="input-group"  style="background: white; border-radius: 10px; width: 290px;  ">
+      <input type="text" id="text" class="form-control  small" style="border: 0px" placeholder="Buscar por nombre o código" autocomplete= 'off'
+          aria-label="Search" aria-describedby="basic-addon2" id="kword" name="kword" value="{{request.GET.kword}}">
+      <div class="input-group-append">
+          <button id="bs" class="btn" type="submit" style="background: white;" value="Buscar">
+              <i  class="fas fa-search fa-sm" style="color: grey"></i>
+          </button>
+      </div>
+  </div>
+</form>
+{% endif %}
+
+
+  
+
+  

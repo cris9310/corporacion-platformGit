@@ -1,0 +1,21 @@
+
+{% extends "Base.html" %}
+{% load  static %}
+
+{% block content %}
+<form  method="POST" action="{% url 'academico_app:delete-Program' object.pk %}">{% csrf_token %}
+    <div class="cell medium-7">
+        <div >
+            <div >
+                <h4>Desea eliminar a:</h4>  
+              <h4>{{ object.programa_name }}</h4>
+              
+            </div>
+        </div>
+    </div>
+    
+    <div class="cell medium-6">
+      <button type="submit" class="alert button">Eliminar</button>
+      <a href="{% url 'academico_app:list-program' %}" class="primary button clear">Volver</a>
+</form>
+{% endblock content %}

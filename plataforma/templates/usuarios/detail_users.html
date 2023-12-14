@@ -1,0 +1,157 @@
+<div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-user"></i>&nbsp; {{object.nombres}}&nbsp;{{object.apellidos}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          <div class="card">
+            <div class="card-header">
+              <div class="titulo">
+                Información personal
+              </div>
+              
+            </div>
+            
+            <div class="card-body" style="display: flex">
+              <div class="col">
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-address-card"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Código:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.codigo }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-solid fa-signature"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Nombres:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.nombres }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-solid fa-signature"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Apellidos:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.apellidos }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Nombre de usuario:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.username }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-envelope"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Email:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.email }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Tipo de usuario:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{object.tipe}}
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-calendar-days"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Fecha de creación:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {% if object.created_at %}
+                      {{object.created_at |date:'d M Y'}}
+                      {% else %}
+                      Sin conexiones
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="fa-regular fa-calendar-days"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Última conexión:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {% if object.last_login %}
+                      {{object.last_login |date:'d M Y'}}
+                      {% else %}
+                      Sin conexiones
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              </div>
+            </div>        
+          </div>
+        </div>
+        </div> 
+        
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+{% extends "Base.html" %} {% load static %} 
+
+
+{% block content %}
+{% if user.is_authenticated %}
+<div id="body"  >
+  <div class="general"  style="">
+    <div class=""  style="">
+      {% include "includes/sidebar.html" %}
+    </div>
+    <div class="container-fluid m-0 p-0" >
+      <div class="header" >
+        {% include "includes/header.html" %}
+      </div>
+      <div class="">
+        {% block extracontent %}
+          
+          {% endblock extracontent %}
+      </div>
+    </div>
+  </div>
+  
+</div>
+{% else %}
+<div>
+  <a class="navbar-brand" href="{% url 'homepage_app:login'%}">
+    iniciar sesión
+  </a>
+  {% endif %}
+</div>
+
+{% endblock content %}
+

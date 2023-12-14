@@ -1,0 +1,107 @@
+{% extends "Base.html" %}
+{% load  static %}
+
+{% block content %}
+<div class="grid-x grid-margin-x">
+  <div>
+    <button><a href="{% url 'academico_app:create-topic'%}">agregar</a>
+    </button>
+  </div>
+
+  <div class='col-10' style="margin-top: 2em;">
+    
+    {% if materias %}
+    <table class="table table-striped">
+      <thead>
+        <th>Código </th>
+        <th>Nombre del programa</th>
+        <th>Materia</th>
+        <th>Periodo</th>
+        <th>Total Alumnos</th>
+        <th>Acciones</th>
+      </thead>
+      <tbody>
+        {% for materia in materias %}
+          <tr>
+             
+            <td><a  href="{% url 'academico_app:topic-list-notes' materia.pk %} ">{{materia.codigo}}</a></td>
+            <td>{{materia.programa}}</td>
+            <td>{{materia.materia}}</td>
+            <td>{{materia.periodo}}</td>
+            <td>{{materia.banner_set.count}}</td>
+            <td> 
+              <button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-topic' materia.pk %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button>
+              
+              {% if materia.banner_set.count > 0  %}
+              <a href="#" >No Eliminar</a>
+              <a href="#" >No Editar</a>
+              {% else %}
+              <a href="{% url 'academico_app:update-topic' materia.pk %}" >editar</a>
+              <button  onclick="abrir_modal_edicion('{% url 'academico_app:delete-topic' materia.pk %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Eliminar</button>
+               
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+       <p>No hay materias para mostrar</p>
+        
+    {% endif %}
+        
+    
+  </div>
+  <div class="cell">
+      
+      {% if is_paginated %}
+      <nav aria-label="Pagination">
+          <ul class="pagination">
+            
+            {% if page_obj.has_previous %}
+              <li class="pagination-previous">
+                 <a href="?page={{page_obj.previous_page_number}}">Atrás</a>
+              </li>   
+            {% endif %}
+            
+            {% for pagina in paginator.page_range  %}
+
+            
+            {% if pagina == page_obj.number  %} 
+            <li class="current"><span class="show-for-sr">You're on page</span>{{ pagina }}</li> 
+            {% else %}
+            <li><a href="?page={{pagina}}">{{ pagina }}</a></li>   
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}     
+            <li class="pagination-next">
+                <a href="?page={{page_obj.next_page_number}}">siguiente</a>
+              </li>
+            {% endif %}
+          </ul>
+      </nav>
+          
+      {% endif %}
+          
+      
+
+  </div>
+</div>
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+</script>
+{% endblock js %}

@@ -1,0 +1,50 @@
+
+{% extends "base.html" %}
+{% load  static %}
+
+{% block content %}
+<div class="col-10">
+    <form  method="POST" action="{% url 'academico_app:update-Program' object.pk %}">{% csrf_token %}
+        <div >
+            <div >
+                {{form.as_p}}
+            </div>
+        </div>
+        <h5 class="modal-title">Nuevo costo del programa</h5><p id="parrafo"></p>
+        <div class="cell medium-6">
+          <button type="submit" class="alert button">Actualizar</button>
+          <a href="{% url 'academico_app:list-program' %}" class="primary button clear">Volver</a>
+    </form>
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#id_matricula').on('change', function() {
+    var matricula= document.getElementById('id_matricula').value;
+    var cuota_value= document.getElementById('id_cuota_valor').value;
+    var cuotas= document.getElementById('id_cuotas').value;
+    var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+    $("#parrafo").text(total);
+    $("#id_costo").val(total);
+  });
+  $('#id_cuota_valor').on('change', function() {
+    var matricula= document.getElementById('id_matricula').value;
+    var cuota_value= document.getElementById('id_cuota_valor').value;
+    var cuotas= document.getElementById('id_cuotas').value;
+    var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+    $("#parrafo").text(total);
+    $("#id_costo").val(total);
+  });
+  $('#id_cuotas').on('change', function() {
+    var matricula= document.getElementById('id_matricula').value;
+    var cuota_value= document.getElementById('id_cuota_valor').value;
+    var cuotas= document.getElementById('id_cuotas').value;
+    var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+    $("#parrafo").text(total);
+    $("#id_costo").val(total);
+  });
+        
+});  
+</script>
+{% endblock js %}
