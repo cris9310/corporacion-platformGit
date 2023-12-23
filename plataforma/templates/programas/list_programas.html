@@ -1,76 +1,154 @@
-{% extends "Base.html" %}
+
+{% extends "Base2.html" %}
 {% load  static %}
 
-{% block content %}
-<div class="grid-x grid-margin-x">
-  <div class="cell small-2">
-    <a href="?order=activos">
-      <span class="label warning">Activos</span>
-    </a>
-  </div>
-  <div class="cell small-2">
-    <a href="?order=inactivos">
-      <span class="label warning">Inactivos</span>
-    </a>
-  </div>
-  <div class="cell small-2">
-    <a href="?order=todos">
-      <span class="label warning">Todos</span>
-    </a>
-  </div>
-  <div>
-    <button  onclick="abrir_modal_edicion('{% url 'academico_app:create-programas' %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Crear</button>
-    
-  </div> 
-  <div class='col-10' style="margin-top: 2em;">
-    
-    {% if programas %}
-    <table class="table table-striped">
-      <thead>
-        <th>Código </th>
-        <th>Nombre del programa</th>
-        <th>acciones</th>
-      </thead>
-      <tbody>
-        {% for programa in programas %}
-          <tr>
-              
-            <td>{{programa.codigo}}</td>
-            <td>{{programa.programa}}</td>
-            <td>
-              <button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-program' programa.pk %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button>  
-              <a href="{% url 'academico_app:update-Program' programa.pk %}" >editar</a>
-              {% if programa.estado == True %}
-              <a href="#" >No Eliminar</a>
-              {% else %}
-              <a href="{% url 'academico_app:delete-Program' programa.pk %}" >eliminar</a> 
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% block title %}Programas | Portal CNE{% endblock title %}
 
-    {% else %}
-       <p>No hay programas para mostrar</p>
-        
-    {% endif %}
-        
-    
+{% block extracontent %}
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-pencil"></i> Programas</h1></span>
+      </div>
+      
   </div>
-  {% include 'includes\paginator.html' %}
+  
+
+  <div class="card">
+      <div class="card-header">
+          <div class="row">
+            
+            <div class="col filtro">
+              
+              
+            </div>
+            <div class="col-7 boton">
+              <button  type="button" title="Crear" class="btn btn-sm" onclick="abrir_modal_edicion('{% url 'settings_app:create-programas' %}')">
+                <a >
+                  <i class="fa-solid fa-pencil"></i>
+                  &nbsp; Crear programas
+                </a>
+              </button>
+            </div>
+          </div>
+        </div>
+    
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if programas %}
+                <table id="table_general"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código </th>
+                    <th>Nombre del programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                    
+                  </thead>
+                  <tbody>
+                    {% for programa in programas %}
+                    <tr>
+                        
+                      <td>{{programa.codigo}}</td>
+                      <td>{{programa.programa}}</td>
+                      {% if programa.is_active == True %}
+                      <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                      {% else %}
+                      <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                      {% endif %}
+                      <td>
+                        {% if programa.estado == True %}
+                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                         
+                        {% else %}
+                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-Program' programa.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                 
+                        {% endif %}
+                      </td>
+                      
+                    </tr>
+                  {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_general"  class="hover" style="width:100%; ">
+                <thead >
+                  <th>Código </th>
+                  <th>Nombre del programa</th>
+                  <th>Acciones</th>
+                  <th>ensato</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
 </div>
+
+
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
-</div>
-{% endblock content %}
+{% endblock extracontent %}
+
 {% block js %}
 <script>
-  var $=jQuery.noConflict();
-  function abrir_modal_edicion(url) {
-    $('#edicion').load(url, function(){
-        $(this).modal('show');
+var $=jQuery.noConflict();
+function abrir_modal_edicion(url) {
+  $('#edicion').load(url, function(){
+      $(this).modal('show');
+  });
+}
+function actulizar_eliminar(url, accion) {
+
+  if (accion == "habilitar") {
+    $("#edicion").load(url, function () {
+      $(this).modal("show");
+      document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+      $('#accion').val(accion);
+  
     });
+  } else if (accion == "eliminar"){
+    $("#edicion").load(url, function () {
+      $(this).modal("show");
+    });
+  }else {
+    $("#edicion").load(url, function () {
+      $(this).modal("show");
+      document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+      $('#accion').val(accion);
+
+  
+    });
+      
+
   }
+}
+
 </script>
 {% endblock js %}
+

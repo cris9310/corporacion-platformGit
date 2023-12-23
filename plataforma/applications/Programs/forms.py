@@ -3,32 +3,58 @@ from django import forms
 
 from .models import *
 
+##Formulario de creacion de periodos
+class PeriodoForm(forms.ModelForm):
 
-class PeriodoForm(forms.Form):
-
-    Año = forms.CharField(
+    anio = forms.CharField(
         label='Año',
         required=True,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(
+            attrs={
+                    
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'anio',
+                    'placeholder':"Ingrese el año",
+                    "onkeydown":"noPuntoComa( event )"
+            }
+        )
 
     )
 
     periodo = forms.CharField(
-        label='periodo',
+        label='Periodo',
         required=True,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(
+            attrs={
+                    
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': "periodo",
+                    'placeholder':"Ingrese el periodo",
+                    "onkeydown":"noPuntoComa( event )"
+            }
+        )
 
     )
 
+    class Meta:
+        """Meta definition for MODELNAMEform."""
+
+        model = Periodos
+        fields = ('__all__')
+        exclude =['an_creacion', "periodo"]
+
     def clean_periodo(self):
-        ano = self.cleaned_data.get('Año')
+        ano = self.cleaned_data.get('anio')
         periodo = self.cleaned_data.get('periodo')
         concat=str(ano) + "-" + periodo
         
         if Periodos.objects.filter(periodo = concat).exists() :
-           self.add_error('Año', 'El periodo que intenta crear ya existe.')
+           self.add_error('anio', 'El periodo que intenta crear ya existe.')
         else:
             return concat
+
 
 
 class ProgramaForm(forms.ModelForm):
@@ -46,15 +72,56 @@ class ProgramaForm(forms.ModelForm):
 
             'programa_name': TextInput(
                 attrs={
+                    'id':'programa_name',
                     'placeholder':"Ingrese un nombre",
                     'autocomplete': 'off',
                     'class':'form-control'
                 }
             ),
-            'costo': HiddenInput(),
+            "aceptado": NumberInput(
+                attrs={
+                    'id':'aceptado',
+                    'placeholder':"Ingrese un valor",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                     "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+            "matricula":NumberInput(
+                attrs={
+                    'id':'matricula',
+                    'placeholder':"Ingrese un valor",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                     "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+            "cuotas": NumberInput(
+                attrs={
+                    'id':'cuotas',
+                    'placeholder':"Ingrese un valor",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                     "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+            "cuota_valor": NumberInput(
+                attrs={
+                    'id':'cuota_valor',
+                    'placeholder':"Ingrese un valor",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                     "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+            'costo': HiddenInput(
+                attrs={
+                    'id':'costo'
+                }
+            ),
              'tipe': Select(
                 attrs={
-                    'id':'Tipo_program',
+                    'id':'tipe',
                     'class':'form-control'
                 }
             ),

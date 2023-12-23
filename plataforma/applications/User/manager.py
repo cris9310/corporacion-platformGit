@@ -218,7 +218,7 @@ class BuscadorManager(models.Manager):
         return consulta.order_by('cod_student')
     
 
-    ########
+    ### manager de creación de programas
     def crear(self, tipe, cod_prog, programa_name, aceptado, matricula, cuota_valor, cuotas, costo):
 
         programa = self.model(

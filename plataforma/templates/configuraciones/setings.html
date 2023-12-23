@@ -9,14 +9,13 @@
         <!-- Default Card Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Crear año académico</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Periodos académicos</h6>
             </div>
             <div class="card-body">
-                Cree una sesión por año académico. La última sesión creada será considerada la última sesión académica.
+                Cree periodos académicos, uno por semestre.
             </div>
             <div class="card-header">
-                <a  href="{% url 'academico_app:create-periodo' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Crear</a>
-                <a  href="{% url 'academico_app:list-periodo' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver periodos</a>
+                <a  href="{% url 'settings_app:list-periodo' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver periodos</a>
             </div>
             
         </div>
@@ -28,9 +27,7 @@
                 Cree los programas académicos que ofrece la institución.
             </div>
             <div class="card-header">
-                <button  onclick="abrir_modal_edicion('{% url 'academico_app:create-programas' %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Crear</button>
-                <a  href="{% url 'academico_app:list-program' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver programas</a>
-                <a  href="{% url 'academico_app:create-pensum' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Asignar mallas</a>
+                <a  href="{% url 'settings_app:list-program' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver programas</a>
                 
             </div>
             
@@ -42,32 +39,6 @@
     </div>
 
     <div class="col-lg-6">
-
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Crear asignaturas</h6>
-            </div>
-            <div class="card-body">
-                Cree asignaturas para los programas académicos.
-            </div>
-            <div class="card-header">
-                <a  href="{% url 'academico_app:create-inventario' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Crear</a>
-                <a  href="{% url 'academico_app:list-topic' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver asignaturas</a>
-                <a  href="{% url 'academico_app:create-topic' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Asignar docentes</a>
-
-            </div>
-        </div>
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Habilitaciones</h6>
-            </div>
-            <div class="card-body">
-                Habilite a los docentes para el cargue de notas.
-            </div>
-            <div class="card-header">
-                <a  href="{% url 'academico_app:habilitado' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ingresar</a>
-            </div>
-        </div>
 
     </div>
 

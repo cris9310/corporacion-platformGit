@@ -13,6 +13,13 @@ def validate_cero(value):
             params={"value": value},
         )
 
+def validate_noncero(value):
+    if int(value) == 0:
+        raise ValidationError(
+            _("Este campo no puede ser cero"),
+            params={"value": value},
+        )
+
 def validate_decimal(value):
     if not float(value):
         raise ValidationError(

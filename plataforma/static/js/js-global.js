@@ -256,7 +256,7 @@ function mostrarErroresCreacionEditar(errores) {
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
     'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', "password1", "password2",
-    "tipe"
+    "tipe", "anio", "periodo", 'programa_name', "aceptado", "matricula", "cuotas", "cuota_valor"
   ];
 
   for (const i in array1) {
@@ -340,7 +340,34 @@ function abrir_modal_crearEvent(url) {
 
 // Esta función modifica el css del menú, teniendo en cuenta el url actual
 
+$(document).ready(function () {
+  var $ = jQuery.noConflict();
+  var tabla = $('#table_general').DataTable({
 
+
+    language: {
+      "decimal": "",
+      "emptyTable": "No hay información",
+      "info": "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+      "infoEmpty": "Mostrando 0 to 0 of 0 Registros",
+      "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+      "infoPostFix": "",
+      "thousands": ",",
+      "lengthMenu": "Items por rango: _MENU_",
+      "loadingRecords": "Cargando...",
+      "processing": "Procesando...",
+      "search": "Buscar:",
+      "zeroRecords": "Sin resultados encontrados",
+      "paginate": {
+        "first": "Primero",
+        "last": "Ultimo",
+        "next": "Siguiente",
+        "previous": "Anterior"
+      }
+    }
+
+  });
+})
 
 
 $(document).ready(function () {
@@ -484,8 +511,8 @@ $(document).ready(function () {
       }
     },
     "columns": [
-      { "width": "25%", },
-      { "width": "75%", },
+      null,
+      null,
     ],
 
   });

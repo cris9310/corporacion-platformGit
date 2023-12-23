@@ -1,17 +1,89 @@
 
-{% extends "base.html" %}
-{% load  static %}
-{% block content %}
-
-<form  method="post" action="{% url 'academico_app:create-periodo' %}" >{% csrf_token %}
-    {{form.as_p}}
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Crear</button>
+{% load static %}
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-book"></i> Crear periodos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+            <form  method="POST" id="dataGeneralForm" action="{% url 'settings_app:create-periodo' %}" >{% csrf_token %}
+                <div id="errores" ></div>
+                <div class="container-fluid"> 
+                    <div class="row">
+                      
+                      <div class="col ms-auto"">
+                        <div class="{{ form.anio.id_for_label }}" ></div>
+                        <label for="{{ form.anio.id_for_label }}">Año:</label>
+                        {{ form.anio }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container-fluid" style="margin-top: 15px">
+                    <div class="row">
+                      
+                      <div class="col ms-auto"">
+                        <div class="{{ form.periodo.id_for_label }}" ></div>
+                        <label for="{{ form.periodo.id_for_label }}">Periodo:</label>
+                        {{ form.periodo }}
+                      </div>
+                    </div>
+                  </div>
+                
+                <div class="modal-footer" style="margin-top: 15px;">
+                    <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Cargando...
+                    </button>
+          
+                    <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+                      Registrar periodo
+                    </button>
+                  <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
+                  </div>
+            </form>
+          
+        </div> 
+        
     </div>
-</form>
+  </div>
 
-{% endblock content %}
+
+  {% block js %}
+  <script type="text/javascript">
+  
+    function sendUser() {
+      var serializedData = $("#dataGeneralForm").serialize();
+      if (serializedData) {
+        $('#spinner-div').show();
+        $('#spinner-div-real').hide();
+        var request = $.ajax({
+          type: "POST",
+          url: "{% url 'settings_app:create-periodo' %}",
+          data: serializedData,
+          success: function (response) {
+            $("#edicion").modal("hide");
+            window.location = "{% url 'settings_app:list-periodo' %}";
+            mostrarOk();
+            
+            
+          },
+          error: function (error) {
+            $('#spinner-div-real').show();
+            $('#spinner-div').hide()
+            mostrarErroresCreacionEditar(error);
+            mostrarError();
+          }
+        });
+      } 
+    }
+  
+  </script>
+  
+  {% endblock js %}
+  
 
 
  

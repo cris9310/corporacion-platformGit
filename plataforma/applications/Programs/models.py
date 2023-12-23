@@ -11,7 +11,7 @@ from applications.Student.models import *
 
 class Periodos(models.Model):
     periodo = models.CharField(max_length=15, unique=True, blank=False, null=False)
-    an_creacion=models.CharField(max_length=50, default=datetime.now()) 
+    an_creacion=models.DateTimeField(default=datetime.now)
     objects = periodoManager()
 
     def __str__(self): 
@@ -23,10 +23,10 @@ class Periodos(models.Model):
 class Programas(models.Model):
     cod_prog=models.CharField(max_length=10, unique=True, verbose_name='Código del Programa')
     programa_name=models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombre del Programa')
-    aceptado = models.PositiveIntegerField(null=False, blank=False, verbose_name='Total materias para grado')
-    matricula = models.DecimalField(max_digits= 25, decimal_places=0, default=0)
-    cuota_valor= models.DecimalField(max_digits= 25, decimal_places=0, default=0)
-    cuotas= models.PositiveIntegerField(null=False, blank=False, verbose_name='Numero de cuotas')
+    aceptado = models.PositiveIntegerField(null=False, blank=False, verbose_name='Total materias', validators=[validate_noncero])
+    matricula = models.DecimalField(max_digits= 25, decimal_places=0, default=0, verbose_name='Valor de la matrícula', validators=[validate_noncero])
+    cuota_valor= models.DecimalField(max_digits= 25, decimal_places=0, default=0, verbose_name='Valor de la mensualidad', validators=[validate_noncero])
+    cuotas= models.PositiveIntegerField(null=False, blank=False, verbose_name='Número de cuotas', validators=[validate_noncero])
     costo =  models.DecimalField(max_digits= 25, decimal_places=0, default=0)
     an_creacion=models.CharField(max_length=50, default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True)
