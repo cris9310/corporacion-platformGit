@@ -34,6 +34,9 @@ class Programas(models.Model):
     is_active=models.BooleanField(default=True)
     objects = BuscadorManager()
 
+    def __str__(self): 
+        return  self.programa_name
+
 
 class Inventario(models.Model):
     codigo = models.CharField(max_length=200, null=False, blank=False, verbose_name='Código de la asignatura')
@@ -41,6 +44,7 @@ class Inventario(models.Model):
     programa = models.ForeignKey(Programas, on_delete=models.CASCADE)
     an_creacion=models.CharField(max_length=50, default=datetime.now) 
     updated_at = models.DateTimeField(auto_now=True)
+    objects = BuscadorManager()
 
     def __str__(self): 
         return  self.nombre_materia
@@ -48,7 +52,6 @@ class Inventario(models.Model):
 
 class Materias(models.Model):
 
-    programa = models.ForeignKey(Programas, on_delete=models.CASCADE)
     materia  = models.ForeignKey(Inventario, on_delete=models.CASCADE )
     sede=models.ForeignKey(CatalogsSede, verbose_name='Sede', on_delete=models.CASCADE)
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE )

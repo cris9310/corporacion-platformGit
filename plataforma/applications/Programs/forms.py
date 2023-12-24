@@ -138,6 +138,40 @@ class ProgramaForm(forms.ModelForm):
         return nombre.title()
     
 
+
+##Formulario de asignaturas
+class InventarioRegisterForm(forms.ModelForm):
+
+    class Meta:
+        model = Inventario
+        fields = ('__all__')
+        exclude =['an_creacion', "updated_at", "codigo"]
+
+        widgets={
+
+            'nombre_materia': TextInput(
+                attrs={
+                    'id':'nombre_materia',
+                    'placeholder':"Ingrese un nombre",
+                    'autocomplete': 'off',
+                    'class':'form-control'
+                }
+            ),
+            'programa': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'programa'
+
+                }
+            ),
+
+                
+        } 
+
+
+
+
 class MateriasForm(forms.ModelForm):
     
     def __init__(self,*args,**kwargs):
@@ -211,33 +245,3 @@ class MateriasForm(forms.ModelForm):
         else:
             return b
         
-    
-class InventarioRegisterForm(forms.ModelForm):
-
-    class Meta:
-        model = Inventario
-        fields = ('__all__')
-        exclude =['an_creacion']
-
-        widgets={
-
-                'programa': Select(
-                    attrs={
-                        'autocomplete': 'off',
-                        'class':'form-select ',
-                        'id': 'carrera'
-
-                    }
-                ),
-
-                'pensum_asig_inv': Select(
-                    attrs={
-                        'autocomplete': 'off',
-                        'class':'form-select ',
-                        'id': 'pensum_asig'
-
-                    }
-                ),
-                
-                
-        } 

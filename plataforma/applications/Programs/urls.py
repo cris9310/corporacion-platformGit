@@ -53,6 +53,36 @@ urlpatterns = [
         views.ProgramaDeleteView.as_view(),
         name='delete-Program'
     ),
+
+
+    path(
+        'list-inventario/',
+        views.Inventariolistview.as_view(),
+        name='list-inventario'
+    ),
+    path(
+        'create-inventario/',
+        views.InventarioCreateView.as_view(),
+        name='create-inventario'
+    ),
+    path(
+        'update-inventario/<pk>/',
+        views.InventarioUpdateView.as_view(),
+        name='update-inventario'
+    ),
+
+    path(
+        'delete-inventario/<pk>/',
+        views.InventarioDeleteView.as_view(),
+        name='delete-inventario'
+    ),
+
+
+    
+
+
+
+    
 ]
 
 

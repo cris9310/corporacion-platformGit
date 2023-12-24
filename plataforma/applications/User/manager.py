@@ -127,6 +127,17 @@ class BuscadorManager(models.Manager):
             cod_asign = str(año.year) + str(1000)
 
         return str(cod_asign)
+    
+    def code_asignaturas(self):
+
+        try:
+            filtro = self.latest('id').codigo
+            cod_asign = int(filtro) + 1
+        except:
+            año = datetime.now()
+            cod_asign = str(año.year) + str(2000)
+
+        return str(cod_asign)
 
 
     def filtrar_buscador(self, kword):

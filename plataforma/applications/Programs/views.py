@@ -1,31 +1,15 @@
-from typing import Any, Dict
-from django.shortcuts import render
-import datetime
-from openpyxl import Workbook
-from openpyxl.worksheet.datavalidation import DataValidation
-from openpyxl.writer.excel import save_virtual_workbook
+
 from decimal import *
-import warnings
 
+from django.http import JsonResponse
+from django.views.generic import (TemplateView,
+    FormView, CreateView, DeleteView, UpdateView,
+    DetailView, ListView, View)
+from django.urls import reverse_lazy, reverse
 
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.db.models.functions import Coalesce
-from django.db.models import F, Sum, Avg, Count
-
-# Create your views here.
 
 from .models import *
-from django.views.generic import (TemplateView,
-                                  FormView, CreateView, DeleteView, UpdateView,
-                                  DetailView, ListView, View)
-
-
 from .forms import *
-from django.urls import reverse_lazy, reverse
-import pandas as pd
-import re
 
 
 # Vista ok
@@ -165,6 +149,27 @@ class ProgramaUpdateView(UpdateView):
     form_class = ProgramaForm
     success_url = reverse_lazy('settings_app:list-program')
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        user_c = self.model.objects.get(pk=self.kwargs['pk'])
+        form = ProgramaForm(request.POST, instance=user_c)
+        
+        if form.is_valid():
+            form.save()
+            mensaje = f'{self.model.__name__} Actualizado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+
 #Vista de listado de programas ok
 class Programalistview(ListView):
     model = Programas
@@ -177,7 +182,7 @@ class Programalistview(ListView):
         if kword:
             data_prin = Programas.objects.filtrar_buscador(kword)
             for i in data_prin:
-                if Materias.objects.filter(programa_id=i.id).exists():
+                if Materias.objects.filter(materia__programa_id=i.id).exists():
                     data_json = {"pk": i.id, "codigo": i.cod_prog,
                                  "programa": i.programa_name, "estado": True, "is_active": i.is_active}
                     data_program.append(data_json)
@@ -191,7 +196,7 @@ class Programalistview(ListView):
 
             data_prin = Programas.objects.all()
             for i in data_prin:
-                if Materias.objects.filter(programa_id=i.id).exists():
+                if Materias.objects.filter(materia__programa_id=i.id).exists():
                     data_json = {"pk": i.id, "codigo": i.cod_prog,
                                  "programa": i.programa_name, "estado": True, "is_active": i.is_active}
                     data_program.append(data_json)
@@ -202,3 +207,102 @@ class Programalistview(ListView):
             queryset = data_program
 
         return queryset
+
+
+
+#------- Inventario asignaturas ---------
+    
+
+class Inventariolistview(ListView):
+    model = Inventario
+    template_name = 'inventario/inventarioList.html'
+    context_object_name = 'inventario'
+
+    def get_queryset(self):
+
+        data_Inventari = Inventario.objects.all()
+        data = []
+        for i in data_Inventari:
+            if Materias.objects.filter(materia_id=i.id):
+                data_json = {"pk": i.id, "codigo": i.codigo, "estado": True, 
+                             "programa_name": i.programa.programa_name,
+                            "nombre_materia": i.nombre_materia }
+                data.append(data_json)
+            else:
+                data_json = {"pk": i.id, "codigo": i.codigo, "estado": False, 
+                             "programa_name": i.programa.programa_name,
+                            "nombre_materia": i.nombre_materia }
+                data.append(data_json)
+
+        return data
+
+
+#Vista de creacion de programas ok
+class InventarioCreateView(CreateView):
+    model = Inventario
+    form_class = InventarioRegisterForm
+    template_name = 'inventario/inventarioRegister.html'
+    success_url = reverse_lazy('settings_app:list-inventario')
+
+    def post(self, request, *args, **kwargs):
+
+        form = InventarioRegisterForm(self.request.POST)
+        
+        if form.is_valid():
+
+            crear_asignaturas = Inventario.objects.create(
+                codigo = Inventario.objects.code_asignaturas(),
+                nombre_materia=form.cleaned_data['nombre_materia'],
+                programa=form.cleaned_data['programa']
+
+            )
+            mensaje = f'{self.model.__name__} creado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+
+
+#Vista de actualizacion de programas ok
+class InventarioUpdateView(UpdateView):
+    model = Inventario
+    template_name = 'inventario/inventarioUpdate.html'
+    form_class = InventarioRegisterForm
+    success_url = reverse_lazy('settings_app:list-inventario')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        user_c = self.model.objects.get(pk=self.kwargs['pk'])
+        form = InventarioRegisterForm(request.POST, instance=user_c)
+        
+        if form.is_valid():
+            form.save()
+            mensaje = f'{self.model.__name__} Actualizado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+        
+
+class InventarioDeleteView(DeleteView):
+    template_name = 'inventario/inventarioDelete.html'
+    model = Inventario
+    success_url = reverse_lazy('settings_app:list-inventario')
+
+    

@@ -256,7 +256,7 @@ function mostrarErroresCreacionEditar(errores) {
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
     'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', "password1", "password2",
-    "tipe", "anio", "periodo", 'programa_name', "aceptado", "matricula", "cuotas", "cuota_valor"
+    "tipe", "anio", "periodo", 'programa_name', "aceptado", "matricula", "cuotas", "cuota_valor", "nombre_materia", "programa"
   ];
 
   for (const i in array1) {

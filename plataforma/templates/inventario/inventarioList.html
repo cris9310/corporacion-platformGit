@@ -1,0 +1,153 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Inventario | Portal CNE{% endblock title %}
+
+
+
+    
+
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-solid fa-laptop-code"></i> Pensum académico</h1></span>
+        </div>
+        
+    </div>
+    
+  
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+
+                <div class="col filtro">
+              
+              
+                </div>
+              
+              <div class="col-7 boton">
+                <button  type="button" title="Crear asignatura" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-inventario' %}')">
+                  <a >
+                    <i class="fa-solid fa-laptop-code"></i>
+                    &nbsp; Crear asignatura
+                  </a>
+                </button>
+              </div>
+            </div>
+          </div>
+      
+      <div class="card-body">
+          <div class="container-fluid" style="">
+            <div  class="row">
+              <div class="conte">
+                <div class ="conteTabla">
+  
+                  {% if inventario %}
+                  <table  id="table_general" class="hover" style="width:100%; ">
+                    <thead >
+                      <th>Código</th>
+                      <th>Programa</th>
+                      <th>Nombre asignatura</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                      {% for i in inventario %}
+                        <tr>
+                          <td >{{i.codigo}}</td>
+                          <td>{{i.programa_name}}</td>
+                          <td>{{i.nombre_materia}}</td>
+                          {% if i.estado %}
+                          <td><span class="estado"><i class="fa-regular fa-circle-check "></i> &nbsp; Asignada</span></td>
+                          <td><a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a></td>
+                          {% else %}
+                          <td><span class="iconos"><i class="fa-regular fa-circle-check "></i> &nbsp; Sin asignar</span></td>
+                          <td>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                           </td>
+
+                          {% endif %}
+                        </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table> 
+                {% else %}
+                <table id=""  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre asignatura</th>
+                    <th>Programa</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+                  
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+{% endblock js %}
