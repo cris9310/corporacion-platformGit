@@ -168,6 +168,23 @@ class InventarioRegisterForm(forms.ModelForm):
 
                 
         } 
+    
+   
+##Formulario de asignaturas de manera masiva  
+class InventarioMasiveForm(forms.Form):
+
+    carga = forms.FileField(
+        required=True,
+        widget=forms.FileInput(
+            attrs={
+                'class':'form-control ',
+                'name':'carga',
+                'id':'carga'
+
+            }
+        )
+    )
+
 
 
 
@@ -184,38 +201,22 @@ class MateriasForm(forms.ModelForm):
     class Meta:
         model = Materias
         fields = ('__all__')
-        exclude =['an_creacion', 'is_active', 'codigo']
+        exclude =['an_creacion', 'is_active', 'updated_at']
 
         widgets={
 
-                'materia': Select(
-                    attrs={
-                        'autocomplete': 'off',
-                        'class':'form-select ',
-                        'id': 'materia'
 
-                    }
-                ),
-                'programa': Select(
+                'materia': HiddenInput(
                     attrs={
-                        'autocomplete': 'off',
-                        'class':'form-select ',
-                        'id': 'carrera'
+                        'id': 'materia'
 
                     }
                 ),
                 'sede': Select(
                     attrs={
                         'autocomplete': 'off',
-                        'class':'form-select ',
+                        'class':'form-control',
                         'id': 'sede'
-
-                    }
-                ),
-                'pensum_asig': Select(
-                    attrs={
-                        'class':'form-select ',
-                        'id': 'pensum_asig'
 
                     }
                 ),
@@ -223,25 +224,41 @@ class MateriasForm(forms.ModelForm):
                 'periodo': Select(
                     attrs={
                         'autocomplete': 'off',
-                        'class':'form-select '
+                        'class':'form-control',
+                        'id': 'periodo'
+                    }
+                ),
+                'jornada': Select(
+                    attrs={
+                        'autocomplete': 'off',
+                        'class':'form-control',
+                        'id': 'jornada'
                     }
                 ),
                 'docente': Select(
                     
                     attrs={
                         'autocomplete': 'off',
-                        'class':'form-select '
+                        'class':'form-control',
+                        "id":"docente"
                     }
                 ),
-                
+                "pre_cierre":DateInput(
+                    format=('%Y-%m-%d'),
+                    attrs={
+                        "type": "date", 
+                        "class": "form-control",
+                        "id":"pre_cierre"
+                    },
+                ),
+                "cierre":DateInput(
+                    format=('%Y-%m-%d'),
+                    attrs={
+                        "type": "date", 
+                        "class": "form-control",
+                        "id":"cierre"
+                    },
+                ),
         }
 
     
-
-    def clean_codigo(self):
-        b = (self.cleaned_data.get('codigo'))
-        if b[0] == "0":
-            self.add_error('codigo', 'El código no puede iniciar por cero')
-        else:
-            return b
-        

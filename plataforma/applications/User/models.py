@@ -39,6 +39,12 @@ class CatalogsSede(models.Model):
 
     def __str__(self): 
         return  self.sede
+    
+class CatalogsJornada(models.Model):
+    jornada= models.CharField(max_length=200, null=False, blank=False)
+
+    def __str__(self): 
+        return  self.jornada
 
 
 #Modelo de los usuarios, se reescribió todo el modelo inicial e hicimos uno desde cero, logueamos con user y contraseña

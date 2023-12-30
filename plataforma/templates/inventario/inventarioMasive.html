@@ -1,0 +1,80 @@
+
+
+
+{% load static %}
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-upload"></i> Cargue de asignaturas</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex justify-content-center">
+      
+      </div>
+      <form action="{% url 'settings_app:create-masive-asignaturas' %}" method="post" enctype="multipart/form-data" id="data" > 
+      {% csrf_token %}
+      <div id="errores" ></div>
+      {{form.as_p}}
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-primary"><a href="{% url 'settings_app:export-plant-asignaturas' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
+        
+        <button class="btn btn-danger" type="button" id="spinner-div" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Cargando...
+        </button>
+
+        <button type="button" class="btn btn-danger" id="spinner-div-real" onclick="sendMaterias()">
+          <i class="fa-solid fa-upload"></i> &nbsp;Cargar
+        </button>
+      </div>
+    </form>
+    </div> 
+  </div>
+</div>
+
+{% block js %}
+<script type="text/javascript">
+
+  function sendMaterias() {
+    var formData = new FormData();
+    var serializedData = document.getElementById('carga');
+    
+    if (serializedData.files.length != 0) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+      formData.append('carga',  $('input[type=file]')[0].files[0])
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'settings_app:create-masive-asignaturas' %}",
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        success: function (response) {
+          $('#spinner-div').show()
+          $("#edicion").modal("hide");
+          window.location.reload();
+          mostrarOk()
+  
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarErroresCreacion(error)
+          mostrarError()
+        }
+      });
+    }else {
+      mostrarErrorvacio()
+    }
+  }
+
+</script>
+
+{% endblock js %}

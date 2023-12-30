@@ -15,7 +15,7 @@ urlpatterns = [
         name='create-periodo'
     ),
     path(
-        'list-periodo/',
+        'config/list-periodo/',
         views.PeriodoListView.as_view(),
         name='list-periodo'
     ),
@@ -34,7 +34,7 @@ urlpatterns = [
         name='create-programas'
     ),
     path(
-        'list-program/',
+        'config/list-program/',
         views.Programalistview.as_view(),
         name='list-program'
     ),
@@ -55,8 +55,11 @@ urlpatterns = [
     ),
 
 
+
+
+
     path(
-        'list-inventario/',
+        'config/list-inventario/',
         views.Inventariolistview.as_view(),
         name='list-inventario'
     ),
@@ -76,6 +79,32 @@ urlpatterns = [
         views.InventarioDeleteView.as_view(),
         name='delete-inventario'
     ),
+    path(
+        'export-plant-asignaturas',
+        views.InventarioMasiveExport,
+        name='export-plant-asignaturas'
+    ),
+    path(
+        'create-masive-asignaturas/',
+        views.InventarioMasiveView.as_view(),
+        name='create-masive-asignaturas'
+    ),
+
+
+
+
+
+    path(
+        'create-materias/<pk>/',
+        views.MateriasCreateView.as_view(),
+        name='create-materias'
+    ),
+
+
+
+    
+
+
 
 
     

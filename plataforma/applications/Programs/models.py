@@ -56,6 +56,7 @@ class Materias(models.Model):
     sede=models.ForeignKey(CatalogsSede, verbose_name='Sede', on_delete=models.CASCADE)
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE )
     periodo = models.ForeignKey(Periodos, on_delete=models.CASCADE)
+    jornada = models.ForeignKey(CatalogsJornada, on_delete=models.CASCADE)
     pre_cierre =models.DateField()
     cierre =models.DateField()
     an_creacion=models.CharField(max_length=50, default=datetime.now)

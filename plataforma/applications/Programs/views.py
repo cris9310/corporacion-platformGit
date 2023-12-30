@@ -1,15 +1,23 @@
 
 from decimal import *
+from openpyxl import Workbook
+from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.writer.excel import save_virtual_workbook
+import warnings
+import pandas as pd
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import (TemplateView,
     FormView, CreateView, DeleteView, UpdateView,
     DetailView, ListView, View)
 from django.urls import reverse_lazy, reverse
-
+from django.shortcuts import render, HttpResponseRedirect
 
 from .models import *
 from .forms import *
+
+
+
 
 
 # Vista ok
@@ -210,6 +218,8 @@ class Programalistview(ListView):
 
 
 
+
+
 #------- Inventario asignaturas ---------
     
 
@@ -249,7 +259,6 @@ class InventarioCreateView(CreateView):
         form = InventarioRegisterForm(self.request.POST)
         
         if form.is_valid():
-
             crear_asignaturas = Inventario.objects.create(
                 codigo = Inventario.objects.code_asignaturas(),
                 nombre_materia=form.cleaned_data['nombre_materia'],
@@ -305,4 +314,251 @@ class InventarioDeleteView(DeleteView):
     model = Inventario
     success_url = reverse_lazy('settings_app:list-inventario')
 
+#class InventarioMasiveCreateView(CreateView):
+
+class InventarioMasiveView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = InventarioMasiveForm()
+        context = {"form": form}
+        return render(request, r"inventario\inventarioMasive.html", context)
     
+    def post(self, request, *args, **kwargs):
+
+        listaEncabezados = ["Nombre_asignatura", "Programa"]
+        mensaje =[]
+        data_list =[]
+        conteo = 0
+        # Leyendo el archivo que recibimos desde el form
+        Data = self.request.FILES['carga']
+
+        # Validacion 1
+        if Data.name == 'cargue_asignaturas.xlsx':
+            warnings.filterwarnings(
+                'ignore', category=UserWarning, module='openpyxl')
+            newData = pd.read_excel(
+                Data, sheet_name="Plantilla", engine='openpyxl')
+            
+
+
+            # Validacion 1.1 valores en blanco y encabezados ok
+            # Validamos que no existan valores nulos y en blancos en el archivo.
+            missValues = newData.isnull().sum()
+            missValues =  missValues[ missValues != 0]
+
+            # Generamos código para la asignatura
+            codigo = Inventario.objects.code_asignaturas()
+
+            # comparando los encabezados para ver si está correcta la estructura
+            for i, a in zip(list(newData), listaEncabezados):
+                if i != a:
+                    break
+
+            # Desplegamos errores en caso de existir
+            if missValues.shape[0] or i != a:
+                if missValues.shape[0]:
+                    if missValues.shape[0] == 1:
+                        mensaje.append({"error": 'El archivo tiene ' + str(
+                            missValues.shape[0]) + ' columna sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje, safe=False)
+                        response.status_code = 400
+                        return response
+                    else:
+                        mensaje.append({"error": 'El archivo tiene ' + str(
+                            missValues.shape[0]) + ' columnas sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje, safe=False)
+                        response.status_code = 400
+                        return response
+
+                else:
+                    mensaje.append({"error": 'La columna con encabezado ' + i +
+                                    ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+                    
+            # Validacion 1.1 mas de 20 asignaturas y archivos en blanco
+            elif len(newData) > 20 or len(newData) == 0:
+                if len(newData) > 20:
+                    mensaje.append(
+                        {"error": 'Recuerde que no puede cargar más de 20 asignaturas a la vez, en este archivo encontramos: ' + str(len(newData))})
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+                else:
+                    mensaje.append(
+                        {"error": 'No encontramos asignaturas para cargar'})
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+                
+            else:
+                newData['DUPLICADO'] = newData.duplicated()
+
+                for i in range(len(newData)):
+                    if newData['DUPLICADO'][i] == True:
+                        conteo = 1 + conteo
+                        mensaje.append({"error": "Encontramos filas duplicadas para la asignatura: " +
+                                        newData['Nombre_asignatura'][i] + " verifique la información"})
+                    else:
+                        conteo = 0 + conteo
+                
+                for i in range(len(newData)):
+                    if Programas.objects.filter(programa_name=newData['Programa'][i]):
+                        conteo = 0 + conteo
+                    else:
+                        conteo = 1 + conteo
+                        mensaje.append(
+                            {"error": "El programa " + newData['Programa'][i] + " no existe, verifique la información que intenta cargar."})
+
+                for i in range(len(newData)):
+                    if not Inventario.objects.filter(programa__programa_name=newData['Programa'][i], nombre_materia= newData['Nombre_asignatura'][i] ):
+                        conteo = 0 + conteo
+                    else:
+                        conteo = 1 + conteo
+                        mensaje.append(
+                            {"error": "La asignatura " + newData['Nombre_asignatura'][i] + " del programa " +newData['Programa'][i]+  "  ya se encuentra creada."})
+                       
+                if len(mensaje) > 0:
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+
+                # si pasa las validaciones, se comienza a procesar
+                else:
+                    for i in range(len(newData)):
+                        carrera = Programas.objects.get(
+                            programa_name=newData['Programa'][i]).id
+                        
+                        data_list.append(Inventario(
+                            codigo=int(codigo) + i,
+                            nombre_materia = newData['Nombre_asignatura'][i],
+                            programa_id= carrera
+                        ))
+                    Inventario.objects.bulk_create(data_list)
+                    
+                    return HttpResponseRedirect(
+                        reverse(
+                            'settings_app:list-inventario'
+                        )
+                    )
+        
+        else:
+            mensaje =[]
+            mensaje.append(
+                {"error": "Archivo inválido, recuerde que el archivo tiene por nombre: cargue_asignaturas.xlsx, por favor verifique y cárguelo nuevamente"}
+            )
+            response = JsonResponse(mensaje, safe=False)
+            response.status_code = 400
+            return response
+
+
+# Vista para generar plantilla de creacion de asignaturas, se encuentra ok
+
+def InventarioMasiveExport(request):
+
+    # Variables utilizadas para traerse la información creada en modelos y catálogos
+    program = Programas.objects.all()
+    wb = Workbook()
+
+    # Nombramos las pestanas que va a llevar el archivo
+    ws1 = wb.create_sheet(index=0, title="Plantilla")
+    ws = wb.create_sheet(index=1, title="Campos")
+
+    # Generamos los datos que van a las celdas, y que sirven de listas desplegables
+    for number in range(0, len(program)):
+        ws['A{}'.format(number+1)].value = "{}".format(program[number])
+
+    # Asignamos los nombres de los encabezados a las columnas del archivo de excel
+    c1 = ws1.cell(row=1, column= 1)
+    c1.value = "Nombre_asignatura"
+    c2 = ws1.cell(row=1, column= 2)
+    c2.value = "Programa"
+
+    # Asignamos las listas de validación para el excel
+    data_val1 = DataValidation(
+        type="list", formula1='=Campos!$A$1:$A$' + str(len(program)))
+    
+    # Asignamos las listas desplegables al la hoja principal
+    ws1.add_data_validation(data_val1)
+    data_val1.add(ws1["B2"])
+    
+
+    content = save_virtual_workbook(wb)
+    response = HttpResponse(content)
+    response['Content-Disposition'] = 'attachment; filename=cargue_asignaturas.xlsx'
+    response['Content-Type'] = 'application/x-xlsx'
+    return response
+
+
+
+
+
+#------- Vistas de asignaturas ---------
+
+
+#Vista de creacion de asignaturas ok
+class MateriasCreateView(CreateView):
+    model = Materias
+    form_class = MateriasForm
+    template_name = 'materias/materiasRegister.html'
+    success_url = reverse_lazy('settings_app:list-inventario')
+
+
+    def get_context_data(self, **kwargs):
+        context = super(MateriasCreateView, self).get_context_data(**kwargs)
+        context["asignatura"] = Inventario.objects.get(pk=self.kwargs['pk'])
+        context["pk"] = self.kwargs['pk']
+        return context
+    
+
+    def post(self, request, *args, **kwargs):
+
+        form = MateriasForm(self.request.POST)
+        if form.is_valid():
+            crear_asignaturas = Materias.objects.create(
+                materia = Inventario.objects.get(pk=self.kwargs['pk']), 
+                sede=form.cleaned_data['sede'],
+                periodo=form.cleaned_data['periodo'],
+                docente=form.cleaned_data['docente'],
+                jornada=form.cleaned_data['jornada'],
+                pre_cierre=form.cleaned_data['pre_cierre'],
+                cierre=form.cleaned_data['cierre'],
+
+            )
+            mensaje = f'{self.model.__name__} creado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+
+class Materialistview(ListView):
+    model = Materias
+    template_name = 'materias/materiasList.html'
+    context_object_name = 'materias'
+
+    def get_queryset(self):
+
+        data_Inventari = Inventario.objects.all()
+        data = []
+        for i in data_Inventari:
+            if Materias.objects.filter(materia_id=i.id):
+                data_json = {"pk": i.id, "codigo": i.codigo, "estado": True, 
+                             "programa_name": i.programa.programa_name,
+                            "nombre_materia": i.nombre_materia }
+                data.append(data_json)
+            else:
+                data_json = {"pk": i.id, "codigo": i.codigo, "estado": False, 
+                             "programa_name": i.programa.programa_name,
+                            "nombre_materia": i.nombre_materia }
+                data.append(data_json)
+
+        return data

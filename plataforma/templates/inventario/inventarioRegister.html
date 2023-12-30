@@ -9,7 +9,7 @@
           <span aria-hidden="true">&times;</span>
       </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" spellcheck="true">
         <form  method="post" id="dataGeneralForm" action="{% url 'settings_app:create-inventario' %}" >{% csrf_token %}
             <div id="errores" ></div>
             <div class="container-fluid" style="margin-top: 15px;"> 

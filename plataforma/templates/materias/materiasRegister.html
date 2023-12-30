@@ -1,0 +1,132 @@
+
+{% load  static %}
+
+<div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-laptop-code"></i> {{asignatura.nombre_materia}} - {{asignatura.programa}}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body" spellcheck="true">
+        <form  method="post" id="dataGeneralForm" action="{% url 'settings_app:create-materias' pk %}" >{% csrf_token %}
+            <div id="errores" ></div>
+            {{ form.materia }}
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.sede.id_for_label }}" ></div>
+                    <label for="{{ form.sede.id_for_label }}">Seleccione la sede:</label>
+                    {{ form.sede }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.periodo.id_for_label }}" ></div>
+                    <label for="{{ form.periodo.id_for_label }}">Seleccione el periodo:</label>
+                    {{ form.periodo }}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.docente.id_for_label }}" ></div>
+                    <label for="{{ form.docente.id_for_label }}">Seleccione docente:</label>
+                    {{ form.docente }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="{{ form.jornada.id_for_label }}" ></div>
+                        <label for="{{ form.jornada.id_for_label }}">Seleccione jornada:</label>
+                        {{ form.jornada }}
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="{{ form.pre_cierre.id_for_label }}" ></div>
+                    <label for="{{ form.pre_cierre.id_for_label }}">Seleccione fecha de inicio:</label>
+                    {{ form.pre_cierre }}
+                    </div>
+                    <div class="col-md-6 ms-auto"">
+                    <div class="{{ form.cierre.id_for_label }}" ></div>
+                    <label for="{{ form.cierre.id_for_label }}">Seleccione fecha de cierre:</label>
+                    {{ form.cierre }}
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="modal-footer" style="margin-top: 15px;">
+              <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+              </button>
+    
+              <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+                Registrar asignatura
+              </button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+      </div> 
+    </div>
+  </div>
+
+
+  
+{% block js %}
+<script type="text/javascript">
+    $("#materia").val("{{pk}}")
+    
+    
+  function sendUser() {
+    var fechaIni =  new Date(document.getElementById("pre_cierre").value);
+    var fechafin =  new Date(document.getElementById("cierre").value);
+    var diferencia = Math.abs(fechafin - fechaIni);
+    var diferenciaFinal = diferencia / (1000 * 3600 * 24)
+    
+    if( (fechafin.getTime() < fechaIni.getTime())){
+        $('div[class="cierre"]').html("");
+        mostrarError();
+        errores = '<div class ="alert alert-danger" <strong>' + 'La fecha final no puede ser menor a la inicial' + '</strong></div>'
+        $('div[class="cierre"]').append(errores);
+    }
+    
+    else if (diferenciaFinal > 7) {
+        $('div[class="cierre"]').html("");
+        mostrarError();
+        errores = '<div class ="alert alert-danger" <strong>' + 'Las fechas no pueden tener una diferencia mayor a 7 días' + '</strong></div>'
+        $('div[class="cierre"]').append(errores);
+    }
+    else{
+        var serializedData = $("#dataGeneralForm").serialize();
+        if (serializedData) {
+          $('#spinner-div').show();
+          $('#spinner-div-real').hide();
+          var request = $.ajax({
+            type: "POST",
+            url: "{% url 'settings_app:create-materias' pk %}",
+            data: serializedData,
+            success: function (response) {
+              $("#edicion").modal("hide");
+              window.location = "{% url 'settings_app:list-inventario' %}";
+              mostrarOk();
+              
+              
+            },
+            error: function (error) {
+              $('#spinner-div-real').show();
+              $('#spinner-div').hide()
+              mostrarErroresCreacionEditar(error);
+              mostrarError();
+            }
+          });
+        }
+    }
+ 
+  }
+
+</script>
+{% endblock js %}

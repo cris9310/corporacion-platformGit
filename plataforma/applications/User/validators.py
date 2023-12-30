@@ -66,3 +66,10 @@ def validate_blanco(value):
             params={"value": value},
         )
 
+def validate_exist(self, value):
+    if self.model.filter( nombre_materia = value):
+        raise ValidationError(
+            _("La asignatura: %(value)s ya existe, verifique por favor."),
+            params={"value": value},
+        )
+

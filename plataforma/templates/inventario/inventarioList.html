@@ -1,7 +1,7 @@
 {% extends "Base2.html" %}
 {% load  static %}
 
-{% block title %}Inventario | Portal CNE{% endblock title %}
+{% block title %}Pensum | Portal CNE{% endblock title %}
 
 
 
@@ -29,7 +29,13 @@
               
                 </div>
               
-              <div class="col-7 boton">
+              <div class="col-7 botones-miltiples">
+                <button  type="button" title="Carga masiva de asignaturas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-masive-asignaturas' %}')">
+                    <a >
+                        <i class="fa-solid fa-upload"></i>
+                      &nbsp; Carga masiva
+                    </a>
+                  </button>
                 <button  type="button" title="Crear asignatura" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-inventario' %}')">
                   <a >
                     <i class="fa-solid fa-laptop-code"></i>
@@ -63,12 +69,18 @@
                           <td>{{i.nombre_materia}}</td>
                           {% if i.estado %}
                           <td><span class="estado"><i class="fa-regular fa-circle-check "></i> &nbsp; Asignada</span></td>
-                          <td><a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a></td>
+                          <td>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Asignar"><i class="fa-regular fa-square-plus iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Consultar"><i class="fa-regular fa-eye iconos"></i></a>
+                            
+                           </td>
                           {% else %}
                           <td><span class="iconos"><i class="fa-regular fa-circle-check "></i> &nbsp; Sin asignar</span></td>
                           <td>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk  %}')" title="Asignar"><i class="fa-regular fa-square-plus iconos"></i></a>
                             <a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
                             <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                            
                            </td>
 
                           {% endif %}
