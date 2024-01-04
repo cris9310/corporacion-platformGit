@@ -114,6 +114,15 @@ class ProgramaForm(forms.ModelForm):
                      "onkeydown":"noPuntoComa( event )"
                 }
             ),
+            "derechosGrado": NumberInput(
+                attrs={
+                    'id':'derechosGrado',
+                    'placeholder':"Ingrese un valor",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                     "onkeydown":"noPuntoComa( event )"
+                }
+            ),
             'costo': HiddenInput(
                 attrs={
                     'id':'costo'

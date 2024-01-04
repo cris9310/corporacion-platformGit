@@ -36,18 +36,29 @@
                     </div>
                     <div class="col-md-6 ms-auto"">
                     <div class="{{ form.cuotas.id_for_label }}" ></div>
-                    <label for="{{ form.cuotas.id_for_label }}">Valor de la mensualidad:</label>
+                    <label for="{{ form.cuotas.id_for_label }}">Número de mensualidades:</label>
                     {{ form.cuotas }}
                     </div>
                 </div>
             </div>
+            
+            <div class="container-fluid" style="margin-top: 15px;"> 
+              <div class="row">
+                  <div class="col-md-6">
+                  <div class="{{ form.cuota_valor.id_for_label }}" ></div>
+                  <label for="{{ form.cuota_valor.id_for_label }}">Valor de la mensualidad:</label>
+                  {{ form.cuota_valor }}
+                  </div>
+                  <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.derechosGrado.id_for_label }}" ></div>
+                  <label for="{{ form.derechosGrado.id_for_label }}">Valor de los derechos a grado:</label>
+                  {{ form.derechosGrado }}
+                  </div>
+              </div>
+            </div>
             <div class="container-fluid" style="margin-top: 15px;"> 
                 <div class="row">
-                    <div class="col-md-6">
-                    <div class="{{ form.cuota_valor.id_for_label }}" ></div>
-                    <label for="{{ form.cuota_valor.id_for_label }}">Número de mensualidades:</label>
-                    {{ form.cuota_valor }}
-                    </div>
+                    
                     <div class="col-md-6 ms-auto"">
                     <div class="{{ form.tipe.id_for_label }}" ></div>
                     <label for="{{ form.tipe.id_for_label }}">Tipo de programa:</label>
@@ -85,24 +96,32 @@
       $('#matricula').on('change', function() {
         var matricula= document.getElementById('matricula').value;
         var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+        var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+        var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
         $("#parrafo").text(total);
         $("#costo").val(total);
       });
       $('#cuota_valor').on('change', function() {
         var matricula= document.getElementById('matricula').value;
         var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+        var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+        var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
         $("#parrafo").text(total);
         $("#costo").val(total);
       });
       $('#cuotas').on('change', function() {
         var matricula= document.getElementById('matricula').value;
         var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
+        var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+        var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
+        $("#parrafo").text(total);
+        $("#costo").val(total);
+      });
+      $('#derechosGrado').on('change', function() {
+        var matricula= document.getElementById('matricula').value;
+        var cuota_value= document.getElementById('cuota_valor').value;
+        var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+        var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
         $("#parrafo").text(total);
         $("#costo").val(total);
       });

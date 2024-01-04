@@ -1,0 +1,87 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Estudiantes | Portal CNE{% endblock title %}
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1></span>
+        </div>
+        
+    </div>
+    <div class="row tarjetasConfig">
+
+        <div class="col-lg-6">
+    
+            <!-- Default Card Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold tituloCard">Matriculados</h6>
+                </div>
+                <div class="card-body ">
+                    Cree, edite y consulte los estudiantes matriculados en la institución.
+                </div>
+                <div class="card-header">
+                    
+                    <a  href="{% url 'student_app:list-student' %}" class="btn btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        &nbsp; Ver estudiantes
+                    </a>
+                </div>
+                
+            </div>
+            
+    
+            <!-- Basic Card Example -->
+            
+    
+        </div>
+    
+        
+        <div class="col-lg-6 ">
+    
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold tituloCard">Graduados</h6>
+                </div>
+                <div class="card-body">
+                    Cree, edite y consulte los estudiantes que se han graduado en la institución.
+                </div>
+                <div class="card-header">
+                    <a  href="{% url 'settings_app:list-inventario' %}" class="btn btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">
+                        <i class="fa-solid fa-user-graduate fa-lg" ></i>
+                        &nbsp; Ver graduados
+                    </a>
+                    
+                </div>
+            </div>
+            
+    
+        </div>
+    
+    </div>
+
+</div>
+
+
+
+</div>
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+
+  
+</script>
+
+{% endblock js %}

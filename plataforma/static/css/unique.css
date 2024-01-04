@@ -337,6 +337,7 @@ header .image-text .header-text {
 .card .card-header .botones-miltiples {
     display: flex;
     justify-content: flex-end;
+
 }
 
 .card .card-header .botones-miltiples button {
@@ -625,6 +626,29 @@ th.sorting {
 
 #nav-document .form-check {
     margin-bottom: 10px;
+}
+
+
+.tarjetasConfig .card-body {
+    color: var(--text-color);
+    font-size: 15px !important;
+}
+
+.conteTabla th {
+    color: var(--primary-color) !important;
+}
+
+
+.tituloCard {
+    color: var(--primary-color);
+}
+
+.dataTables_length label {
+    color: var(--text-color) !important;
+}
+
+.dataTables_filter label {
+    color: var(--text-color) !important;
 }
 
 /* Css del body*/

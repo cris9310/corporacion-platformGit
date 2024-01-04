@@ -99,6 +99,12 @@ urlpatterns = [
         views.MateriasCreateView.as_view(),
         name='create-materias'
     ),
+    path(
+        'list-materias/<pk>/',
+        views.Materialistview.as_view(),
+        name='list-materias'
+    ),
+    
 
 
 

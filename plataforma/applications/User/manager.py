@@ -89,12 +89,6 @@ class periodoManager(models.Manager):
 ### Manager para los buscadores
 class BuscadorManager(models.Manager):
 
-    def create_periodo(self, periodo):
-        periodo= self.model(
-            periodo = periodo,
-        )
-        periodo.save(using = self.db)
-        return periodo
 
     def code_invoice(self):
         try:
@@ -105,15 +99,7 @@ class BuscadorManager(models.Manager):
 
         return str(cod_asign)
 
-
-    def code_generatorr(self):  
-        try:
-            filtro = self.latest('id').codigo
-            cod_asign = int(filtro) + 1
-        except:
-            cod_asign = 1000
-
-        return str(cod_asign)  
+    
     
 
     # se encuentra ok, genera codigos de programas
@@ -139,113 +125,8 @@ class BuscadorManager(models.Manager):
 
         return str(cod_asign)
 
-
-    def filtrar_buscador(self, kword):
-
-        consulta = self.filter(
-
-            Q(cod_prog__icontains=kword) |
-            Q(programa_name__icontains=kword)
-
-        ).distinct()
-
-        return consulta.order_by('-cod_prog')
-
-    def filtrar_buscador_materias(self, kword):
-
-        
-        consulta = self.filter(
-
-            Q(codigo__icontains=kword) |
-            Q(materia__nombre_materia__icontains=kword) |
-            Q(programa__programa_name__icontains=kword)
-        ).distinct()
-
-        return consulta.order_by('-codigo')
-    
-    def filtrar_student(self, kword, order):
-
-        if order:
-            if order == 'activos':
-                consulta = self.filter(
-                    is_active=True
-                )
-            elif order == 'inactivos':
-                consulta = self.filter(
-                    is_active = False
-                )
-            else:
-                consulta = self.all()
-        
-        else:
-            consulta = self.filter(
-                Q(codigo__icontains=kword) |
-                Q(apellidos__icontains=kword) |
-                Q(nombre__icontains=kword) |
-                Q(carrera__programa_name__icontains=kword)
-            ).distinct()
-        return consulta.order_by('-codigo')
-    
-    def filtrar_teacher(self, kword, order):
-
-        if order:
-            if order == 'activos':
-                consulta = self.filter(
-                    is_active=True
-                )
-            elif order == 'inactivos':
-                consulta = self.filter(
-                    is_active = False
-                )
-            else:
-                consulta = self.all()
-        
-        else:
-            consulta = self.filter(
-                Q(codigo__icontains=kword) |
-                Q(apellidos__icontains=kword) |
-                Q(nombres__icontains=kword)
-            ).distinct()
-
-        return consulta.order_by('-codigo')
-
-    def filtrar_buscador_Teacher_topic(self, kword, cod):
-        consulta = self.filter(docente=cod).filter(
-                Q(codigo__icontains=kword) |
-                Q(materia__nombre_materia__icontains=kword) |
-                Q(programa__programa_name__icontains=kword) |
-                Q(periodo__periodo__icontains=kword)
-
-            ).distinct()
-        return consulta.order_by('periodo')
-    
-    def filtrar_buscador_Teacher_notes(self, kword, cod):
-        consulta = self.filter(materia=cod).filter(
-                Q(cod_student__codigo__icontains=kword) |
-                Q(cod_student__nombre__icontains=kword) |
-                Q(cod_student__apellidos__icontains=kword)
-
-            ).distinct()
-        return consulta.order_by('cod_student')
     
 
-    ### manager de creación de programas
-    def crear(self, tipe, cod_prog, programa_name, aceptado, matricula, cuota_valor, cuotas, costo):
-
-        programa = self.model(
-            cod_prog= cod_prog,
-            programa_name= programa_name,
-            aceptado= aceptado,
-            matricula=matricula,
-            cuota_valor=cuota_valor,
-            cuotas=cuotas,
-            costo=costo,
-            is_active = True,
-            tipe = tipe,
-            
-        )
-        programa.save(using = self.db)
-        return programa
     
     def manejo(self, valor1, valor2):
         try:

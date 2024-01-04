@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('applications.Homepage.urls')),
     path('user/', include('applications.User.urls')),
     path('settings/', include('applications.Programs.urls')),
+    path('student/', include('applications.Student.urls')),
     #path('agenda/', include('applications.Agenda.urls')),
     #path('finance/', include('applications.Financiero.urls')),
 

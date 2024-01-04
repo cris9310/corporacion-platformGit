@@ -15,7 +15,6 @@ class CatalogsTypesProg(models.Model):
 
 class CatalogsTypesActivities(models.Model):
     tipo = models.CharField(max_length=200, null=False, blank=False)
-    observaciones=models.CharField(max_length=100, blank=True, null=True, verbose_name='Observacion')
 
     def __str__(self): 
         return  self.tipo

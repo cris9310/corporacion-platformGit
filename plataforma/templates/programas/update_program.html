@@ -11,58 +11,69 @@
       </div>
       <div class="modal-body">
         <form  method="post" id="dataGeneralForm" action="{% url 'settings_app:update-Program' object.pk %}" >{% csrf_token %}
-            <div id="errores" ></div>
-            {{ form.costo }}
-            <div class="container-fluid" style="margin-top: 15px;"> 
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="{{ form.programa_name.id_for_label }}" ></div>
-                    <label for="{{ form.programa_name.id_for_label }}">Nombre del Programa:</label>
-                    {{ form.programa_name }}
-                    </div>
-                    <div class="col-md-6 ms-auto"">
-                    <div class="{{ form.aceptado.id_for_label }}" ></div>
-                    <label for="{{ form.aceptado.id_for_label }}">Total materias:</label>
-                    {{ form.aceptado }}
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid" style="margin-top: 15px;"> 
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="{{ form.matricula.id_for_label }}" ></div>
-                    <label for="{{ form.matricula.id_for_label }}">Valor de la matrícula:</label>
-                    {{ form.matricula }}
-                    </div>
-                    <div class="col-md-6 ms-auto"">
-                    <div class="{{ form.cuotas.id_for_label }}" ></div>
-                    <label for="{{ form.cuotas.id_for_label }}">Valor de la mensualidad:</label>
-                    {{ form.cuotas }}
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid" style="margin-top: 15px;"> 
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="{{ form.cuota_valor.id_for_label }}" ></div>
-                    <label for="{{ form.cuota_valor.id_for_label }}">Número de mensualidades:</label>
-                    {{ form.cuota_valor }}
-                    </div>
-                    <div class="col-md-6 ms-auto"">
-                    <div class="{{ form.tipe.id_for_label }}" ></div>
-                    <label for="{{ form.tipe.id_for_label }}">Tipo de programa:</label>
-                    {{ form.tipe }}
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid" style="margin-top: 15px;"> 
+          <div id="errores" ></div>
+          {{ form.costo }}
+          <div class="container-fluid" style="margin-top: 15px;"> 
               <div class="row">
-                  <div class="col">
-                    <h6><strong> Nuevo costo del programa: </strong> <p id="parrafo"></p></h6>
+                  <div class="col-md-6">
+                  <div class="{{ form.programa_name.id_for_label }}" ></div>
+                  <label for="{{ form.programa_name.id_for_label }}">Nombre del Programa:</label>
+                  {{ form.programa_name }}
                   </div>
-                  
+                  <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.aceptado.id_for_label }}" ></div>
+                  <label for="{{ form.aceptado.id_for_label }}">Total materias:</label>
+                  {{ form.aceptado }}
+                  </div>
               </div>
           </div>
+          <div class="container-fluid" style="margin-top: 15px;"> 
+              <div class="row">
+                  <div class="col-md-6">
+                  <div class="{{ form.matricula.id_for_label }}" ></div>
+                  <label for="{{ form.matricula.id_for_label }}">Valor de la matrícula:</label>
+                  {{ form.matricula }}
+                  </div>
+                  <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.cuotas.id_for_label }}" ></div>
+                  <label for="{{ form.cuotas.id_for_label }}">Número de mensualidades:</label>
+                  {{ form.cuotas }}
+                  </div>
+              </div>
+          </div>
+          
+          <div class="container-fluid" style="margin-top: 15px;"> 
+            <div class="row">
+                <div class="col-md-6">
+                <div class="{{ form.cuota_valor.id_for_label }}" ></div>
+                <label for="{{ form.cuota_valor.id_for_label }}">Valor de la mensualidad:</label>
+                {{ form.cuota_valor }}
+                </div>
+                <div class="col-md-6 ms-auto"">
+                <div class="{{ form.derechosGrado.id_for_label }}" ></div>
+                <label for="{{ form.derechosGrado.id_for_label }}">Valor de los derechos a grado:</label>
+                {{ form.derechosGrado }}
+                </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px;"> 
+              <div class="row">
+                  
+                  <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.tipe.id_for_label }}" ></div>
+                  <label for="{{ form.tipe.id_for_label }}">Tipo de programa:</label>
+                  {{ form.tipe }}
+                  </div>
+              </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px;"> 
+            <div class="row">
+                <div class="col">
+                  <h6><strong> Costo del programa: </strong> <p id="parrafo"></p></h6>
+                </div>
+                
+            </div>
+        </div>
             <div class="modal-footer" style="margin-top: 15px;">
               
               <button class="btn btn-primary" type="button" id="spinner-div" disabled>
@@ -81,33 +92,41 @@
   </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-      $('#matricula').on('change', function() {
-        var matricula= document.getElementById('matricula').value;
-        var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
-        $("#parrafo").text(total);
-        $("#costo").val(total);
-      });
-      $('#cuota_valor').on('change', function() {
-        var matricula= document.getElementById('matricula').value;
-        var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
-        $("#parrafo").text(total);
-        $("#costo").val(total);
-      });
-      $('#cuotas').on('change', function() {
-        var matricula= document.getElementById('matricula').value;
-        var cuota_value= document.getElementById('cuota_valor').value;
-        var cuotas= document.getElementById('cuotas').value;
-        var total = parseFloat(matricula) + parseFloat(cuota_value * cuotas)
-        $("#parrafo").text(total);
-        $("#costo").val(total);
-      });
-            
-    }); 
+  $(document).ready(function() {
+    $('#matricula').on('change', function() {
+      var matricula= document.getElementById('matricula').value;
+      var cuota_value= document.getElementById('cuota_valor').value;
+      var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+      var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
+      $("#parrafo").text(total);
+      $("#costo").val(total);
+    });
+    $('#cuota_valor').on('change', function() {
+      var matricula= document.getElementById('matricula').value;
+      var cuota_value= document.getElementById('cuota_valor').value;
+      var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+      var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
+      $("#parrafo").text(total);
+      $("#costo").val(total);
+    });
+    $('#cuotas').on('change', function() {
+      var matricula= document.getElementById('matricula').value;
+      var cuota_value= document.getElementById('cuota_valor').value;
+      var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+      var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
+      $("#parrafo").text(total);
+      $("#costo").val(total);
+    });
+    $('#derechosGrado').on('change', function() {
+      var matricula= document.getElementById('matricula').value;
+      var cuota_value= document.getElementById('cuota_valor').value;
+      var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
+      var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
+      $("#parrafo").text(total);
+      $("#costo").val(total);
+    });
+          
+  });  
 
     function sendUser() {
       var serializedData = $("#dataGeneralForm").serialize();

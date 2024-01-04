@@ -1,0 +1,201 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Estudiantes | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1></span>
+      </div>
+      
+  </div>
+  
+  <div class="card shadow">
+    <div class="card-header">
+      <div class="row">
+        
+        <div class="col filtro">
+          
+        </div>
+        <div class="col-5 botones-miltiples">
+          <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+              <a >
+                <i class="fa-solid fa-user-plus "></i>
+                &nbsp; Nuevo
+              </a>
+            </button>
+          <button  type="button" title="Crear multiples estudiantes" class="btn btn-sm"  onclick="abrir_modal_general('{% url 'student_app:list-top-asignar'%}')">
+            <a >
+              <i class="fa-solid fa-people-group"></i></a>
+              &nbsp; Múltiples
+            </a>
+          </button>
+          {% if masivo > 0 %}
+          <span id="group">
+            <button type="button" class="btn btn-sm" title="Ver estudiantes pendientes"  onclick="location.href='{% url 'student_app:list-student-cargue'%}'">
+              <i class="fas fa-bell" ></i>
+              &nbsp; Pendientes
+            </button>
+            <span class="badge badge-light">{{masivo}}</span>
+          </span>
+          {% else %}
+          <span id="group">
+            <button type="button" class="btn btn-sm" title="Sin estudiantes pendientes" href="#">
+              <i class="fas fa-bell" ></i>
+              &nbsp; Pendientes
+            </button>
+            <span class="badge badge-light sin-student">0</span>
+          </span>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if student %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre del estudiante</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for estudiante in student %}
+                      <tr>
+                        <td >{{estudiante.codigo}}</td>
+                        <td>{{estudiante.apellidos}} {{estudiante.nombres}}</td>
+                        <td>{{estudiante.carrera}}</td>
+
+                        {% if estudiante.is_active == True and estudiante.estado == True  %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+
+                        </td>
+
+                        {% elif estudiante.is_active == False and estudiante.estado == True  %}
+                        
+                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+
+                        </td>
+
+                        {% elif estudiante.is_active == True and estudiante.estado == False %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td>
+                        <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                        </td>
+
+                        {% else   %}
+                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                        <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+
+                        
+                        </td>
+                        
+                        {% endif %}
+                          
+                    </tr>
+                      
+                    {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead >
+                  <th>Código</th>
+                  <th>Nombre del estudiante</th>
+                  <th>Programa</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+{% endblock js %}

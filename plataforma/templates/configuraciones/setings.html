@@ -1,60 +1,84 @@
 {% extends "Base2.html" %}
 {% load  static %}
+
+{% block title %}Parámetros | Portal CNE{% endblock title %}
 {% block extracontent %}
 
-<div class="row">
 
-    <div class="col-lg-6">
 
-        <!-- Default Card Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Periodos académicos</h6>
-            </div>
-            <div class="card-body">
-                Cree periodos académicos, uno por semestre.
-            </div>
-            <div class="card-header">
-                <a  href="{% url 'settings_app:list-periodo' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver periodos</a>
-            </div>
-            
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-solid fa-gear"></i> Parámetros</h1></span>
         </div>
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Crear programas</h6>
-            </div>
-            <div class="card-body">
-                Cree los programas académicos que ofrece la institución.
-            </div>
-            <div class="card-header">
-                <a  href="{% url 'settings_app:list-program' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver programas</a>
-                
-            </div>
-            
-        </div>
-
-        <!-- Basic Card Example -->
         
-
     </div>
+    <div class="row tarjetasConfig">
 
+        <div class="col-lg-6">
     
-    <div class="col-lg-6">
-
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Crear asignaturas</h6>
-            </div>
-            <div class="card-body">
-                Cree asignaturas para los programas académicos.
-            </div>
-            <div class="card-header">
-                <a  href="{% url 'settings_app:list-inventario' %}" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">Ver aasignaturas</a>
+            <!-- Default Card Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold tituloCard">Periodos académicos</h6>
+                </div>
+                <div class="card-body ">
+                    Cree periodos académicos, uno por semestre.
+                </div>
+                <div class="card-header">
+                    
+                    <a  href="{% url 'settings_app:list-periodo' %}" class="btn btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">
+                        <i class="fa-solid fa-book"></i>
+                        &nbsp; Ver periodos
+                    </a>
+                </div>
                 
             </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold tituloCard">Listado de programas</h6>
+                </div>
+                <div class="card-body">
+                    Cree los programas académicos que ofrece la institución.
+                </div>
+                <div class="card-header">
+                    <a  href="{% url 'settings_app:list-program' %}" class="btn btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">
+                        <i class="fa-solid fa-pencil"></i>
+                        &nbsp; Ver programas
+                    
+                    </a>
+                    
+                </div>
+                
+            </div>
+    
+            <!-- Basic Card Example -->
+            
+    
         </div>
+    
         
-
+        <div class="col-lg-6 ">
+    
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold tituloCard">Listado de asignaturas</h6>
+                </div>
+                <div class="card-body">
+                    Cree asignaturas para los programas académicos.
+                </div>
+                <div class="card-header">
+                    <a  href="{% url 'settings_app:list-inventario' %}" class="btn btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        &nbsp; Ver asignaturas
+                    </a>
+                    
+                </div>
+            </div>
+            
+    
+        </div>
+    
     </div>
 
 </div>
@@ -64,7 +88,8 @@
 
 
 
-<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+
 
 </div>
 {% endblock extracontent %}

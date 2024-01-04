@@ -98,13 +98,14 @@ class ProgramaCreateView(CreateView):
         
         if form.is_valid():
 
-            crear_programa = Programas.objects.crear(
-                tipe=form.cleaned_data['tipe'],
+            crear_programa = Programas.objects.create(
+                tipe=form.cleaned_data['tipe'], 
                 cod_prog=Programas.objects.code_programas(),
                 matricula=form.cleaned_data['matricula'],
                 cuota_valor=form.cleaned_data['cuota_valor'],
                 cuotas=form.cleaned_data['cuotas'],
                 costo=form.cleaned_data['costo'],
+                derechosGrado=form.cleaned_data['derechosGrado'],
                 programa_name=form.cleaned_data['programa_name'],
                 aceptado=form.cleaned_data['aceptado']
 
@@ -135,8 +136,8 @@ class ProgramaDetailView(DetailView):
         datos = Programas.objects.get(
             pk=self.kwargs['pk'])
         datos_final = {"cod_prog": datos.cod_prog, 'programa_name': datos.programa_name,
-                'matricula': f'$ {datos.matricula:,.2f}', 'costo': f'$ {datos.costo:,.2f}', 'cuota_valor': datos.cuota_valor,
-                "cuotas": f'$ {datos.cuotas:,.2f}'
+                'matricula': f'$ {datos.matricula:,.2f}', 'costo': f'$ {datos.costo:,.2f}', 'cuota_valor': f'$ {datos.cuota_valor:,.2f}',
+                'Dgrado': f'$ {datos.derechosGrado:,.2f}', "cuotas": datos.cuotas
             }
 
         context['datos'] = datos_final
@@ -540,25 +541,45 @@ class MateriasCreateView(CreateView):
             response.status_code = 400
             return response
 
+#Vista que sirve para listar materias
 class Materialistview(ListView):
     model = Materias
     template_name = 'materias/materiasList.html'
     context_object_name = 'materias'
 
+    def get_context_data(self, **kwargs):
+        context = super(Materialistview, self).get_context_data(**kwargs)
+        context["asignatura"] = Inventario.objects.get(pk=self.kwargs['pk'])
+        context["pk"] = self.kwargs['pk']
+        return context
+
     def get_queryset(self):
 
-        data_Inventari = Inventario.objects.all()
-        data = []
-        for i in data_Inventari:
-            if Materias.objects.filter(materia_id=i.id):
-                data_json = {"pk": i.id, "codigo": i.codigo, "estado": True, 
-                             "programa_name": i.programa.programa_name,
-                            "nombre_materia": i.nombre_materia }
-                data.append(data_json)
-            else:
-                data_json = {"pk": i.id, "codigo": i.codigo, "estado": False, 
-                             "programa_name": i.programa.programa_name,
-                            "nombre_materia": i.nombre_materia }
-                data.append(data_json)
+        Data = Materias.objects.filter(materia_id = self.kwargs['pk']) 
 
-        return data
+        return Data
+    
+
+
+#------- Vistas de banner ---------
+    
+
+# Sacar las actividades distintas creadas en la asignatura filtrada
+# crear un query con los estudiantes distintos de la asignatura filtrada
+#cruzamos esto con las notas
+    
+
+#Esto queda en stand by hasta que construyamos bien las vistas del estudiante
+
+#Vista que sirve para listar notas
+class Bannerlistview(ListView):
+    model = Banner
+    template_name = 'banner/bannerList.html'
+    context_object_name = 'banner'
+
+
+    def get_queryset(self):
+
+        Data = Inventario.objects.filter(materia_id = self.kwargs['pk']) 
+
+        return Data

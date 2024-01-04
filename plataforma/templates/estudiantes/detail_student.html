@@ -1,0 +1,234 @@
+<div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-graduation-cap"></i>{{object.nombre}}&nbsp;{{object.apellidos}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          <div class="container-fluid personal">
+            <div class="card">
+              <div class="card-header">
+                <div class="titulo">
+                  Información personal del estudiante
+                </div>
+                <div class="comentarios">
+                  Se compone de todos los datos recogidos al momento de la matrícula.
+                </div>
+              </div>
+          
+          
+              <div class="card-body" style="display:flex">
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-signature"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Nombre completo
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nombre}} {{ object.apellidos}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-envelope"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Correo electrónico
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.email}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-calendar-days"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Fecha de nacimiento
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nacimiento }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Dirección
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.direccion }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-person"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Nombre del acudiente
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nombre_acudiente }} {{ object.apellidos_acudiente }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Teléfono del acudiente
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.telefono_acudiente }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Sede
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.sede }}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                </div>
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Código:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.codigo }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-user"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Tipo de usuario
+                      </div>
+                      <div class="personal-text-text-origin">
+                        Estudiante
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-calendar-days"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Fecha de creación
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.fecha_reg }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Teléfono alumno
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.telefono }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-person-half-dress"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Género
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.sexo }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Nacionalidad
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nacionalidad}} 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-calendar-days"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Periodo de ingreso
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.periodo_matriculado}} 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+          
+            </div>
+          </div>
+        </div> 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,31 +20,13 @@
     </div>
     
   
-    <div class="card">
+    <div class="card shadow">
         <div class="card-header">
             <div class="row">
               
               <div class="col filtro">
-                <span class="text nav-text">Filtrar por:</span>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="todos" onchange="window.location.href='?order=todos'">
-                  <label class="form-check-label" for="todos">
-                    Todos
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="activos" onchange="window.location.href='?order=activos'">
-                  <label class="form-check-label" for="activos">
-                    Activos
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="inactivos" onchange="window.location.href='?order=inactivos'">
-                  <label class="form-check-label" for="inactivos">
-                    Inactivos
-                  </label>
-                </div>
-                
+              
+              
               </div>
               <div class="col-7 boton">
                 <button  type="button" title="Crear usuario" class="btn btn-sm" onclick="abrir_modal_general('{% url 'user_app:create-user' %}')">
