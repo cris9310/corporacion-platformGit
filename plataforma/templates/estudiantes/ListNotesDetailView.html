@@ -1,0 +1,59 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Estudiantes | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}}</h1></span>
+        </div>
+        
+    </div>
+    
+    <div class="card shadow">
+  
+      <div class="card-body">
+          <div class="container-fluid" style="">
+            <div  class="row">
+              <div class="conte">
+                <div class ="conteTabla">
+                <table id="table_general"  class="hover" style="width:100%; ">
+                    <thead>
+                        {% for col in student.columns %}
+                            <th>{{col}}</th>
+                          
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% for index, row in student.iterrows %}
+                        <tr>
+                          {% for cell in row %}
+                            <td>
+                              {{cell}}
+                            </td>
+                          {% endfor %}
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                        
+                </table> 
+                  
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+  
+  
+  {% endblock extracontent %}

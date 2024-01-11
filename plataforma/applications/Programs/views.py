@@ -583,3 +583,20 @@ class Bannerlistview(ListView):
         Data = Inventario.objects.filter(materia_id = self.kwargs['pk']) 
 
         return Data
+    
+class BannerCreateView(View):
+
+    def post(self, request, *args, **kwargs):
+
+        asignaturas = str(self.request.POST.get('asignaturas'))
+        estudiante = str(self.request.POST.get('estudiante'))
+        banner_create = asignaturas.split(sep=",")
+        todos = []
+
+        for i in banner_create:
+            consulta = Estudiante.objects.get(pk=estudiante)
+            individual = Banner(student_id=consulta.pk, tarea_id= 6, materia_id= i, calificacion= 0.0 )
+            todos.append(individual)
+        Banner.objects.bulk_create(todos)
+
+        return HttpResponseRedirect(reverse_lazy('student_app:list-student'))

@@ -9,14 +9,18 @@ from django.views.generic import (TemplateView,
                                   DetailView, ListView, View)
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.db.models import F, Sum, Avg, Count
 
 
 import warnings
 import pandas as pd
+from pandas import json_normalize
 import re
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
+import json
+
 
 
 
@@ -448,18 +452,14 @@ class StudentCargueListview(ListView):
                 is_active=True).exclude(masivo=False)
         return queryset
     
-
+#Vista para actualizar estudiantes creados de manera masiva, la diferencia entre esta vista y la siguiente es que en esta
+    # se crean las facturas, confirmando que si se va a matricular el estudiante, en el otro solo actualizamos datos
 class StudentMasiveUpdateView(UpdateView):
     model = Estudiante
     template_name = 'estudiantes/update_student.html'
     form_class = StudentUpdateForm
     success_url = reverse_lazy('academico_app:list-student')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        existe = Estudiante.objects.get(pk=self.kwargs['pk']).masivo
-        context['existe'] = existe
-        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -516,6 +516,40 @@ class StudentMasiveUpdateView(UpdateView):
 
                 ))
             Facturas.objects.bulk_create(inv_list)
+
+            mensaje1.append({"error": 'Registrado correctamente'})
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+
+#Vista para actualizar estudiantes creados de manera normal, uno a uno   
+class StudentUpdateView(UpdateView):
+    model = Estudiante
+    template_name = 'estudiantes/update_student_normal.html'
+    form_class = StudentUpdateForm
+    success_url = reverse_lazy('academico_app:list-student')
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        cod_estudiante = Estudiante.objects.get(pk=self.kwargs['pk']).codigo
+        estudiante_c = self.model.objects.get(codigo=cod_estudiante)
+        form = StudentUpdateForm(request.POST, instance=estudiante_c)
+
+        if form.is_valid():
+            form.save()
+            crea_user = User.objects.filter(
+                codigo=cod_estudiante
+            ).update(
+                     email=form.cleaned_data['email'])
 
             mensaje1.append({"error": 'Registrado correctamente'})
             response = JsonResponse(mensaje1, safe=False)
@@ -618,11 +652,108 @@ class StudentDeleteView(DeleteView):
 
         return HttpResponseRedirect(self.success_url)
     
-
+# Vista que muestra el detalle del estudiante
 class StudentDetailView(DetailView):
     template_name = 'estudiantes/detail_student.html'
     model = Estudiante
 
+#Vista que muestra las materias que se pueden asignar al estudiante
+class StudentAssignListview(ListView):
+    model = Estudiante
+    template_name = 'estudiantes/AssignCreate.html'
+    success_url = reverse_lazy('student_app:list-student')
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        estudiante = Estudiante.objects.get(pk=self.kwargs['pk'])
+        asignaturas = Materias.objects.filter(materia__programa=estudiante.carrera, is_active=True)
+        datos = []
+        for i in asignaturas:
+            total = Banner.objects.filter( materia_id= i.pk ).distinct("student_id", "materia_id").count()
+            if Banner.objects.filter(student_id=estudiante.pk, materia_id= i.pk ).exists():
+                data_json = {"pk": i.id, "codigo": i.materia.codigo, "nombres": i.materia.nombre_materia,
+                                "docente":i.docente, "jornada": i.jornada, "periodo": i.periodo, 
+                                "total":total, "estado": "Asignada"}
+                datos.append(data_json)
+            else:
+                data_json = {"pk": i.id, "codigo": i.materia.codigo, "nombres": i.materia.nombre_materia,
+                                "docente":i.docente, "jornada": i.jornada, "periodo": i.periodo, 
+                                "total":total, "estado": "Sin asignar"}
+                datos.append(data_json)
+        
+        context['asignaturas'] = datos
+        context['estudiante'] = estudiante
+        return context
+
+
+#Vista que muestra las asignaturas que ya tiene asignado el estudiante
+class StudentNotesListview(ListView):
+    model = Banner
+    template_name = 'estudiantes/ListNotesView.html'
+    context_object_name = 'student'
+    success_url = reverse_lazy('student_app:list-student')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        estudiante = Estudiante.objects.get(pk=self.kwargs['pk'])
+        context['estudiante'] = estudiante
+        return context
+
+    def get_queryset(self):
+
+        data = [] 
+        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).distinct("student_id", "materia_id")
+        for i in estudiante:
+            promedio = round (Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i.materia.pk ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+            
+            data_json = {
+                'pk': i.pk, 'pkmateria':i.materia.pk, "codigo": i.materia.materia.codigo, "nombre": i.materia.materia.nombre_materia,
+                "estado": i.materia.is_active, "promedio": promedio,
+                "tiene": "si" if promedio != 0.00 else "no"
+            }
+            data.append(data_json)
+
+        return data
+    
+
+#Vista que muestra el detalle de notas de la asignatura seleccionada de el estudiante
+class StudentNotesDetailListview(ListView):
+    model = Banner
+    template_name = 'estudiantes/ListNotesDetailView.html'
+    context_object_name = 'student'
+    success_url = reverse_lazy('student_app:list-student')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        estudiante_data = Estudiante.objects.get(pk=self.kwargs['pk2'])
+        context['estudiante'] = estudiante_data
+        data = [] 
+        estudiante = Banner.objects.filter(student_id=self.kwargs['pk2'], materia_id=self.kwargs['pk1'] )
+
+        for i in estudiante:
+            promedio = round (Banner.objects.filter(student_id=self.kwargs['pk2'], materia_id=self.kwargs['pk1'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+            
+            data_json = {
+                'pk': i.pk, "codigo": i.materia.materia.codigo, "nombre": i.materia.materia.nombre_materia,
+                "estado": i.materia.is_active, "promedio": promedio
+            }
+            data.append(data_json)
+        context['informacion'] = data
+        return context
+    
+    def get_queryset(self):
+        data = []
+        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student_id=self.kwargs['pk2']  )
+
+        for i in estudiante:
+            datos = {"estudiante": i.student.nombre + " " + i.student.apellidos, "tarea": i.tarea.tipo, "calificacion": i.calificacion }
+            data.append(datos)
+        estudiante = pd.DataFrame(data, columns=['estudiante', 'tarea', "calificacion"])
+        estudiante = estudiante.pivot(index='estudiante', columns='tarea', values='calificacion')
+        print(estudiante)
+
+        return estudiante
 
 
 

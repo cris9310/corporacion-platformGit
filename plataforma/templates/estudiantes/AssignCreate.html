@@ -1,0 +1,206 @@
+
+{% load  static %}
+
+<div class="modal-dialog modal-xl" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"> <i class="fa-solid fa-graduation-cap"></i> {{estudiante.nombre}} {{estudiante.apellidos}}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="card shadow">
+          
+          <div class="card-body">
+              <div class="container-fluid" style="">
+                <div  class="row">
+                  <div class="conte">
+                    <div class ="conteTabla">
+      
+                      {% if asignaturas %}
+
+                      <table id="table_general"  class="hover" style="width:100%; ">
+                        <thead >
+                          <th>Seleccione</th>
+                          <th>Codigo</th>
+                          <th>Asignatura</th>
+                          <th>Nro. Alumnos</th>
+                          <th>Docente</th>
+                          <th>Periodo</th>
+                          <th>Jornada</th>
+                          <th>Estado</th>
+                        </thead>
+                        <tbody>
+                          {% for i in asignaturas %}
+                            <tr>
+                              {% if i.estado == "Asignada" %}
+                              <td><span class="estado"><i class="fa-regular fa-circle-check"></span></td>
+                              {% else %}
+                              <td ><span ><input type="checkbox"  value="{{i.pk}}"></span></td>
+                              {% endif %}
+                              <td >{{i.codigo}}</td>
+                              <td >{{i.nombres}}</td>
+                              <td >{{i.total}}</td>
+                              <td >{{i.docente}}</td>
+                              <td >{{i.periodo}}</td>
+                              <td >{{i.jornada}}</td>
+                              {% if i.estado == "Asignada" %}
+                              <td><span class="estado">Asignada</span></td>
+                              {% else %}
+                              <td><span class="nonEstado">Sin asignar</span></td>
+                              {% endif %}
+                              
+                              
+                                
+                            </tr>
+                            
+                          {% endfor %}
+                          
+                        </tbody>
+                      </table> 
+                    {% else %}
+                    <table id="table_general"  class="hover" style="width:100%; ">
+                      <thead >
+                        <th>Seleccione</th>
+                        <th>Codigo</th>
+                        <th>Asignatura</th>
+                        <th>Nro. Alumnos</th>
+                        <th>Docente</th>
+                        <th>Programa</th>
+                        <th>Jornada</th>
+                        <th>Estado</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                          <td > - </td >
+                        </tr>
+                      </tbody>
+                    </table>   
+                    {% endif %}
+                      
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <form  method="POST" id="dataGeneralForm" action="{% url 'settings_app:create-banner' %}" >
+            {% csrf_token %}
+            <input type="hidden" name="asignaturas" id="asignaturas" class="asignaturas" />
+            <input type="hidden" name="estudiante" id="estudiante" class="estudiante" />
+
+            <div class="modal-footer" >
+              <button type="button"  class="btn btn-primary" onclick="SendDataInform()" >Matricular</button>
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+          </form>
+      
+      
+        </div>
+
+
+
+      </div> 
+    </div>
+  </div>
+
+
+  {% block js %}
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+    $('#table_general tbody input[type="checkbox"]').change(function() {
+      var checkboxes = $('#table_general tbody input[type="checkbox"]');
+      var cont = 0;
+      var checkboxesSelect = $('#table_general tbody input[type="checkbox"]:checked'); 
+      var arr = checkboxesSelect.map(function () {
+        return this.value;
+      }).get();
+      var str = arr.join(",");
+      $("#asignaturas").val(arr);
+      $("#estudiante").val("{{estudiante.pk}}");
+
+      for (var x=0; x < checkboxes.length; x++) {
+      if (checkboxes[x].checked) {
+        cont = cont + 1;
+      }
+      }
+         
+    });
+
+  })
+    $(document).ready(function () {
+      var $ = jQuery.noConflict();
+      var tabla = $('#table_general').DataTable({
+        "order": [6, 'desc'],
+        language: {
+          "decimal": "",
+          "emptyTable": "No hay información",
+          "info": "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+          "infoEmpty": "Mostrando 0 to 0 of 0 Registros",
+          "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+          "infoPostFix": "",
+          "thousands": ",",
+          "lengthMenu": "Items por rango: _MENU_",
+          "loadingRecords": "Cargando...",
+          "processing": "Procesando...",
+          "search": "Buscar:",
+          "zeroRecords": "Sin resultados encontrados",
+          "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+          }
+        }
+      });
+
+       
+
+
+    })
+  
+    function SendDataInform() {
+      var serializedData = $("#dataGeneralForm")
+      var checkboxes = $('#table_general tbody input[type="checkbox"]');
+      var cont = 0;
+  
+      for (var x=0; x < checkboxes.length; x++) {
+        if (checkboxes[x].checked) {
+          cont = cont + 1;
+        }
+      }
+  
+      
+      if (cont == 0  ) {
+        
+          Swal.fire({
+            "title": "Aún falta algo",
+            "text": "Por favor verifique que haya seleccionado por lo menos 1 asignatura",
+            "icon": "error"
+          })
+        
+      }
+      else{
+        serializedData.submit();
+        $("#edicion-informe").modal("hide");
+        mostrarOkInformes();
+        
+      }
+       
+    }
+  
+  </script>
+  
+  {% endblock js %}

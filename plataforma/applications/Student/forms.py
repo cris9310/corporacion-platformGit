@@ -581,3 +581,18 @@ class StudentAsigMate(forms.Form):
         else:
             return carga_file_exp
         
+
+#Formulario de cargue masivo de estudiantes.
+class StudentAsigNewForm(forms.Form):
+
+    asignaturas = forms.HiddenInput(
+        attrs={
+                'id':'asignaturas'
+            }
+    ),
+
+    estudiante = forms.HiddenInput(
+        attrs={
+                'id':'estudiante'
+        }
+    )

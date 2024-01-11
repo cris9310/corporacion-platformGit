@@ -83,17 +83,23 @@
                         {% if estudiante.is_active == True and estudiante.estado == True  %}
                         <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
                         <td>
+                          
+                        <a href="{% url 'student_app:student-notes' estudiante.pk   %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        
                         </td>
 
                         {% elif estudiante.is_active == False and estudiante.estado == True  %}
                         
                         <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
                         <td>
+                        <a href="{% url 'student_app:student-notes' estudiante.pk  %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
+
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
 
                         </td>
 
@@ -101,8 +107,9 @@
                         <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
                         <td>
                         <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
                         <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
                         </td>
 
@@ -110,8 +117,9 @@
                         <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
                         <td>
                         <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
                         <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
 
                         

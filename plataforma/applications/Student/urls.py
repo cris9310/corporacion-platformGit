@@ -33,6 +33,12 @@ urlpatterns = [
         name='update-student'
     ),
     path(
+        'update-student-normal/<pk>/',
+        views.StudentUpdateView.as_view(),
+        name='update-student-normal'
+    ),
+    
+    path(
         'export-plant-student',
         views.export_users_csv,
         name='export-plant-student'
@@ -52,6 +58,28 @@ urlpatterns = [
         views.Studentlistview.as_view(),
         name='list-student'
     ),
+    path(
+        'assign/<pk>/',
+        views.StudentAssignListview.as_view(),
+        name='assign'
+    ),
+    path(
+        'student-notes/<pk>/',
+        views.StudentNotesListview.as_view(),
+        name='student-notes'
+    ),
+    path(
+        'student-notes-detail/<int:pk1>/<int:pk2>/',
+        views.StudentNotesDetailListview.as_view(),
+        name='student-notes-detail'
+    ),
+
+    
+
+
+    
+
+    
     
 
     

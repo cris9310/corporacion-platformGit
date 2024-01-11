@@ -1,0 +1,337 @@
+{% load static %}
+
+<div class="modal-dialog modal-xl" role="document" >
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i> Actualización del estudiante</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Datos personales</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Datos del acudiente</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Datos académicos</button>
+          <button class="nav-link" id="nav-document-tab" data-bs-toggle="tab" data-bs-target="#nav-document" type="button" role="tab" aria-controls="nav-document" aria-selected="false">Documentos</button>
+        </div>
+      </nav>
+      
+      <form  method="POST" id="dataGeneralForm" action="{% url 'student_app:update-student-normal' object.pk %}" >{% csrf_token %}
+        
+        <div class="tab-content" id="nav-tabContent">
+          
+          <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+  
+            <div class="container-fluid" style="margin-top:20px">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.tDocument.id_for_label }}" ></div>
+                  <label for="{{ form.tDocument.id_for_label }}">Tipo de documento:</label>
+                  {{ form.tDocument }}
+                </div>
+                <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.cedula.id_for_label }}" ></div>
+                  <label for="{{ form.cedula.id_for_label }}">Número de documento:</label>
+                  {{ form.cedula }}
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.nombre.id_for_label }}" ></div>
+                  <label for="{{ form.nombre.id_for_label }}">Nombre(s):</label>
+                  {{ form.nombre }}
+                </div>
+                <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.apellidos.id_for_label }}" ></div>
+                  <label for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
+                  {{ form.apellidos }}
+                </div>
+              </div>
+            </div>
+    
+            <div class="container-fluid" style="margin-top: 15px">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.direccion.id_for_label }}" ></div>
+                  <label for="{{ form.direccion.id_for_label }}">Direccion:</label>
+                  {{ form.direccion }}
+                </div>
+                <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.telefono.id_for_label }}" ></div>
+                  <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+                  {{ form.telefono }}
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.sexo.id_for_label }}" ></div>
+                  <label for="{{ form.sexo.id_for_label }}">Género:</label>
+                  {{ form.sexo }}
+                </div>
+                <div class="col-md-6 ms-auto"">
+                  <div class="{{ form.nacionalidad.id_for_label }}" ></div>
+                  <label for="{{ form.nacionalidad.id_for_label }}">Nacionalidad:</label>
+                  {{ form.nacionalidad }}
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.nacimiento.id_for_label }}" ></div>
+                  <label for="{{ form.nacimiento.id_for_label }}">Fecha de nacimiento:</label>
+                  {{ form.nacimiento }}
+                </div>
+                <div class="col-md-6 ms-auto">
+                  <div class="{{ form.email.id_for_label }}" ></div>
+                  <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+                  {{ form.email }}
+                </div>
+              </div>
+            </div>
+    
+            <div class="container-fluid" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.username.id_for_label }}" ></div>
+                  <label for="{{ form.username.id_for_label }}">Username:</label>
+                  {{ form.username }}
+                </div>
+              </div>
+            </div>
+  
+          </div>
+          <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+  
+            <div class="container-fluid" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.nombre_acudiente.id_for_label }}" ></div>
+                  <label for="{{ form.nombre_acudiente.id_for_label }}">Nombre del acudiente:</label>
+                  {{ form.nombre_acudiente }}
+                </div>
+                <div class="col-md-6 ms-auto">
+                  <div class="{{ form.apellidos_acudiente.id_for_label }}" ></div>
+                  <label for="{{ form.apellidos_acudiente.id_for_label }}">Apellidos del acudiente:</label>
+                  {{ form.apellidos_acudiente }}
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.telefono_acudiente.id_for_label }}" ></div>
+                  <label for="{{ form.telefono_acudiente.id_for_label }}">Teléfono de contacto:</label>
+                  {{ form.telefono_acudiente }}
+                </div>
+                <div class="col-md-6 ms-auto">
+                  <div class="{{ form.cedula_acudiente.id_for_label }}" ></div>
+                  <label for="{{ form.cedula_acudiente.id_for_label }}">Nro. de identificación acudiente:</label>
+                  {{ form.cedula_acudiente }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+            <div class="container-fluid" style="margin-top: 15px;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="{{ form.carrera.id_for_label }}" ></div>
+                  <label for="{{ form.carrera.id_for_label }}">Programa académico:</label>
+                  {{ form.carrera }}
+                </div>
+                <div class="col-md-6">
+                  <div class="{{ form.periodo_matriculado.id_for_label }}" ></div>
+                  <label for="{{ form.periodo_matriculado.id_for_label }}">Periodo de ingreso:</label>
+                  {{ form.periodo_matriculado }}
+                </div>
+                
+              </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px; ">
+              <div class="row">
+                
+                <div class="col-md-6 ms-auto">
+                  <div class="{{ form.sede.id_for_label }}" ></div>
+                  <label for="{{ form.sede.id_for_label }}">Seleccione sede de estudio</label>
+                  {{ form.sede }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-document" role="tabpanel" aria-labelledby="nav-document-tab">
+            <div class="container-fluid" style="margin-top: 15px; ">
+              <p class="text-start">Seleccione el documento que entrega el estudiante:</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-check">
+                    {{ form.document }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Fotocopia documento de identidad
+                    </label>
+                    <div class="{{ form.document.id_for_label }}" ></div>
+                  </div>
+                  <div class="form-check">
+                    {{ form.fotos }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Fotos
+                    </label>
+                    <div class="{{ form.fotos.id_for_label }}" ></div>
+                  </div>
+                  <div class="form-check">
+                    {{ form.siet }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Siet
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {{ form.actaBachillerato }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Acta de bachillerato
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {{ form.serviciosPublicos }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Recibo de servicios públicos
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {{ form.carneSalud }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Carné de salud
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {{ form.cedulaAcudiente }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Documento del acudiente
+                    </label>
+                    <div class="{{ form.cedulaAcudiente.id_for_label }}" ></div>
+                  </div>
+                  <div class="form-check">
+                    {{ form.certificados }}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Certificados del alumno
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {{ form.homologacion}}
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Documento de homologación
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6 ms-auto">
+                  <div class="observaciones" ></div>
+                  <label for="observaciones">Indique alguna observación (opcional):</label>
+                  
+                  {{ form.observaciones}}
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer" style="margin-top: 15px;">
+          <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Cargando...
+          </button>
+
+          <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendStudent()">
+            Actualizar estudiante
+          </button>
+        
+        <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div> 
+  </div>
+</div>
+
+
+{% block js %}
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#masivo").hide();
+    $('label[for="masivo"]').hide();
+    
+    
+  });
+
+
+  function sendStudent() {
+    $('#carrera').prop('disabled', false);
+    $("#username").prop('disabled', false);
+    var serializedData = $("#dataGeneralForm").serialize() ;
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'student_app:update-student-normal' object.pk %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location = "{% url 'student_app:list-student' %}";
+          mostrarOk();
+  
+  
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          $('#carrera').prop('disabled', true);
+          $("#username").prop('disabled', true);
+          mostrarErroresCreacionEditar(error);
+          mostrarError();
+        }
+      });
+    }
+  }
+
+  $(document).ready(function () {
+    var navhometab = document.getElementById("nav-home-tab"),
+      navprofiletab = document.getElementById("nav-profile-tab"),
+      navcontacttab = document.getElementById("nav-contact-tab"),
+      navdocumenttab = document.getElementById("nav-document-tab");
+  
+    navprofiletab.onclick = function () {
+      $("#nav-tab .active").removeClass("active");
+      $(".tab-pane").removeClass("show active");
+      $("#nav-tab #nav-profile-tab").addClass("active");
+      $("#nav-profile").addClass("show active"); 
+    }
+    navhometab.onclick = function () {
+      $("#nav-tab .active").removeClass("active");
+      $(".tab-pane").removeClass("show active");
+      $("#nav-tab #nav-home-tab").addClass("active");
+      $("#nav-home").addClass("show active"); 
+    }
+    navcontacttab.onclick = function () {
+      $("#nav-tab .active").removeClass("active");
+      $(".tab-pane").removeClass("show active");
+      $("#nav-tab #nav-contact-tab").addClass("active");
+      $("#nav-contact").addClass("show active"); 
+    }
+    navdocumenttab.onclick = function () {
+      $("#nav-tab .active").removeClass("active");
+      $(".tab-pane").removeClass("show active");
+      $("#nav-tab #nav-document-tab").addClass("active");
+      $("#nav-document").addClass("show active"); 
+    }
+  
+  
+  
+  });
+</script>
+{% endblock js %}

@@ -104,6 +104,14 @@ urlpatterns = [
         views.Materialistview.as_view(),
         name='list-materias'
     ),
+
+    path(
+        'create-banner/',
+        views.BannerCreateView.as_view(),
+        name='create-banner'
+    ),
+    
+
     
 
 
