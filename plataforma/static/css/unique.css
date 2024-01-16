@@ -494,9 +494,16 @@ th.sorting {
     background: var(--sidebar-color) !important;
     width: 100%;
     display: flex;
-    border-left-color: var(--primary-color) !important;
-    border-left-width: 8px !important;
     font-size: 14px !important;
+}
+
+
+.information .card-title {
+    color: var(--primary-color);
+}
+
+.card-header strong {
+    color: var(--primary-color);
 }
 
 .informationExtra {

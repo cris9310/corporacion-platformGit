@@ -54,7 +54,7 @@ urlpatterns = [
         name='detail-student'
     ),
     path(
-        'list-student/',
+        'home-student/list-student/',
         views.Studentlistview.as_view(),
         name='list-student'
     ),
@@ -73,6 +73,13 @@ urlpatterns = [
         views.StudentNotesDetailListview.as_view(),
         name='student-notes-detail'
     ),
+    path(
+        'student-notes-delete/<int:pk1>/<int:pk2>/',
+        views.StudentNotesDeleteview.as_view(),
+        name='student-notes-delete'
+    ),
+
+    
 
     
 

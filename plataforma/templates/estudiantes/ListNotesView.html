@@ -8,12 +8,55 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}}</h1></span>
+        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}} </h1></span>
       </div>
       
   </div>
+  <div class="datos ">
+    
+    <div class="card information shadow" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Código del estudiante:</p></strong>
+              <p class="card-text">&nbsp; {{estudiante.codigo}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Programa:</strong>
+              <p class="card-text">&nbsp; {{estudiante.carrera}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Promedio:</strong>
+              <p class="card-text">&nbsp; {{final.promedio}}</p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
+  </div>
+
   
   <div class="card shadow">
+    <div class="card-header">
+      
+        <div class=" ">
+          
+          <div class="progreso-content"> <strong >Cumplimiento académico:</strong></div>
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{final.pasadas}}" aria-valuemin="0" aria-valuemax="100" style="width: {{final.pasadas}}%">
+              {{final.pasadas}} %
+            </div>
+          </div>
+          
+        </div>
+      </div>
 
     <div class="card-body">
         <div class="container-fluid" style="">
@@ -25,7 +68,8 @@
                 <table id="table_general"  class="hover" style="width:100%; ">
                   <thead >
                     <th>Código</th>
-                    <th>Materia</th>
+                    <th>Asignatura</th>
+                    <th>Periodo</th>
                     <th>Estado</th>
                     <th>Promedio</th>
                     <th>Acciones</th>
@@ -35,6 +79,7 @@
                       <tr>
                         <td >{{student.codigo}}</td>
                         <td>{{student.nombre}}</td> 
+                        <td>{{student.periodo}}</td> 
                         {% if student.estado %}
                         <td><span ><i class="fa-solid fa-hourglass-half iconos"></i> &nbsp; En curso</span></td>
                         <td>{{student.promedio}}</td>
@@ -47,7 +92,7 @@
                         <td><a href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk  %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a></td>
                         {% else %}
                         <td><a href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
-                        <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' student.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.pk %}')" title="Eliminar"><i  class="fa-regular fa-trash-can iconos"></i></a>
                         </td>
                         {% endif %}
 
@@ -62,12 +107,14 @@
                 <thead >
                     <th>Código</th>
                     <th>Materia</th>
+                    <th>Periodo</th>
                     <th>Estado</th>
                     <th>Promedio</th>
                     <th>Acciones</th>
                 </thead>
                 <tbody>
                   <tr>
+                    <td > - </td >
                     <td > - </td >
                     <td > - </td >
                     <td > - </td >
@@ -92,6 +139,43 @@
 </div>
 
 
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
 {% endblock extracontent %}
 
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+{% endblock js %}

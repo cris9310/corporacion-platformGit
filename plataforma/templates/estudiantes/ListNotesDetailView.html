@@ -8,10 +8,45 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}}</h1></span>
+          <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> {{estudiante.nombre}} {{estudiante.apellidos}} - {{estudiante.carrera}}</h1></span>
         </div>
         
     </div>
+    <div class="datos ">
+    
+        <div class="card information shadow" style="">
+            <div class="container-fluid" style="">
+              <div class="" style="">
+                
+                {% for i in informacion %}
+                <div style="display: flex"  >
+                
+                    <strong><p  class="card-title">Código de la asignatura:</p></strong>
+                    <p class="card-text">&nbsp; {{i.codigo}}</p>
+                  
+                  </div>
+                  
+                  <div style="display: flex" >
+                  
+                    <strong><p  class="card-title">Asignatura:</strong>
+                    <p class="card-text">&nbsp; {{i.nombre}}</p>
+                  
+                  </div>
+                  <div style="display: flex" >
+                  
+                    <strong><p  class="card-title">Promedio:</strong>
+                    <p class="card-text">&nbsp; {{i.promedio}}</p>
+                  
+                  </div>
+                {% endfor %}
+                    
+                
+                
+              </div>
+            </div>
+            
+        </div>
+      </div>
     
     <div class="card shadow">
   
