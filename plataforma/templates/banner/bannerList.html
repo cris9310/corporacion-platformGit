@@ -1,0 +1,177 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Banner | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="fa-solid fa-laptop-code"></i> {{informacion.materia.nombre_materia}} ({{informacion.periodo}})</h1></span>
+        </div>
+        
+    </div>
+    <div class="datos ">
+    
+      <div class="card information shadow" style="">
+          <div class="container-fluid" style="">
+            <div class="" style="">
+
+              <div style="display: flex"  >
+              
+                  <strong><p  class="card-title">Código de la asignatura:</p></strong>
+                  <p class="card-text">&nbsp; {{informacion.materia.codigo}} - {{informacion.materia.programa}} </p>
+                
+                </div>
+                
+                <div style="display: flex" >
+                
+                  <strong><p  class="card-title">Docente:</strong>
+                  <p class="card-text">&nbsp; {{informacion.docente}}</p>
+                
+                </div>
+                <div style="display: flex" >
+                
+                  <strong><p  class="card-title">Promedio general:</strong>
+                  <p class="card-text">&nbsp; {{general}}</p>
+                
+                </div>
+                  
+              
+              
+            </div>
+          </div>
+          
+      </div>
+    </div>
+    
+    <div class="card shadow">
+      <div class="card-header">
+        <div class="row">
+          
+          <div class="col filtro">
+            <div style="display: flex" >
+                
+              <strong><p  class="card-title">Fecha de cierre:</strong>
+              <p class="card-text">&nbsp; {{informacion.cierre}}</p>
+              {% if not informacion.is_active %}
+              &nbsp; - &nbsp; <span class="iconos"><i class="fa-regular fa-circle-check "></i> &nbsp; Asignatura cerrada</span>
+              {% endif %}
+            
+            </div>
+          </div>
+          {% if  informacion.is_active %}
+          <div class="col-8 botones-miltiples">
+
+            <button  type="button" title="Nueva tarea" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-banner-task' informacion.pk %}')">
+              <a >
+                <i class="fa-solid fa-book"></i>
+                &nbsp; Crear
+              </a>
+            </button>
+            <button  type="button" title="Cargar notas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+              <a >
+                <i class="fa-solid fa-upload"></i>
+                &nbsp; Cargar
+              </a>
+            </button>
+            
+            <button  type="button" title="Descargar grupo" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+              <a >
+                <i class="fa-solid fa-download"></i>
+                &nbsp; Descargar
+              </a>
+            </button>
+            <button  type="button" title="Eliminar tarea" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+              <a >
+                <i class="fa-solid fa-trash-can"></i>
+                &nbsp; Eliminar
+              </a>
+            </button>
+            
+          </div>
+          {% endif %}
+        </div>
+      </div>
+  
+  
+      <div class="card-body">
+          <div class="container-fluid" style="">
+            <div  class="row">
+              <div class="conte">
+                <div class ="conteTabla">
+                    <table id="table_general"  class="hover" style="width:100%; ">
+                        <thead>
+                            {% for col in banner.columns %}
+                                <th>{{col}}</th>
+                              
+                            {% endfor %}
+                        </thead>
+                        <tbody>
+                            {% for index, row in banner.iterrows %}
+                            <tr>
+                              {% for cell in row %}
+                                <td>
+                                  {{cell}}
+                                </td>
+                              {% endfor %}
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                            
+                    </table> 
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+        $('#materia').val("{{informacion.pk}}")
+    });
+  }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+{% endblock js %}

@@ -46,12 +46,12 @@
                 <div class="row">
                     <div class="col-md-6">
                     <div class="{{ form.pre_cierre.id_for_label }}" ></div>
-                    <label for="{{ form.pre_cierre.id_for_label }}">Seleccione fecha de inicio:</label>
+                    <label for="{{ form.pre_cierre.id_for_label }}">Fecha de inicio:</label>
                     {{ form.pre_cierre }}
                     </div>
                     <div class="col-md-6 ms-auto"">
                     <div class="{{ form.cierre.id_for_label }}" ></div>
-                    <label for="{{ form.cierre.id_for_label }}">Seleccione fecha de cierre:</label>
+                    <label for="{{ form.cierre.id_for_label }}">Fecha de cierre:</label>
                     {{ form.cierre }}
                     </div>
                 </div>
@@ -84,20 +84,11 @@
   function sendUser() {
     var fechaIni =  new Date(document.getElementById("pre_cierre").value);
     var fechafin =  new Date(document.getElementById("cierre").value);
-    var diferencia = Math.abs(fechafin - fechaIni);
-    var diferenciaFinal = diferencia / (1000 * 3600 * 24)
     
     if( (fechafin.getTime() < fechaIni.getTime())){
         $('div[class="cierre"]').html("");
         mostrarError();
         errores = '<div class ="alert alert-danger" <strong>' + 'La fecha final no puede ser menor a la inicial' + '</strong></div>'
-        $('div[class="cierre"]').append(errores);
-    }
-    
-    else if (diferenciaFinal > 7) {
-        $('div[class="cierre"]').html("");
-        mostrarError();
-        errores = '<div class ="alert alert-danger" <strong>' + 'Las fechas no pueden tener una diferencia mayor a 7 días' + '</strong></div>'
         $('div[class="cierre"]').append(errores);
     }
     else{

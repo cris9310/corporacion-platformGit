@@ -114,6 +114,16 @@ class BuscadorManager(models.Manager):
 
         return str(cod_asign)
     
+    def code_task(self):
+
+        try:
+            filtro = self.latest('id').cod_tarea
+            cod_asign = int(filtro) + 1
+        except:
+            cod_asign = str(1000)
+
+        return str(cod_asign)
+    
     def code_asignaturas(self):
 
         try:

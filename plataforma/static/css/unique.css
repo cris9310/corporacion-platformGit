@@ -319,13 +319,10 @@ header .image-text .header-text {
     align-items: center;
 }
 
-.card .card-header .filtro .nav-text {
-    margin-right: 15px;
+.card .card-header .filtro div {
+    margin-top: 3px;
 }
 
-.card .card-header .filtro .form-check {
-    margin-right: 15px;
-}
 
 
 .card .card-header .boton {
@@ -657,6 +654,17 @@ th.sorting {
 .dataTables_filter label {
     color: var(--text-color) !important;
 }
+
+.cierre {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.cierre span {
+
+    font-size: 15px !important;
+}
+
 
 /* Css del body*/
 

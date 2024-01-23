@@ -1,0 +1,83 @@
+
+{% load  static %}
+
+<div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-book"></i> Nueva tarea</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body" spellcheck="true">
+        <form  method="post" id="dataGeneralForm" action="{% url 'settings_app:create-banner-task' pk %}" >{% csrf_token %}
+            <div id="errores" ></div>
+            {{ form.materia }}
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col">
+                    <div class="{{ form.tarea.id_for_label }}" ></div>
+                    <label for="{{ form.tarea.id_for_label }}">Seleccione el tipo de tarea:</label>
+                    {{ form.tarea }}
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="margin-top: 15px;"> 
+                <div class="row">
+                    <div class="col">
+                    <div class="{{ form.observacion.id_for_label }}" ></div>
+                    <label for="{{ form.observacion.id_for_label }}">Escriba una observación para esta tarea *:</label>
+                    {{ form.observacion }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 15px;">
+              <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+              </button>
+    
+              <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+                Registrar
+              </button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+      </div> 
+    </div>
+  </div>
+
+
+  
+{% block js %}
+<script type="text/javascript">
+    $('#materia').val("{{pk}}")
+  function sendUser() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'settings_app:create-banner-task' pk %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location.reload();
+          mostrarOk();
+          
+          
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarErroresCreacionEditar(error);
+          mostrarError();
+        }
+      });
+    } 
+  }
+
+</script>
+
+{% endblock js %}

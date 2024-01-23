@@ -6,12 +6,14 @@ from openpyxl.writer.excel import save_virtual_workbook
 import warnings
 import pandas as pd
 
+
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import (TemplateView,
     FormView, CreateView, DeleteView, UpdateView,
     DetailView, ListView, View)
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, HttpResponseRedirect
+from django.db.models import F, Sum, Avg, Count
 
 from .models import *
 from .forms import *
@@ -555,9 +557,15 @@ class Materialistview(ListView):
 
     def get_queryset(self):
 
-        Data = Materias.objects.filter(materia_id = self.kwargs['pk']) 
+        Data = Materias.objects.filter(materia_id = self.kwargs['pk'])
+        datosBase = []
 
-        return Data
+        for i in Data:
+            total=Banner.objects.filter(materia_id = i.pk).count()
+            datos = {"pk": i.pk, "sede": i.sede, "docente": i.docente, "periodo": i.periodo,
+                     "jornada": i.jornada, "cierre":i.cierre, "is_active": i.is_active, "total": total }
+            datosBase.append(datos)
+        return datosBase
     
 
 
@@ -568,21 +576,40 @@ class Materialistview(ListView):
 # crear un query con los estudiantes distintos de la asignatura filtrada
 #cruzamos esto con las notas
     
-
-#Esto queda en stand by hasta que construyamos bien las vistas del estudiante
-
-#Vista que sirve para listar notas
+#Vista que sirve para listar notas del salon completo
 class Bannerlistview(ListView):
     model = Banner
     template_name = 'banner/bannerList.html'
     context_object_name = 'banner'
 
 
+    def get_context_data(self, **kwargs):
+        context = super(Bannerlistview, self).get_context_data(**kwargs)
+        context["informacion"] = Materias.objects.get(pk=self.kwargs['pk'])
+        context["general"]  = round (Banner.objects.filter(materia_id=self.kwargs['pk'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+        return context
+    
+
     def get_queryset(self):
+        data = []
+        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk'])
 
-        Data = Inventario.objects.filter(materia_id = self.kwargs['pk']) 
-
-        return Data
+        for i in estudiante:
+            datos = {"Código": i.student.codigo, "Estudiante": i.student.nombre + " " + i.student.apellidos, 
+                     "tarea": i.tarea.tipo, "calificacion": i.calificacion, "cod_tarea":i.cod_tarea
+                     }
+            data.append(datos)
+        estudiante = pd.DataFrame(data, columns=["Código",'Estudiante', 'tarea', "calificacion","cod_tarea"])
+        notas = estudiante.drop(['Estudiante','tarea',"cod_tarea"], axis=1)
+        notas= notas.groupby(by='Código').agg(['mean'])
+        notas.set_axis(["Promedio"], axis="columns", inplace=True)
+        estudiante["Cod-Tarea"]=estudiante["cod_tarea"]+ "-" + estudiante["tarea"]
+        estudiante = estudiante.pivot(index=["Código",'Estudiante'], columns=['Cod-Tarea'], values='calificacion'
+                                      )
+        estudiante =estudiante.reset_index()
+        
+        estudiante=pd.merge(estudiante, notas, on='Código')
+        return estudiante
 
 #Vista que matricula estudiantes en las asignaturas
 class BannerCreateView(View):
@@ -609,3 +636,53 @@ class BannerCreateView(View):
         Banner.objects.bulk_create(todos)
 
         return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
+
+#Vista que crea las tareas y actividades de los estudiantes
+class BannerCreateTaskView(CreateView):
+    model = Banner
+    form_class = BannerTaksForm
+    template_name = 'banner/bannerRegisterTask.html'
+    success_url = reverse_lazy('student_app:list-student')
+
+    def get_context_data(self, **kwargs):
+        context = super(BannerCreateTaskView, self).get_context_data(**kwargs)
+        context["pk"] = self.kwargs['pk']
+        return context
+    
+
+    def post(self, request, *args, **kwargs):
+
+        form = BannerTaksForm(self.request.POST)
+        if form.is_valid():
+
+            todos = []
+            todosCreate = []
+            estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("student_id").distinct()
+            for i in range(len(estudiantes)):
+                todos.append(estudiantes[i]["student_id"])
+            todos = set(todos)
+            codigo = Banner.objects.code_task()
+            for i in todos:
+                
+                individual = Banner(student_id=i, 
+                                    tarea_id= CatalogsTypesActivities.objects.get(tipo = form.cleaned_data['tarea']).id,
+                                     materia_id= self.kwargs['pk'], calificacion= 0.0, 
+                                      cod_tarea = codigo, observacion = form.cleaned_data['observacion'] )
+                
+                todosCreate.append(individual)
+            Banner.objects.bulk_create(todosCreate)
+            mensaje = f'{self.model.__name__} registrado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje =[]
+            mensaje.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje, safe=False)
+            response.status_code = 400
+            return response
+
+    

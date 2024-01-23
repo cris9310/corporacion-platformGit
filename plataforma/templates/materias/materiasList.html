@@ -69,13 +69,21 @@
                           {% if i.is_active %}
                           <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
                           <td>
-                            <a href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="fa-regular fa-eye iconos"></i></a>
+                            {% if i.total > 0 %}
+                            <a href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                            {% else %}
+                            <a href="#" title="Consultar"><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                            {% endif %}
                            </td>
                           {% else %}
                           <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
                           <td>
-                            <a href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="fa-regular fa-eye iconos"></i></a>
-                           </td>
+                            {% if i.total > 0 %}
+                            <a href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                            {% else %}
+                            <a href="#" title="Consultar"><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                            {% endif %}
+                          </td>
                           {% endif %}
                         </tr>
                       {% endfor %}

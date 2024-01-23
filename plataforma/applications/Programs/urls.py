@@ -92,8 +92,6 @@ urlpatterns = [
 
 
 
-
-
     path(
         'create-materias/<pk>/',
         views.MateriasCreateView.as_view(),
@@ -110,6 +108,19 @@ urlpatterns = [
         views.BannerCreateView.as_view(),
         name='create-banner'
     ),
+    path(
+        'create-banner-task/<pk>/',
+        views.BannerCreateTaskView.as_view(),
+        name='create-banner-task'
+    ),
+    
+    path(
+        'list-banner/<pk>/',
+        views.Bannerlistview.as_view(),
+        name='list-banner'
+    ),
+
+    
     
 
     

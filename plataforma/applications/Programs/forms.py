@@ -197,7 +197,7 @@ class InventarioMasiveForm(forms.Form):
 
 
 
-
+##Formulario de asignaturas 
 class MateriasForm(forms.ModelForm):
     
     def __init__(self,*args,**kwargs):
@@ -270,4 +270,44 @@ class MateriasForm(forms.ModelForm):
                 ),
         }
 
-    
+
+##Formulario de asignacion de tareas en Banner
+        
+class BannerTaksForm(forms.ModelForm):
+
+    class Meta:
+        model = Banner
+        fields = ('__all__')
+        exclude =['student', "cod_tarea", "calificacion"]
+
+        widgets={
+
+
+                'materia':  HiddenInput(
+                    attrs={
+                        'id': 'materia'
+
+                    }
+                ),
+                'tarea': Select(
+                    attrs={
+                        'autocomplete': 'off',
+                        'class':'form-control',
+                        'id': 'tarea'
+
+                    }
+                ),
+                "observacion":Textarea(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'observacion'
+                }
+            ),
+        }
+
+    def clean_tarea(self):
+        tarea = str(self.cleaned_data.get("tarea"))
+        if tarea == "Sin asignar":
+            raise forms.ValidationError("Debes seleccionar una actividad diferente a 'Sin asignar'.")
+        return self.cleaned_data.get("tarea")

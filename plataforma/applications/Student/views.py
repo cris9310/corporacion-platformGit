@@ -42,7 +42,7 @@ class StudentCreateView(CreateView):
 
     def post(self, request, *args, **kwargs):
 
-        form = StudentRegisterForm(self.request.POST)
+        form = StudentRegisterForm(self.request.POST) 
         if form.is_valid():
             inv_list = []
             # Generador de código para un nuevo estudiante

@@ -76,5 +76,10 @@ class Banner(models.Model):
     student = models.ForeignKey(Estudiante, verbose_name='Estudiante', on_delete=models.CASCADE)
     materia = models.ForeignKey(Materias, verbose_name='Materias', on_delete=models.CASCADE)
     tarea = models.ForeignKey(CatalogsTypesActivities, verbose_name='Tareas', on_delete=models.CASCADE)
+    cod_tarea=models.CharField(max_length=20, default=0000 )
     calificacion = models.DecimalField(max_digits = 5, decimal_places = 2, verbose_name='Calificacion')
+    observacion = models.CharField(max_length=200, blank=False)
     objects = BuscadorManager()
+
+    class Meta:
+        ordering = ['cod_tarea']
