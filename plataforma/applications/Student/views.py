@@ -673,7 +673,7 @@ class StudentAssignListview(ListView):
         asignaturas = Materias.objects.filter(materia__programa=estudiante.carrera, is_active=True)
         datos = []
         for i in asignaturas:
-            total = Banner.objects.filter( materia_id= i.pk ).distinct("student_id", "materia_id").count()
+            total = Banner.objects.filter( materia_id= i.pk ).values("student_id").distinct().count()
             
             if Banner.objects.filter(student_id=estudiante.pk, materia_id= i.pk ).exists():
                 data_json = {"pk": i.id, "codigo": i.materia.codigo, "nombres": i.materia.nombre_materia,
@@ -742,7 +742,7 @@ class StudentNotesListview(ListView):
     def get_queryset(self):
 
         data = [] 
-        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).distinct("student_id", "materia_id")
+        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).order_by("student_id").distinct("student_id", "materia_id")
         for i in estudiante:
             promedio = round (Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i.materia.pk ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
             
@@ -786,10 +786,11 @@ class StudentNotesDetailListview(ListView):
         estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student_id=self.kwargs['pk2']  )
 
         for i in estudiante:
-            datos = {"estudiante": i.student.nombre + " " + i.student.apellidos, "tarea": i.tarea.tipo, "calificacion": i.calificacion }
+            datos = {"estudiante": i.student.nombre + " " + i.student.apellidos, "cod_tarea": i.cod_tarea, "tarea": i.tarea.tipo, "calificacion": i.calificacion }
             data.append(datos)
-        estudiante = pd.DataFrame(data, columns=['estudiante', 'tarea', "calificacion"])
-        estudiante = estudiante.pivot(index='estudiante', columns='tarea', values='calificacion')
+        estudiante = pd.DataFrame(data, columns=['estudiante', 'tarea', "calificacion", "cod_tarea"])
+        estudiante["cod_tareaG"] = estudiante["cod_tarea"] + "-" + estudiante["tarea"]
+        estudiante = estudiante.pivot(index='estudiante', columns='cod_tareaG', values='calificacion')
 
         return estudiante
 

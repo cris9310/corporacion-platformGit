@@ -64,12 +64,12 @@ urlpatterns = [
         name='assign'
     ),
     path(
-        'student-notes/<pk>/',
+        'home-student/student-notes/<pk>/',
         views.StudentNotesListview.as_view(),
         name='student-notes'
     ),
     path(
-        'student-notes-detail/<int:pk1>/<int:pk2>/',
+        'home-student/student-notes-detail/<int:pk1>/<int:pk2>/',
         views.StudentNotesDetailListview.as_view(),
         name='student-notes-detail'
     ),

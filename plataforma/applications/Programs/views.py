@@ -586,6 +586,7 @@ class Bannerlistview(ListView):
     def get_context_data(self, **kwargs):
         context = super(Bannerlistview, self).get_context_data(**kwargs)
         context["informacion"] = Materias.objects.get(pk=self.kwargs['pk'])
+        
         context["general"]  = round (Banner.objects.filter(materia_id=self.kwargs['pk'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
         return context
     
@@ -619,19 +620,25 @@ class BannerCreateView(View):
         asignaturas = str(self.request.POST.get('asignaturas'))
         estudiante = str(self.request.POST.get('estudiante'))
         banner_create = asignaturas.split(sep=",")
+        codigo = int(Banner.objects.code_task())
         todos = []
 
         for i in banner_create:
-            tareas = Banner.objects.filter(materia_id= i).values("tarea_id").distinct()
+            tareas = Banner.objects.filter(materia_id= i).values("tarea_id", "cod_tarea", "observacion").distinct()
             if tareas:
                 tamano = len(tareas)
                 for j in range(tamano):
                     consulta = Estudiante.objects.get(pk=estudiante)
-                    individual = Banner(student_id=consulta.pk, tarea_id= int(tareas[j]["tarea_id"]), materia_id= i, calificacion= 0.0 )
+                    individual = Banner(student_id=consulta.pk, tarea_id= int(tareas[j]["tarea_id"]), 
+                                        cod_tarea= tareas[j]["cod_tarea"], 
+                                        observacion= tareas[j]["observacion"], 
+                                        materia_id= i, calificacion= 0.0 )
                     todos.append(individual)
             else:
+                
                 consulta = Estudiante.objects.get(pk=estudiante)
-                individual = Banner(student_id=consulta.pk, tarea_id= 6, materia_id= i, calificacion= 0.0 )
+                individual = Banner(student_id=consulta.pk, tarea_id= 6, cod_tarea= codigo, materia_id= i, calificacion= 0.0 )
+                codigo += 1
                 todos.append(individual)
         Banner.objects.bulk_create(todos)
 
@@ -657,25 +664,49 @@ class BannerCreateTaskView(CreateView):
 
             todos = []
             todosCreate = []
-            estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("student_id").distinct()
-            for i in range(len(estudiantes)):
-                todos.append(estudiantes[i]["student_id"])
-            todos = set(todos)
-            codigo = Banner.objects.code_task()
-            for i in todos:
-                
-                individual = Banner(student_id=i, 
-                                    tarea_id= CatalogsTypesActivities.objects.get(tipo = form.cleaned_data['tarea']).id,
-                                     materia_id= self.kwargs['pk'], calificacion= 0.0, 
-                                      cod_tarea = codigo, observacion = form.cleaned_data['observacion'] )
-                
-                todosCreate.append(individual)
-            Banner.objects.bulk_create(todosCreate)
-            mensaje = f'{self.model.__name__} registrado correctamente'
-            error = "No hay error!"
-            response = JsonResponse({"mensaje": mensaje, "error": error})
-            response.status_code = 201
-            return response
+            if Banner.objects.filter( materia_id= self.kwargs['pk'], tarea_id= 6).exists():
+               
+               estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("student_id").distinct()
+               for i in range(len(estudiantes)):
+                    todos.append(estudiantes[i]["student_id"])
+               todos = set(todos)
+               codigo = Banner.objects.code_task()
+               for i in todos:
+                    
+                    individual = Banner(student_id=i, 
+                                        tarea_id= CatalogsTypesActivities.objects.get(tipo = form.cleaned_data['tarea']).id,
+                                        materia_id= self.kwargs['pk'], calificacion= 0.0, 
+                                        cod_tarea = codigo, observacion = form.cleaned_data['observacion'] )
+                    
+                    todosCreate.append(individual)
+               Banner.objects.bulk_create(todosCreate)
+               Banner.objects.filter( materia_id= self.kwargs['pk'], tarea_id= 6).delete()
+               mensaje = f'{self.model.__name__} registrado correctamente'
+               error = "No hay error!"
+               response = JsonResponse({"mensaje": mensaje, "error": error})
+               response.status_code = 201
+               return response
+
+            else:
+                estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("student_id").distinct()
+                for i in range(len(estudiantes)):
+                    todos.append(estudiantes[i]["student_id"])
+                todos = set(todos)
+                codigo = Banner.objects.code_task()
+                for i in todos:
+                    
+                    individual = Banner(student_id=i, 
+                                        tarea_id= CatalogsTypesActivities.objects.get(tipo = form.cleaned_data['tarea']).id,
+                                        materia_id= self.kwargs['pk'], calificacion= 0.0, 
+                                        cod_tarea = codigo, observacion = form.cleaned_data['observacion'] )
+                    
+                    todosCreate.append(individual)
+                Banner.objects.bulk_create(todosCreate)
+                mensaje = f'{self.model.__name__} registrado correctamente'
+                error = "No hay error!"
+                response = JsonResponse({"mensaje": mensaje, "error": error})
+                response.status_code = 201
+                return response
         else:
             mensaje =[]
             mensaje.append(
