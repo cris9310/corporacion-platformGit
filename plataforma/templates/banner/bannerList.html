@@ -70,6 +70,13 @@
                 &nbsp; Crear
               </a>
             </button>
+            <button  type="button" title="Detalles tareas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:Task-Detail-View' informacion.pk %}')">
+              <a >
+                <i  class="fa-regular fa-eye"></i>
+                &nbsp; Consultar
+              </a>
+            </button>
+            
             <button  type="button" title="Cargar notas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
               <a >
                 <i class="fa-solid fa-upload"></i>

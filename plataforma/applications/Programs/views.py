@@ -716,4 +716,18 @@ class BannerCreateTaskView(CreateView):
             response.status_code = 400
             return response
 
-    
+class ListBannerTaskDetailView(ListView):
+    model = Banner
+    template_name = 'banner/listBannerTaskDetail.html'
+    context_object_name = 'banner'
+
+    def get_queryset(self):
+        data = []
+        estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("tarea","cod_tarea", "observacion" ).distinct()
+        for i in range(len(estudiantes)):
+            datos = {"codigo":str(estudiantes[i]["cod_tarea"]) + "-" + str(estudiantes[i]["tarea"]),
+                     "observacion": str(estudiantes[i]["observacion"]),
+                     }
+            data.append(datos)
+        
+        return data

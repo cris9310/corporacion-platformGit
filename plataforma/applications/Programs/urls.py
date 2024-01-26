@@ -98,7 +98,7 @@ urlpatterns = [
         name='create-materias'
     ),
     path(
-        'list-materias/<pk>/',
+        'config/list-materias/<pk>/',
         views.Materialistview.as_view(),
         name='list-materias'
     ),
@@ -115,10 +115,19 @@ urlpatterns = [
     ),
     
     path(
-        'list-banner/<pk>/',
+        'config/list-banner/<pk>/',
         views.Bannerlistview.as_view(),
         name='list-banner'
     ),
+
+    path(
+        'Task-Detail-View/<pk>/',
+        views.ListBannerTaskDetailView.as_view(),
+        name='Task-Detail-View'
+    ),
+
+
+    
 
     
     
