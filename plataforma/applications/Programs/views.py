@@ -651,6 +651,8 @@ class BannerCreateTaskView(CreateView):
     template_name = 'banner/bannerRegisterTask.html'
     success_url = reverse_lazy('student_app:list-student')
 
+    
+
     def get_context_data(self, **kwargs):
         context = super(BannerCreateTaskView, self).get_context_data(**kwargs)
         context["pk"] = self.kwargs['pk']
@@ -721,13 +723,90 @@ class ListBannerTaskDetailView(ListView):
     template_name = 'banner/listBannerTaskDetail.html'
     context_object_name = 'banner'
 
+    def get_context_data(self, **kwargs):
+        context = super(ListBannerTaskDetailView, self).get_context_data(**kwargs)
+        context["total"] = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("tarea__tipo","cod_tarea", "observacion" ).distinct().count()
+        return context
+
     def get_queryset(self):
         data = []
-        estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("tarea","cod_tarea", "observacion" ).distinct()
+        estudiantes = Banner.objects.filter( materia_id= self.kwargs['pk'] ).values("tarea__tipo","cod_tarea", "observacion" ).distinct()
         for i in range(len(estudiantes)):
-            datos = {"codigo":str(estudiantes[i]["cod_tarea"]) + "-" + str(estudiantes[i]["tarea"]),
+            datos = {"codigo":estudiantes[i]["cod_tarea"], "tarea":str(estudiantes[i]["cod_tarea"]) + " - " + str(estudiantes[i]["tarea__tipo"]),
                      "observacion": str(estudiantes[i]["observacion"]),
                      }
             data.append(datos)
         
         return data
+
+#Vista que elimina las tareas
+class BannerTaskDeleteView(DeleteView):
+    template_name = 'banner/BannerTaskDeleteView.html'
+    model = Banner
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        materias = self.kwargs['pk']
+        tarea = Banner.objects.filter( cod_tarea= self.kwargs['pk'] ).values("tarea__tipo" ).distinct()
+        context = {'materias':materias, "tarea": tarea}
+        return context
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tarea"] = Banner.objects.filter( cod_tarea= self.kwargs['pk'] ).values("tarea__tipo","cod_tarea" ).distinct()
+        context["codigo"] = self.kwargs['pk']
+        return context
+    
+    
+    def post(self, request, *args, **kwargs):
+        estudiante = Banner.objects.filter(cod_tarea=self.kwargs['pk']  ).delete()
+
+        return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
+    
+
+# vista que genera los cargues masivos de notas
+class BannerNoteMasive(View):
+    
+    #momstramos el form que hemos creado
+    def get(self, request, *args, **kwargs):
+        form = BannerFormCharge()
+        pk = self.kwargs['pk']
+        context = {"form": form, "pk":pk }
+        return render(request, r"banner\bannerNotes.html", context)
+    
+
+class ExportNotesCsv(View):
+
+    def post(self, request, *args, **kwargs):
+
+        
+        materia = Banner.objects.filter(
+            cod_tarea=self.kwargs['pk']
+        ).values("student__nombre","student__apellidos").distinct()
+
+        wb = Workbook()
+        ws1 = wb.create_sheet(index=0, title="Plantilla")
+
+        #####3333
+
+        for number in range(0, len(CORTE)):
+            c1 = ws1.cell(row=1, column=number + 1)
+            c1.value = CORTE[number] + "_" + str(corte)
+
+        var_est = 2
+        for number in materia:
+            c1 = ws1.cell(row=var_est, column=1)
+            c1.value = number.cod_student.codigo
+            c1 = ws1.cell(row=var_est, column=2)
+            c1.value = str(number.cod_student)
+            c1 = ws1.cell(row=var_est, column=3)
+            c1.value = str(number.materia.codigo)
+            var_est += 1
+
+        content = save_virtual_workbook(wb)
+        response = HttpResponse(content)
+        response['Content-Disposition'] = 'attachment; filename=cargue_notas_estudiantes.xlsx'
+        response['Content-Type'] = 'application/x-xlsx'
+        return response

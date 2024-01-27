@@ -126,6 +126,21 @@ urlpatterns = [
         name='Task-Detail-View'
     ),
 
+    path(
+        'Task-Delete-View/<pk>/',
+        views.BannerTaskDeleteView.as_view(),
+        name='Task-Delete-View'
+    ),
+    path(
+        'Banner-Note-Masive/<pk>/',
+        views.BannerNoteMasive.as_view(),
+        name='Banner-Note-Masive'
+    ),
+    
+
+
+    
+
 
     
 

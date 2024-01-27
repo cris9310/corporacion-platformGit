@@ -311,3 +311,51 @@ class BannerTaksForm(forms.ModelForm):
         if tarea == "Sin asignar":
             raise forms.ValidationError("Debes seleccionar una actividad diferente a 'Sin asignar'.")
         return self.cleaned_data.get("tarea")
+    
+
+##Formulario de eliminacion de tareas en Banner
+        
+class BannerTaksDeleteForm(forms.ModelForm):
+
+    class Meta:
+        model = Banner
+        fields = ('__all__')
+        exclude =['student', "cod_tarea", "calificacion",'tarea',"observacion"]
+
+        widgets={
+
+
+                'cod_tarea':  HiddenInput(
+                    attrs={
+                        'id': 'cod_tarea'
+
+                    }
+                ),
+        }
+
+
+#Formulario de cargue masivo de estudiantes.
+class BannerFormCharge(forms.Form):
+
+    carga = forms.FileField(
+        required=True,
+        widget=forms.FileInput(
+            attrs={
+                'class':'form-control ',
+                'name':'carga',
+                'id':'carga'
+
+            }
+        )
+    )
+
+    def clean_carga(self):
+        carga_file1 = self.cleaned_data['carga'].name
+        carga_file_exp = (self.files['carga'])
+
+        if carga_file1 != 'cargue_notas.xlsx' :
+           self.add_error('carga', 'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_notas.xlsx" , por favor verifique y cárguelo nuevamente')
+
+        else:
+            return carga_file_exp
+        

@@ -665,6 +665,10 @@ th.sorting {
     font-size: 15px !important;
 }
 
+label strong {
+    color: var(--text-color-inactivos);
+}
+
 
 /* Css del body*/
 

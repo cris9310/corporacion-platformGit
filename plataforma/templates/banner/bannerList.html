@@ -70,30 +70,10 @@
                 &nbsp; Crear
               </a>
             </button>
-            <button  type="button" title="Detalles tareas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:Task-Detail-View' informacion.pk %}')">
+            <button  type="button" title="Detalle de tareas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:Task-Detail-View' informacion.pk %}')">
               <a >
                 <i  class="fa-regular fa-eye"></i>
                 &nbsp; Consultar
-              </a>
-            </button>
-            
-            <button  type="button" title="Cargar notas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
-              <a >
-                <i class="fa-solid fa-upload"></i>
-                &nbsp; Cargar
-              </a>
-            </button>
-            
-            <button  type="button" title="Descargar grupo" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
-              <a >
-                <i class="fa-solid fa-download"></i>
-                &nbsp; Descargar
-              </a>
-            </button>
-            <button  type="button" title="Eliminar tarea" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
-              <a >
-                <i class="fa-solid fa-trash-can"></i>
-                &nbsp; Eliminar
               </a>
             </button>
             
@@ -151,7 +131,6 @@
   function abrir_modal_edicion(url) {
     $('#edicion').load(url, function(){
         $(this).modal('show');
-        $('#materia').val("{{informacion.pk}}")
     });
   }
   function actulizar_eliminar(url, accion) {
