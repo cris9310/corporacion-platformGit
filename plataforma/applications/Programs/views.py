@@ -776,37 +776,38 @@ class BannerNoteMasive(View):
         context = {"form": form, "pk":pk }
         return render(request, r"banner\bannerNotes.html", context)
     
-
-class ExportNotesCsv(View):
+#Vista que Exporta plantilla de estudiantes para cargar notas
+class ExportNotesCsvView(View):
 
     def post(self, request, *args, **kwargs):
-
         
         materia = Banner.objects.filter(
             cod_tarea=self.kwargs['pk']
-        ).values("student__nombre","student__apellidos").distinct()
+        ).values("student__codigo","student__nombre","student__apellidos").distinct()
 
         wb = Workbook()
         ws1 = wb.create_sheet(index=0, title="Plantilla")
 
-        #####3333
-
         for number in range(0, len(CORTE)):
-            c1 = ws1.cell(row=1, column=number + 1)
-            c1.value = CORTE[number] + "_" + str(corte)
+            c1 = ws1.cell(row=1, column=1)
+            c1.value = "Codigo"
+            c1 = ws1.cell(row=1, column=3)
+            c1.value = "Estudiante"
+            c1 = ws1.cell(row=1, column=3)
+            c1.value = self.kwargs['pk']
 
-        var_est = 2
-        for number in materia:
-            c1 = ws1.cell(row=var_est, column=1)
-            c1.value = number.cod_student.codigo
-            c1 = ws1.cell(row=var_est, column=2)
-            c1.value = str(number.cod_student)
-            c1 = ws1.cell(row=var_est, column=3)
-            c1.value = str(number.materia.codigo)
-            var_est += 1
+        for i in range(len(materia)):
+            c1 = ws1.cell(row=i, column=1)
+            c1.value = materia[i]["student__codigo"]
+
+        for i in range(len(materia)):
+            c1 = ws1.cell(row=i, column=2)
+            c1.value = materia[i]["student__nombre"] + " " + materia[i]["student__apellidos"]
+        
+        
 
         content = save_virtual_workbook(wb)
         response = HttpResponse(content)
-        response['Content-Disposition'] = 'attachment; filename=cargue_notas_estudiantes.xlsx'
+        response['Content-Disposition'] = 'attachment; filename=cargue_notas.xlsx'
         response['Content-Type'] = 'application/x-xlsx'
         return response

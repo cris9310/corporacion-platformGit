@@ -136,6 +136,13 @@ urlpatterns = [
         views.BannerNoteMasive.as_view(),
         name='Banner-Note-Masive'
     ),
+    path(
+        'Banner-Note-Masive/<pk>/',
+        views.BannerNoteMasive.as_view(),
+        name='Banner-Note-Masive'
+    ),
+
+    
     
 
 
