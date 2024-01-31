@@ -776,10 +776,119 @@ class BannerNoteMasive(View):
         context = {"form": form, "pk":pk }
         return render(request, r"banner\bannerNotes.html", context)
     
+    def post(self, request, *args, **kwargs):
+        conteo = 0
+        Data = self.request.FILES['carga']
+        l = ["Codigo", "Estudiante", "Tarea_"+str(self.kwargs['pk'])]
+        mensaje = []
+        # zona de verificación de datos en el archivo
+        if Data.name == 'cargue_notas.xlsx':
+            warnings.filterwarnings(
+                'ignore', category=UserWarning, module='openpyxl')
+            notes = pd.read_excel(
+                Data, sheet_name="Plantilla", engine='openpyxl')
+            
+            # Validamos que no existan valores nulos y en blancos en el archivo.
+            miss_values_count = notes.isnull().sum()
+            miss_values_count = miss_values_count[miss_values_count != 0]
+            
+            print(list(notes), l)
+            for i, a in zip(list(notes), l):
+                if i != a:
+                    break
+            
+            if miss_values_count.shape[0] or i != a:
+                if miss_values_count.shape[0]:
+                    if miss_values_count.shape[0] == 1:
+                        mensaje.append({"error": 'El archivo tiene ' + str(
+                            miss_values_count.shape[0]) + ' columna sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje, safe=False)
+                        response.status_code = 400
+                        return response
+                    else:
+                        mensaje.append({"error": 'El archivo tiene ' + str(
+                            miss_values_count.shape[0]) + ' columnas sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje, safe=False)
+                        response.status_code = 400
+                        return response
+
+                else:
+                    mensaje.append({"error": 'La columna con encabezado ' + str(i) +
+                                    ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+            
+            elif len(notes) == 0:
+                    mensaje.append(
+                        {"error": 'No encontramos estudiantes para cargar'})
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+            
+            else:
+                # Verificamos que:  1. exista el estudiante en el salon, 2. las notas se encuentren entre cero y cinco.
+                # 3. No tener calificaciones en enteros
+                for i in range(len(notes)):
+                    try:
+                        resultado = Banner.objects.get(student_id=Estudiante.objects.get(codigo=str(notes['Codigo'][i])).id,
+                                                       cod_tarea=str(self.kwargs['pk']))
+                        conteo = 0 + conteo
+                    except:
+                        conteo = 1 + conteo
+                        mensaje.append(
+                            {"error":"Los datos introducidos en el archivo son erróneos, intenta cargar notas para: " + str(notes['Estudiante'][i]) + ", este alumno no tiene matriculada esta materia"})
+                
+                for i in range(len(notes)):
+                    try:
+                        float(notes["Tarea_"+str(self.kwargs['pk'])][i])
+                        conteo = 0 + conteo
+                        if float(notes["Tarea_"+str(self.kwargs['pk'])][i]) < 0.0 or float(notes["Tarea_"+str(self.kwargs['pk'])][i]) > 5.0:
+                            conteo = 1 + conteo
+                            mensaje.append(
+                                {"error":"El Estudiante " + \
+                               str(notes["Estudiante"][i]) + " contiene notas que no se encuentran bajo los parámetros, recuerde que deben estar en un rango de 0.0 a 5.0"}
+                            )
+
+                        else:
+                            conteo = 0 + conteo
+
+                    except:
+                        conteo = 1 + conteo
+                        mensaje.append(
+                            {"error":"El Estudiante " + \
+                            str(notes["Estudiante"][i]) + " contiene valores en notas que no son decimales, por favor verifique."}
+                        )
+                
+                if len(mensaje) > 0:
+                    response = JsonResponse(mensaje, safe=False)
+                    response.status_code = 400
+                    return response
+                
+                # 4. Actualizamos las notas del estudiante.
+                else:
+                    for i in range(0, len(notes)):
+
+                        actualizar = Banner.objects.filter(student_id=Estudiante.objects.get(codigo=str(notes['Codigo'][i])).id,
+                                                       cod_tarea=str(self.kwargs['pk'])).update(calificacion=float(notes["Tarea_"+str(self.kwargs['pk'])][i]))
+
+                    return HttpResponseRedirect(
+                        self.request.META.get("HTTP_REFERER")
+                    )
+
+
+        else:
+            mensaje.append({"error":'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_notas.xlsx" , por favor verifique y cárguelo nuevamente'})
+            response = JsonResponse(mensaje, safe=False)
+            response.status_code = 400
+            return response
+        return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
+
+    
 #Vista que Exporta plantilla de estudiantes para cargar notas
 class ExportNotesCsvView(View):
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         
         materia = Banner.objects.filter(
             cod_tarea=self.kwargs['pk']
@@ -791,17 +900,17 @@ class ExportNotesCsvView(View):
         for number in range(0, len(CORTE)):
             c1 = ws1.cell(row=1, column=1)
             c1.value = "Codigo"
-            c1 = ws1.cell(row=1, column=3)
+            c1 = ws1.cell(row=1, column=2)
             c1.value = "Estudiante"
             c1 = ws1.cell(row=1, column=3)
-            c1.value = self.kwargs['pk']
+            c1.value = "Tarea_"+str(self.kwargs['pk'])
 
         for i in range(len(materia)):
-            c1 = ws1.cell(row=i, column=1)
+            c1 = ws1.cell(row=i+2, column=1)
             c1.value = materia[i]["student__codigo"]
 
         for i in range(len(materia)):
-            c1 = ws1.cell(row=i, column=2)
+            c1 = ws1.cell(row=i+2, column=2)
             c1.value = materia[i]["student__nombre"] + " " + materia[i]["student__apellidos"]
         
         

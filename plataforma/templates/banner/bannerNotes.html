@@ -20,7 +20,7 @@
       <div id="errores" ></div>
       {{form.as_p}}
       <div class="modal-footer">
-        <button type="button"  class="btn btn-primary"><a href="{% url 'student_app:export-plant-student' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
+        <button type="button"  class="btn btn-primary"><a href="{% url 'settings_app:Export-Notes-Csv' pk %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
         
         <button class="btn btn-danger" type="button" id="spinner-div" disabled>
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

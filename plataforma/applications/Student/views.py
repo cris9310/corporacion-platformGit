@@ -248,7 +248,7 @@ class StudentAsigView(View):
                         return response
 
                 else:
-                    mensaje1.append({"error": 'La columna con encabezado ' + i +
+                    mensaje1.append({"error": 'La columna con encabezado ' + str(i) +
                                     ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
                     response = JsonResponse(mensaje1, safe=False)
                     response.status_code = 400

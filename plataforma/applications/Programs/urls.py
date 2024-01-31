@@ -141,6 +141,11 @@ urlpatterns = [
         views.BannerNoteMasive.as_view(),
         name='Banner-Note-Masive'
     ),
+    path(
+        'Export-Notes-Csv/<pk>/',
+        views.ExportNotesCsvView.as_view(),
+        name='Export-Notes-Csv'
+    ),
 
     
     

@@ -348,14 +348,3 @@ class BannerFormCharge(forms.Form):
             }
         )
     )
-
-    def clean_carga(self):
-        carga_file1 = self.cleaned_data['carga'].name
-        carga_file_exp = (self.files['carga'])
-
-        if carga_file1 != 'cargue_notas.xlsx' :
-           self.add_error('carga', 'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_notas.xlsx" , por favor verifique y cárguelo nuevamente')
-
-        else:
-            return carga_file_exp
-        

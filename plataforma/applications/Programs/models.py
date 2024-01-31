@@ -3,6 +3,7 @@ from django.db import models
 from datetime import datetime
 
 
+
 from applications.User.choices import *
 from applications.User.validators import *
 from applications.User.models import *
