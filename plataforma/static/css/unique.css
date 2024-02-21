@@ -1,6 +1,6 @@
 /* Google font importaciones */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
 * {
     font-family: 'Poppins', sans-serif;
@@ -45,6 +45,8 @@
     --toogle-color: #fff;
     --text-color: #ccc;
 }
+
+
 
 .general {
     display: flex !important;
@@ -670,391 +672,44 @@ label strong {
 }
 
 
-/* Css del body*/
+/* Css de la pagina de inicio que ve el cliente o visitante*/
 
-
-/* 
-html,
-body {
-    height: 100%;
-    margin: 0;
+.barra-uno-home {
+    font-weight: 300;
+    font-size: small;
+    font-style: normal;
+    background-color: var(--primary-color-dark);
+    height: 40px;
+    width: auto;
+    color: var(--primary-color-light);
     display: flex;
-    flex-direction: column;
-
 
 }
 
-Css del menu lateral
-
-#sidemenu {
-    width: 330px;
-    height: 100%;
-    background-color: #1F3257;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+.barra-uno-home a {
+    text-decoration: none !important;
+    color: var(--primary-color-light) !important;
 }
 
-#sidemenu>h1 {
-    color: white;
-    align-items: center;
-    padding-left: 30px;
-    padding-top: 10px;
-}
-
-#sidemenu>ul {
-    padding-top: 20px;
+.barra-uno-home a:hover {
+    color: var(--text-color-activos) !important;
 }
 
 
-#sidemenu>ul>li {
-    font-size: 20px;
+.barra-uno-home .barra-uno-home-uno div {
     justify-content: center;
-    align-items: center;
-    margin: 8px;
-    margin-left: 20px;
-    margin-right: 20px;
-    border-radius: 10px;
+    padding: 10px;
 }
 
-#sidemenu>ul>li:hover {
-    background-color: #346888;
-    font-weight: bold;
+.barra-uno-home .barra-uno-home-dos div {
+    text-align: end;
+    padding: 10px;
 }
 
-#sidemenu>ul>li>a>i {
-    font-size: 20px;
-}
-
-
-*/
-/* Css del menu  y el titulo
-.slider {
-    width: 100px;
-    height: 100px;
-    margin: auto;
-    overflow: hidden;
-
-}
-
-#menufijo {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-
-
-}
-
-
-.nav-item {
-    margin-right: 8px;
-
-
-}
-
-.navbar-brand {
-    color: #405FC9 !important;
-    font-weight: bold !important;
-}
-
-.nav-item:hover {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.h1 {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-
-
-}
-
-.h5 {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-weight: bold !important;
-
-}
-
-.h6 {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-weight: bold !important;
-
-}
-
-.divider {
-    top: 10%;
-    bottom: 10%;
-    margin-left: 15px;
-    margin-right: 15px;
-    border-left: 3px solid #000000;
-}
-
-
-#tit {
-    color: #000000;
-}
-
-*/
-/* Css de los filtros
-
-#submenu {
-    background-color: #f4f4f4 !important;
-    margin: 5px;
-    border-radius: 20px !important;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-
-
-}
-
-.fa-layers-counter {
-    background: #405FC9;
-    color: white;
-    border-radius: 10px;
-}
-
-.linea {
-    border-top: 1px solid #e7e4e4;
-    width: 100%;
-    padding: 0;
-    margin: 20px auto 0 auto;
-
-}
-
-
-
-.inicial {
+.navbar .navbar-brand {
     display: flex;
-
+    font-style: normal;
+    font-size: medium;
+    font-weight: 400;
+    color: var(--primary-color-dark) !important;
 }
-
-#conte {
-    margin: 30px !important;
-    border-radius: 10px;
-
-}
-
-#data-teacher {
-    height: 45px;
-    width: 180px;
-    border-radius: 25px;
-    background: #405FC9;
-    color: white;
-    border: none;
-}
-
-
-#button {
-    border: none;
-    height: 45px;
-    width: 180px;
-    border-radius: 25px;
-    color: white;
-
-}
-
-#button2 {
-    border: none;
-    height: 45px;
-    width: 180px;
-    border-radius: 25px;
-    color: white;
-
-}
-
-.tabla {
-    margin-top: 40px !important;
-    height: auto;
-}
-
-.paginate_button,
-.dataTables_info,
-.dataTables_length {
-    color: grey !important;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
-    font-weight: bold;
-}
-
-.paginate_button.current,
-.dataTables_length>label>select {
-    color: black;
-    border-color: #e7e4e4 !important;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
-    font-weight: bold;
-}
-
-div.dataTables_filter {
-    color: grey !important;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
-    font-weight: bold;
-}
-
-div.dataTables_filter>label>input {
-    border-color: #e7e4e4 !important;
-    font-size: 18px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
-    border-radius: 11px !important;
-}
-
-div.dataTables_filter>label>input:hover {
-    box-shadow: inset 0 0 5px #405FC9;
-}
-
-div.dataTables_filter>label>input:focus {
-    border-color: none;
-    outline: none;
-    box-shadow: inset 0 0 5px #405FC9;
-}
-
-thead {
-    background-color: #f4f4f4 !important;
-
-
-}
-
-
-
-th.sorting {
-    color: grey !important;
-    font-weight: bold;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    align-content: center !important;
-}
-
-
-tbody {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    color: black;
-}
-
-tbody a:link {
-    text-decoration: none !important;
-}
-
-
-
-#inactivo {
-    color: #f97b7b;
-}
-
-#activo {
-    color: #40c4a4;
-}
-
-#cursando {
-    color: #507bfc;
-}
-
-#iconos {
-    color: #507bfc;
-    background-color: #e4ecfc;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
-    padding-top: 8px;
-    padding-left: 8px
-}
-
-#iconos2 {
-    color: #f97b7b;
-    background-color: #fce4e4;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
-    padding-top: 8px;
-    padding-left: 8px;
-
-}
-
-.modal-dialog {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-.modal-dialog label {
-    font-weight: bold;
-}
-
-
-#spinner-div {
-    display: none;
-}
-
-.btn-outline-primary {
-    border-color: #405FC9 !important;
-    color: #405FC9 !important;
-}
-
-.btn-outline-primary:hover {
-    background-color: #405FC9 !important;
-    color: white !important;
-}
-
-.badge {
-    position: relative;
-    top: -20px;
-    left: -25px;
-    border: 1px solid black;
-    border-radius: 50%;
-    color: #fce4e4 !important;
-    background-color: #f97b7b !important;
-    border-color: #f97b7b !important;
-}
-
-.sin-student {
-    position: relative;
-    top: -20px;
-    left: -25px;
-    border: 1px solid black;
-    border-radius: 50%;
-    color: #fce4e4 !important;
-    background-color: #40c4a4 !important;
-    border-color: #40c4a4 !important;
-}
-
-#button a:link {
-    text-decoration: none !important;
-    color: white;
-}
-
-
-.exito {
-    background-color: #40c4a4 !important;
-}
-
-.exito:hover {
-    background-color: #03926F !important;
-}
-
-.azules {
-    background-color: #405FC9 !important;
-}
-
-.azules:hover {
-    background-color: #1a41c0 !important;
-}
-
-.progress {
-    width: 150px !important;
-    height: 20px !important;
-}
-
-.progress-bar {
-    background-color: #40c4a4 !important;
-
-}
-
-#barra {
-    text-decoration: none !important;
-    color: white !important;
-}
-
-
-
-#uno {
-    background-color: #405FC9 !important;
-}
-
-#materia {
-    width: 15px;
-    height: 15px;
-}
-
-#observacion {
-    height: 10em;
-}
-
-*/
