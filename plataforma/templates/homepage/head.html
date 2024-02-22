@@ -1,4 +1,5 @@
 {% load  static %}
+
 <div class="fixed-top">
   <div class="barra-uno-home">
     <div class="col barra-uno-home-uno">
@@ -29,19 +30,65 @@
     </div>
   </div>
 
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <a class="navbar-brand" href="#">
 
-
-  <nav class="navbar shadow">
-
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <div>
-          <img src="{% static 'img/home/act.png' %}" alt="" width="100" height="65" class="d-inline-block align-text-top">
-        </div>
-      </a>
+      <img src="{% static 'img/home/act.png' %}" alt="" width="100" height="65" class="d-inline-block align-text-top">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse navegacion" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active"  id="uno">
+          <a class="nav-link" href="#">La institución <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item"  id="dos">
+          <a class="nav-link" href="#">Estudia en CNE </a>
+        </li>
+        <li class="nav-item"  id="tres">
+          <a class="nav-link" href="#">Contáctanos </a>
+        </li>
+      </ul>
     </div>
   </nav>
 </div>
+  
+
+
+ 
+  {% block js %}
+  <script type="text/javascript">
+      var uno = document.getElementById("uno"),
+        dos = document.getElementById("dos"),
+        tres = document.getElementById("tres");
+    
+        uno.onclick = function () {
+        $(".navegacion .active").removeClass("active");
+        $("#uno").addClass("active");
+      }
+      dos.onclick = function () {
+        $(".navegacion .active").removeClass("active");
+        $("#dos").addClass("active");
+      }
+      tres.onclick = function () {
+        $(".navegacion .active").removeClass("active");
+        $("#tres").addClass("active");
+      }
+    
+    
+  
+    
+  
+  
+  </script>
+  
+  {% endblock js %}
+  
+
+  
+
 
 
 

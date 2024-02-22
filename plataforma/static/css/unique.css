@@ -674,6 +674,8 @@ label strong {
 
 /* Css de la pagina de inicio que ve el cliente o visitante*/
 
+
+
 .barra-uno-home {
     font-weight: 300;
     font-size: small;
@@ -712,4 +714,33 @@ label strong {
     font-size: medium;
     font-weight: 400;
     color: var(--primary-color-dark) !important;
+}
+
+.navegacion .navbar-nav .nav-item {
+    margin-left: 40px !important;
+}
+
+.navegacion .navbar-nav .nav-item .nav-link {
+    color: var(--primary-color-dark) !important;
+}
+
+.navegacion .navbar-nav .nav-item:hover {
+    border-bottom: 2px solid var(--text-color-activos) !important;
+
+}
+
+.navegacion .active {
+    border-bottom: 2px solid var(--text-color-activos) !important;
+
+}
+
+.carousel-item {
+    height: 550px;
+}
+
+.carousel-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 550px;
 }
