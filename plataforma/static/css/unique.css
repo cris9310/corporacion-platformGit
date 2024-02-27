@@ -695,6 +695,9 @@ label strong {
 
 .barra-uno-home a:hover {
     color: var(--text-color-activos) !important;
+    transition-property: color;
+    transition-delay: 0.2s;
+
 }
 
 
@@ -725,12 +728,14 @@ label strong {
 }
 
 .navegacion .navbar-nav .nav-item:hover {
-    border-bottom: 2px solid var(--text-color-activos) !important;
+    border-bottom: 3px solid var(--text-color-activos) !important;
+    transition-property: border-bottom;
+    transition-delay: 0.2s;
 
 }
 
 .navegacion .active {
-    border-bottom: 2px solid var(--text-color-activos) !important;
+    border-bottom: 3px solid var(--text-color-activos) !important;
 
 }
 
@@ -739,8 +744,70 @@ label strong {
 }
 
 .carousel-item img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    min-height: 550px;
+    height: 550px;
 }
+
+.carousel-caption {
+    text-align: left !important;
+    padding-bottom: 180px !important;
+}
+
+.iconosBase {
+    height: auto;
+    background: var(--sidebar-color);
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.iconosBase button {
+
+    margin: 20px;
+    border: none !important;
+    color: var(--primary-color-dark) !important;
+
+}
+
+.iconosBase button i {
+
+    font-size: 35px !important;
+
+
+}
+
+.iconosBase button:hover {
+
+    background: none !important;
+    color: var(--text-color-activos) !important;
+    transition-property: color !important;
+    transition-delay: 0.2s !important;
+
+
+}
+
+.estudiar {
+    margin-top: 20px;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    background: var(--primary-color-dark);
+}
+
+.estudiar-imagen {
+    display: inline-flex;
+    width: auto;
+    margin-bottom: 20px;
+}
+
+
+
+.estudiar-titulo {
+    margin: 20px;
+    color: var(--primary-color-light);
+
+}
+
+
