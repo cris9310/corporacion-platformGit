@@ -781,8 +781,7 @@ label strong {
 
     background: none !important;
     color: var(--text-color-activos) !important;
-    transition-property: color !important;
-    transition-delay: 0.2s !important;
+    transition-duration: 0.5s;
 
 
 }
@@ -802,12 +801,129 @@ label strong {
     margin-bottom: 20px;
 }
 
+.estudiar-imagen .estudiar-imagen-primaria {
+    position: relative;
+    background: var(--text-color-activos);
+
+}
+
+.estudiar-imagen .estudiar-imagen-primaria img {
+    filter: brightness(60%);
+
+}
+
+.estudiar-imagen .estudiar-imagen-primaria:hover img {
+    opacity: 0.5;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+
+}
+
+.estudiar-imagen .estudiar-imagen-primaria h3 {
+    color: var(--primary-color-light);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+.estudiar-imagen .estudiar-imagen-bachillerato {
+    position: relative;
+    background: var(--text-color-inactivos);
+
+}
+
+.estudiar-imagen .estudiar-imagen-bachillerato img {
+    filter: brightness(60%);
+
+}
+
+.estudiar-imagen .estudiar-imagen-bachillerato:hover img {
+    opacity: 0.5;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+
+}
+
+.estudiar-imagen .estudiar-imagen-bachillerato h3 {
+    color: var(--primary-color-light);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+.estudiar-imagen .estudiar-imagen-tecnicos {
+    position: relative;
+    background: var(--primary-color);
+
+}
+
+.estudiar-imagen .estudiar-imagen-tecnicos img {
+    filter: brightness(60%);
+
+}
+
+.estudiar-imagen .estudiar-imagen-tecnicos:hover img {
+    opacity: 0.5;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+
+}
+
+.estudiar-imagen .estudiar-imagen-tecnicos h3 {
+    color: var(--primary-color-light);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+
+.estudiar-imagen .estudiar-imagen-cursos {
+    position: relative;
+    background: var(--text-color);
+
+}
+
+.estudiar-imagen .estudiar-imagen-cursos img {
+    filter: brightness(60%);
+
+}
+
+.estudiar-imagen .estudiar-imagen-cursos:hover img {
+    opacity: 0.5;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+
+}
+
+.estudiar-imagen .estudiar-imagen-cursos h3 {
+    color: var(--primary-color-light);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 
 .estudiar-titulo {
     margin: 20px;
     color: var(--primary-color-light);
 
+
 }
 
-
+.estudiar-titulo h3 {
+    font-weight: bold;
+}
