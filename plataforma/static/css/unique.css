@@ -788,7 +788,7 @@ label strong {
 
 .estudiar {
     margin-top: 20px;
-    width: 100%;
+    width: auto;
     position: relative;
     display: inline-block;
     text-align: center;
@@ -926,4 +926,44 @@ label strong {
 
 .estudiar-titulo h3 {
     font-weight: bold;
+}
+
+.valores {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.valores i {
+    font-size: 50px !important;
+    color: var(--primary-color-dark);
+
+
+
+}
+
+.valores h3 {
+    font-weight: bold;
+    margin-top: 10px;
+    color: var(--primary-color-dark);
+}
+
+.valores p {
+    margin-top: 20px;
+    color: var(--primary-color-dark);
+}
+
+.valores-info-uno-titulo,
+.valores-info-dos-mision-titulo,
+.valores-info-dos-vision-titulo {
+    border-bottom: 2px solid var(--text-color-activos) !important;
+}
+
+.footter {
+    height: 400px;
+    width: auto;
+    background: var(--primary-color-dark);
+
 }
