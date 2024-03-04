@@ -745,11 +745,16 @@ label strong {
 
 .carousel-item img {
     height: 550px;
+    filter: brightness(60%);
 }
 
 .carousel-caption {
     text-align: left !important;
     padding-bottom: 180px !important;
+}
+
+.buttonCarruosel {
+    background: var(--text-color-activos) !important;
 }
 
 .iconosBase {
@@ -961,9 +966,40 @@ label strong {
     border-bottom: 2px solid var(--text-color-activos) !important;
 }
 
+
 .footter {
-    height: 400px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--sidebar-color);
+    font-size: 13px !important;
+    height: 330px;
     width: auto;
     background: var(--primary-color-dark);
+}
+
+
+.footter-final-datos,
+.footter-final-social {
+    margin-top: 30px;
+
+}
+
+.footter-footer {
+    margin-top: 10px;
+
+}
+
+.footter-final-datos p,
+.footter-final-social p {
+    text-align: left;
+
+}
+
+.footter-final-datos h5,
+.footter-final-social h5 {
+
+    border-bottom: 3px solid var(--text-color-activos) !important;
+    padding-bottom: 10px;
 
 }
