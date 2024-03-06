@@ -11,7 +11,7 @@ def RedirectView(request):
         )
 
 class HomePageView(TemplateView):
-    template_name = "homepage/homepage.html"
+    template_name = "homepage/homepageContent.html"
 
 class AdminLogin(LoginView):
     template_name = 'homepage/LoginView_form.html'

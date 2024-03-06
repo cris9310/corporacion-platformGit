@@ -739,6 +739,24 @@ label strong {
 
 }
 
+
+#dos .dropdown-menu {
+    background: var(--primary-color-dark) !important;
+    width: 400px !important;
+
+
+}
+
+#dos .dropdown-menu .dropdown-item {
+    color: var(--primary-color-light) !important;
+    font-size: medium;
+    font-weight: 300;
+    height: 50px;
+    padding: 15px;
+
+}
+
+
 .carousel-item {
     height: 550px;
 }

@@ -1,0 +1,147 @@
+{% extends "homepage/homepage.html" %}
+{% load  static %}
+{% block homecontent %}
+<div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="{% static 'img/home/u.jpg' %}" alt="First slide">
+            <div class="carousel-caption d-none d-md-block">
+              <h1>Prepara tu futuro con nosotros</h1>
+              
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="{% static 'img/home/2.jpg' %}" alt="Second slide">
+            <div class="carousel-caption d-none d-md-block">
+              <h1>Conoce nuestros programas</h1>
+              <button type="button" class="btn btn-info buttonCarruosel">Haz click aquí</button>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="{% static 'img/home/grado1.jpg' %}" alt="Third slide">
+            <div class="carousel-caption d-none d-md-block">
+              <h1>Educación de calidad a precios justos</h1>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+  </div>
+  <div class="container iconosBase">
+    <button class="btn btn-outline-info" type="button" id="home-botones">
+      <div>
+        <i class="fa-regular fa-pen-to-square"></i>
+      </div>
+      <div>
+        Inscripciones
+      </div>
+    </button>
+    <button class="btn btn-outline-info" type="button" id="home-botones">
+      <div>
+        <i class="fa-regular fa-calendar-days"></i>
+      </div>
+      <div>
+        Calendario académico
+      </div>
+    </button>     
+  </div>
+
+  <div class=" estudiar">
+    <div class="estudiar-titulo">
+     <h3>¿Qué quieres estudiar?</h3>
+    </div>
+    <div class="estudiar-imagen">
+      <div class="estudiar-imagen-primaria">
+        <a>
+          <img src="{% static 'img/home/primaria.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
+          <h3>Primaria para adultos</h3>
+        </a>
+        
+      </div>
+      <div class="estudiar-imagen-bachillerato">
+        <a>
+          <img src="{% static 'img/home/imagen1.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
+         <h3>Bachillerato por ciclos</h3>
+        </a>
+        
+      </div>
+      <div class="estudiar-imagen-tecnicos">
+        <a>
+          <img src="{% static 'img/home/imagen2.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
+          <h3>Programas técnicos</h3>
+        </a>
+        
+      </div>
+      <div class="estudiar-imagen-cursos">
+        <a>
+          <img src="{% static 'img/home/imagen3.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
+        <h3>Cursos</h3>
+        </a>
+        
+      </div>
+      
+    </div>
+
+    
+  </div>
+
+  <div class="container valores">
+    
+    <div class="valores-info">
+      <div class="valores-info-uno">
+        <div class="valores-info-uno-icono">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="valores-info-uno-titulo">
+          <h3>Inmersos en una cultura</h3>
+          
+        </div>
+        <div class="valores-info-uno-texto">
+          <p>La Corporación Nacional de Estudios ofrece una formación integral  
+            para sus técnicos y bachilleres que tiene como base un equilibrio 
+            entre educación de vanguardia y valores éticos.
+          </p>
+        </div>
+      </div>
+      <div class="row valores-info-dos">
+        <div class="col valores-info-dos-mision">
+          <div class="valores-info-dos-mision-icono">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <div class="valores-info-dos-mision-titulo">
+            <h3>Misión</h3>
+          </div>
+          <div class="valores-info-dos-mision-texto">
+            <p>Formar bachilleres con conducta participativa, crítica, responsable, 
+              creativa y proyectada a la continuación de sus estudios superiores.
+            </p>
+            <p>Formar técnicos laborales capaces de liderar diferentes procesos de
+               transformación teniendo como base los principios éticos.
+            </p>
+          </div>
+        </div>
+        <div class="col valores-info-dos-vision">
+          <div class="valores-info-dos-vision-icono">
+            <i class="fa-solid fa-school"></i>
+          </div>
+          <div class="valores-info-dos-vision-titulo">
+            <h3>Visión</h3>
+          </div>
+          <div class="valores-info-dos-vision-texto">
+            <p>Ser líder a nivel local y regional en la formación 
+              de bachilleres académicos y técnicos laborales que se
+               distingan por  su calidad educativa..
+            </p>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock homecontent %}
