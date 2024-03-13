@@ -13,6 +13,12 @@ urlpatterns = [
       views.HomePageView.as_view(), 
       name='home'
    ),
+   path(
+      'programs/primaria/',
+      views.PrimariaPageView.as_view(), 
+      name='primaria'
+   ),
+
    
    path(
       'login/', 

@@ -4,13 +4,17 @@
 CNE -Palmira
 {% endblock title %}
 {% block content %}
+<header>
+  <section class="fixed-top">
+  {% include "homepage/head.html" %}
+</section>
+</header>
 <div>
     <div>
-        {% include "homepage/head.html" %}
-    </div>
+    
     {% block homecontent %}
     {% endblock homecontent %}
-    
+    </div>
     <div class=" footter">
       <div class="container row footter-final">
         <div class=" col footter-final-social">

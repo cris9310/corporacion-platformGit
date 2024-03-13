@@ -13,6 +13,9 @@ def RedirectView(request):
 class HomePageView(TemplateView):
     template_name = "homepage/homepageContent.html"
 
+class PrimariaPageView(TemplateView):
+    template_name = "homepage/programPrimaria.html"
+
 class AdminLogin(LoginView):
     template_name = 'homepage/LoginView_form.html'
 

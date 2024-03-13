@@ -1,36 +1,36 @@
 {% load  static %}
 
-<div class="fixed-top">
-  <div class="barra-uno-home">
-    <div class="col barra-uno-home-uno">
-      {% if request.user.is_authenticated %}
-      
-      <div>
-        <span class="">Hola {{request.user.nombres}} &nbsp; | &nbsp;</span>
-        <a class="" href="{% url 'user_app:list-user' %}">
-            <i class="fas fa-user"></i> &nbsp;
-            Acceder
+<div class="barra-uno-home " id="barra-uno-home">
+  <div class="col barra-uno-home-uno">
+    {% if request.user.is_authenticated %}
+    
+    <div>
+      <span class="">Hola {{request.user.nombres}} &nbsp; | &nbsp;</span>
+      <a class="" href="{% url 'user_app:list-user' %}">
+          <i class="fas fa-user"></i> &nbsp;
+          Acceder
+      </a>
+    </div>
+    {% else %}
+    <div>
+        
+        <a class="" href="{% url 'homepage_app:login'%}">
+          <i class="fa-solid fa-right-to-bracket"></i> &nbsp;
+          Iniciar Sesión
         </a>
-      </div>
-      {% else %}
-      <div>
-          
-          <a class="" href="{% url 'homepage_app:login'%}">
-            <i class="fa-solid fa-right-to-bracket"></i> &nbsp;
-            Iniciar Sesión
-          </a>
-      </div>
-      {% endif %}
     </div>
-    <div class="col barra-uno-home-dos">
-      <div>
-        <i class="fa-solid fa-phone"></i> &nbsp;
-        (+57) 3185824051 | Calle 31 # 20 - 12 Palmira
-    </div>
-    </div>
+    {% endif %}
   </div>
+  <div class="col barra-uno-home-dos">
+    <div>
+      <i class="fa-solid fa-phone"></i> &nbsp;
+      (+57) 3185824051 | Calle 31 # 20 - 12 Palmira
+  </div>
+  </div>
+</div>
+<nav class="">
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+  <nav class="navbar  navbar-expand-lg navbar-light bg-light shadow">
     <a class="navbar-brand" href="#">
 
       <img src="{% static 'img/home/act.png' %}" alt="" width="100" height="65" class="d-inline-block align-text-top">
@@ -42,12 +42,12 @@
     <div class="collapse navbar-collapse navegacion" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active"  id="uno">
-          <a class="nav-link" href="#">La institución <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'homepage_app:home'%}">La institución <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item dropdown"  id="dos">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Estudia en CNE </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Primaria para adultos</a>
+            <a class="dropdown-item" href="{% url 'homepage_app:primaria'%}">Primaria para adultos</a>
             <a class="dropdown-item" href="#">Bachillerato por ciclos</a>
             <a class="dropdown-item" href="#">Bachillerato A Distancia</a>
             <a class="dropdown-item" href="#">Técnico en sistemas</a>
@@ -62,29 +62,15 @@
       </ul>
     </div>
   </nav>
-</div>
+</nav>
   
 
 
  
   {% block js %}
   <script type="text/javascript">
-      var uno = document.getElementById("uno"),
-        dos = document.getElementById("dos"),
-        tres = document.getElementById("tres");
+
     
-        uno.onclick = function () {
-        $(".navegacion .active").removeClass("active");
-        $("#uno").addClass("active");
-      }
-      dos.onclick = function () {
-        $(".navegacion .active").removeClass("active");
-        $("#dos").addClass("active");
-      }
-      tres.onclick = function () {
-        $(".navegacion .active").removeClass("active");
-        $("#tres").addClass("active");
-      }
     
     
   

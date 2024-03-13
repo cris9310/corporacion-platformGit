@@ -682,7 +682,6 @@ label strong {
     font-style: normal;
     background-color: var(--primary-color-dark);
     height: 40px;
-    width: auto;
     color: var(--primary-color-light);
     display: flex;
 
@@ -978,9 +977,9 @@ label strong {
     color: var(--primary-color-dark);
 }
 
-.valores-info-uno-titulo,
-.valores-info-dos-mision-titulo,
-.valores-info-dos-vision-titulo {
+.valores-info-uno-titulo h3,
+.valores-info-dos-mision-titulo h3,
+.valores-info-dos-vision-titulo h3 {
     border-bottom: 2px solid var(--text-color-activos) !important;
 }
 
@@ -1019,5 +1018,25 @@ label strong {
 
     border-bottom: 3px solid var(--text-color-activos) !important;
     padding-bottom: 10px;
+
+}
+
+.programa-contenedor img {
+
+    height: 250px;
+    max-width: 100%;
+
+}
+
+.programa-contenedor h1 {
+
+    color: var(--primary-color-dark) !important;
+
+}
+
+.adicional .titulo h2 {
+
+    color: var(--primary-color-dark) !important;
+    border-bottom: 3px solid var(--text-color-activos) !important;
 
 }
