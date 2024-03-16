@@ -31,7 +31,7 @@
 <nav class="">
 
   <nav class="navbar  navbar-expand-lg navbar-light bg-light shadow">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{% url 'homepage_app:home'%}">
 
       <img src="{% static 'img/home/act.png' %}" alt="" width="100" height="65" class="d-inline-block align-text-top">
     </a>
@@ -48,12 +48,11 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Estudia en CNE </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="{% url 'homepage_app:primaria'%}">Primaria para adultos</a>
-            <a class="dropdown-item" href="#">Bachillerato por ciclos</a>
-            <a class="dropdown-item" href="#">Bachillerato A Distancia</a>
-            <a class="dropdown-item" href="#">Técnico en sistemas</a>
-            <a class="dropdown-item" href="#">Técnico en Administración de empresas</a>
-            <a class="dropdown-item" href="#">Técnico Atención Integral A La Primera Infancia</a>
-            <a class="dropdown-item" href="#">Técnico en Secretariado ejecutivo</a>
+            <a class="dropdown-item" href="{% url 'homepage_app:bachillerato'%}">Bachillerato por ciclos</a> 
+            <a class="dropdown-item" href="{% url 'homepage_app:sistemas'%}">Técnico en sistemas</a>
+            <a class="dropdown-item" href="{% url 'homepage_app:administracion'%}">Técnico en Administración de empresas</a>
+            <a class="dropdown-item" href="{% url 'homepage_app:primera-infancia'%}">Técnico Atención Integral A La Primera Infancia</a>
+            <a class="dropdown-item" href="{% url 'homepage_app:secretariado'%}">Técnico en Secretariado ejecutivo</a>
           </div>
         </li>
         <li class="nav-item"  id="tres">

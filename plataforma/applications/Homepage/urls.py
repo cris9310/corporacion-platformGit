@@ -19,6 +19,40 @@ urlpatterns = [
       name='primaria'
    ),
 
+   path(
+      'programs/bachillerato/',
+      views.BachilleratoPageView.as_view(), 
+      name='bachillerato'
+   ),
+
+    path(
+      'programs/tecnico-sistemas/',
+      views.SistemasPageView.as_view(), 
+      name='sistemas'
+   ),
+
+   path(
+      'programs/tecnico-administracion/',
+      views.AdminPageView.as_view(), 
+      name='administracion'
+   ),
+   path(
+      'programs/tecnico-primera-infancia/',
+      views.PrimeraInfanciaPageView.as_view(), 
+      name='primera-infancia'
+   ),
+   path(
+      'programs/tecnico-secretariado/',
+      views.SecretariadoPageView.as_view(), 
+      name='secretariado'
+   ),
+   path(
+      'programs/tecnico-general/',
+      views.TecnicosGeneralPageView.as_view(), 
+      name='tecnico-general'
+   ),
+
+   
    
    path(
       'login/', 

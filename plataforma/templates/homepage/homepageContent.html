@@ -20,7 +20,7 @@
             <img class="d-block w-100" src="{% static 'img/home/2.jpg' %}" alt="Second slide">
             <div class="carousel-caption d-none d-md-block">
               <h1>Conoce nuestros programas</h1>
-              <button type="button" class="btn btn-info buttonCarruosel">Haz click aquí</button>
+              <a href="{% url 'homepage_app:tecnico-general'%}" role="button" class="btn btn-info buttonCarruosel">Haz click aquí</a>
             </div>
           </div>
           <div class="carousel-item">
@@ -65,14 +65,14 @@
         
       </div>
       <div class="estudiar-imagen-bachillerato">
-        <a>
+        <a href="{% url 'homepage_app:bachillerato'%}">
           <img src="{% static 'img/home/imagen1.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
          <h3>Bachillerato por ciclos</h3>
         </a>
         
       </div>
       <div class="estudiar-imagen-tecnicos">
-        <a  >
+        <a href="{% url 'homepage_app:tecnico-general'%}" >
           <img src="{% static 'img/home/imagen2.jpeg' %}" alt="" width="340" height="200" class="d-inline-block align-text-top">
           <h3>Programas técnicos</h3>
         </a>

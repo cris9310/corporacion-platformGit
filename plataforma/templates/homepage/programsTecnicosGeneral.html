@@ -1,0 +1,95 @@
+
+
+
+{% extends "homepage/homepage.html" %}
+{% load  static %}
+{% block homecontent %}
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{% static 'img/home/tecnicosCambio.jpeg' %}" alt="First slide">
+        <div class="carousel-caption d-none d-md-block">
+          <h1>Nuestros programas</h1>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+</div>
+
+
+<div class="container-fluid adicional">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2> Nuestros programas</h1></span>
+      </div>
+      
+  </div>
+  <div class="row tarjetasConfig">
+
+    <div class="col-lg-4">
+
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/primariaConCambio.jpeg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Primaria para adultos</h5>
+              <a href="{% url 'homepage_app:primaria'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/2.jpg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Técnico en Administración de empresas</h5>
+              <a href="{% url 'homepage_app:administracion'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-lg-4">
+
+        
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/bachilleratoCambio.jpg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Bachillerato por ciclos</h5>
+              <a href="{% url 'homepage_app:bachillerato'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/3.jpg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Técnico Atención Integral A La Primera Infancia</h5>
+              <a href="{% url 'homepage_app:primera-infancia'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+
+        
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/tecnicosCambio.jpeg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Técnico en sistemas</h5>
+              <a href="{% url 'homepage_app:sistemas'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+        <div class="card shadow mb-4" style="width: 18rem;">
+            <img class="card-img-top" src="{% static 'img/home/4.jpg' %}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Técnico en Secretariado ejecutivo</h5>
+              <a href="{% url 'homepage_app:secretariado'%}" class="btn btn-sm">Consultar</a>
+            </div>
+        </div>
+    </div>
+
+
+  
+  </div>
+
+</div>
+
+
+{% endblock homecontent %}

@@ -16,6 +16,27 @@ class HomePageView(TemplateView):
 class PrimariaPageView(TemplateView):
     template_name = "homepage/programPrimaria.html"
 
+class BachilleratoPageView(TemplateView):
+    template_name = "homepage/programBachillerato.html"
+
+class SistemasPageView(TemplateView):
+    template_name = "homepage/programSistemas.html"
+
+class AdminPageView(TemplateView):
+    template_name = "homepage/programAdmin.html"
+
+class PrimeraInfanciaPageView(TemplateView):
+    template_name = "homepage/programPrimeraInfancia.html"
+
+class SecretariadoPageView(TemplateView):
+    template_name = "homepage/programSecretariado.html"
+
+class TecnicosGeneralPageView(TemplateView):
+    template_name = "homepage/programsTecnicosGeneral.html"
+
+
+    
+
 class AdminLogin(LoginView):
     template_name = 'homepage/LoginView_form.html'
 
