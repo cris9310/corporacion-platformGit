@@ -1,17 +1,71 @@
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
     <head>
-        <title>LoginView</title>
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/dataquery.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'css/unique.css' %}" type="text/css">
         
+        <link rel="shortcut icon" href="{% static 'img/home/Recurso-7@2x.png' %}">
+        {% block extracss %}
+        {% endblock extracss %}
+        {% load bootstrap4 %}
+        {% bootstrap_css %}
+        {% load bootstrap_icons %}
+        {% load javascript_settings_tags %}
+        <title>CNE  - Palmira - Iniciar sesión</title>
     </head>
 
-<body>
-    <form method="POST">{% csrf_token %}
-        
-    <!-- form variable -->    
-    {{ form.as_p }} 
+<body class="body-login">
 
-    <input type="submit" name="sumbit">
-    </form>
+    <div class="container-fluid center-block " style="">
+        <div class="row tarjetasConfig">
+      
+            <div class="col-lg" >
+        
+                <!-- Default Card Example -->
+                <div class="card shadow mb-4" style=" height: 100%">
+                 <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class ="alert alert-danger"> Por favor, introduzca un Usuario y clave correctos. Observe que ambos campos pueden ser sensibles a mayúsculas.</div>
+                        {% endif %}
+
+                        <div class="col-md ms-auto" style=" margin-bottom: 20px">
+                            <label for="{{ form.username.id_for_label }}">Usuario:</label>
+                            {{ form.username }}
+                        </div>
+
+                        <div class="col-md ms-auto" style=" margin-bottom: 20px">
+                            <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+                            {{ form.password }}
+                        </div>
+                        <div class="col-md ms-auto " style=" margin-bottom: 20px">
+                            <button type="submit" class="btn btn-sm btn-block " id="spinner-div-real">
+                                Ingresar
+                            </button>
+                        </div>
+                        </form>
+                 </div>
+                    
+                </div>
+                
+        
+            </div>
+            
+        
+        </div>
+      
+      </div>
 </body>
 
 </html>
+

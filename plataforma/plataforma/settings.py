@@ -12,11 +12,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
+
+
+
 import os, json
 from pathlib import Path
 import sys
+import environ
 
 sys.modules['fontawesome_free'] = __import__('fontawesome-free')
+
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -158,8 +164,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = reverse_lazy('user_app:list-user')
-LOGOUT_REDIRECT_URL = reverse_lazy('homepage_app:logout')
+LOGIN_REDIRECT_URL = reverse_lazy('user_app:list-user') # terminar el login
+LOGOUT_REDIRECT_URL = reverse_lazy('homepage_app:login') 
+
+#Variables de envio de emails
+env = environ.Env()
+environ.Env.read_env()
+DEFAULT_FROM_EMAIL =get_secret("EMAIL_DEFAULT")
+NOTIFY_EMAIL =get_secret("EMAIL_DEFAULT")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = get_secret('EMAIL_HOST') 
+EMAIL_HOST_USER =get_secret("EMAIL_DEFAULT")
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_PASSWORD')
+RECIPIENT_ADDRESS = get_secret("EMAIL_DEFAULT")
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

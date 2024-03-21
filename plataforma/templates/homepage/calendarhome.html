@@ -1,0 +1,85 @@
+{% extends "homepage/homepage.html" %}
+{% load  static %}
+{% block homecontent %}
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{% static 'img/home/calendario.jpg' %}" alt="First slide">
+        <div class="carousel-caption d-none d-md-block">
+          <h1>Calendario académico</h1>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+</div>
+
+
+
+
+<div class="container-fluid adicional">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2> Datos del calendario</h1></span>
+      </div>
+      
+  </div>
+  <div class="row tarjetasConfig">
+
+    <div class="col-lg-4">
+
+        <!-- Default Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 text-center">
+                <h6 class="m-0 font-weight-bold tituloCard"><i class="fa-solid fa-file-pen"></i> &nbsp;Inscripciones</h6>
+            </div>
+            <div class="card-body text-center">
+                Todo el año
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+  
+      <!-- Default Card Example -->
+      <div class="card shadow mb-4">
+          <div class="card-header py-3 text-center">
+             <h6 class="m-0 font-weight-bold tituloCard"><i class="fa-solid fa-file-pen"></i> &nbsp;	
+                Inicio de clases </h6>
+          </div>
+          <div class="card-body text-center">
+            <figcaption>  Enero 2024</figcaption>
+
+          </div>
+          
+      </div>
+     </div>
+
+     <div class="col-lg-4">
+  
+      <!-- Default Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 text-center">
+            <h6 class="m-0 font-weight-bold tituloCard"><i class="fa-solid fa-file-pen"></i> &nbsp;	
+               Fin de clases </h6>
+         </div>
+         <div class="card-body text-center">
+           <figcaption>  Diciembre 2024</figcaption>
+
+         </div>
+          
+          
+      </div>
+  </div>
+
+  
+  </div>
+
+</div>
+
+
+{% endblock homecontent %}

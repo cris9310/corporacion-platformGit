@@ -1,0 +1,165 @@
+{% extends "homepage/homepage.html" %}
+{% load  static %}
+{% block homecontent %}
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{% static 'img/home/4.jpg' %}" alt="First slide">
+        <div class="carousel-caption d-none d-md-block">
+          <h1>Información de interés</h1>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+</div>
+
+
+
+
+<div class="container-fluid adicional">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2> Contacta con nosotros</h1></span>
+      </div>
+      
+  </div>
+  <div class="row tarjetasConfig">
+
+    <div class="col-lg">
+
+        <!-- Default Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-body text-left">
+                <figcaption> Gracias por su interés en la Corporación Nacional de Estudios.
+                </figcaption>
+                &nbsp;
+                <figcaption> Diligenciando el siguiente formulario, un asesor te contactará respondiendo tu solicitud.
+                    Si tu interés se mantiene en CNE, continuarás recibiendo información sobre tu programa de interés.
+                </figcaption>
+                &nbsp;
+                <figcaption> Es un gusto tenerte con nosotros!
+                </figcaption>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid ">
+  <div class="row tarjetasConfig">
+
+      
+    <div class="col-lg">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 text-center">
+            <h6 class="m-0 font-weight-bold tituloCard"><i class="fa-solid fa-book-open-reader"></i> &nbsp;Rellena los datos </h6>
+         </div>
+         <div class="card-body ">
+
+            <div id="errores">
+            </div>
+            <form  method="POST" id="dataGeneralForm" action="{% url 'homepage_app:contact' %}" >
+                {% csrf_token %}
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-6 ms-auto">
+                        <div class="nombre" ></div>
+                        <label for="nombre">{{ form.nombre.label}}</label>
+                        
+                        {{ form.nombre}}
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                        <div class="apellidos" ></div>
+                        <label for="apellidos">{{ form.apellidos.label}}</label>
+                        
+                        {{ form.apellidos}}
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-6 ms-auto">
+                        <div class="email" ></div>
+                        <label for="email">{{ form.email.label}}</label>
+                        
+                        {{ form.email}}
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                        <div class="telefono" ></div>
+                        <label for="telefono">{{ form.telefono.label}}</label>
+                        
+                        {{ form.telefono}}
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md ms-auto">
+                        <div class="observacion" ></div>
+                        <label for="observacion">{{ form.observacion.label}}</label>
+                        
+                        {{ form.observacion}}
+                    </div>
+                </div>
+                
+                
+                <div class="modal-footer" style="margin-top: 15px;">
+
+                <button class="btn btn-sm btn-block" type="button" id="spinner-div" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Cargando...
+                </button>
+
+                <button type="button" class="btn btn-sm btn-block " id="spinner-div-real" onclick="sendUser()">
+                    Enviar datos
+                </button>
+                </div>
+            </form>
+          
+         </div>
+            
+        </div>
+        
+
+    </div>
+  
+  </div>
+
+</div>
+
+{% endblock homecontent %}
+
+
+{% block js %}
+<script type="text/javascript">
+
+  
+  function sendUser() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'homepage_app:contact' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location = "{% url 'homepage_app:contact' %}";
+          mostrarOk();  
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarErroresCreacion(error);
+          mostrarError();
+        }
+      });
+    } 
+  }
+
+
+
+</script>
+
+{% endblock js %}

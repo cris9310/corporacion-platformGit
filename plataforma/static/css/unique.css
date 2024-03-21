@@ -1062,3 +1062,20 @@ label strong {
     color: var(--text-color-activos);
     background: var(--body-color);
 }
+
+
+/* Formularios del login */
+
+.body-login {
+    background: var(--body-color);
+    width: 100%;
+    height: 100%;
+
+}
+
+.body-login .container-fluid {
+    width: 450px;
+
+    margin-top: 150px;
+
+}

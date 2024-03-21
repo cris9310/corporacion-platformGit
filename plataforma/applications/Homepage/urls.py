@@ -51,6 +51,19 @@ urlpatterns = [
       views.TecnicosGeneralPageView.as_view(), 
       name='tecnico-general'
    ),
+   path(
+      'programs/calendario-home/',
+      views.CalendarPageView.as_view(), 
+      name='calendario-home'
+   ),
+
+   path(
+      'contact/',
+      views.ContactView.as_view(), 
+      name='contact'
+   ),
+
+   
 
    
    

@@ -11,6 +11,7 @@ from django.views.generic import (TemplateView,
                                   FormView, CreateView, DeleteView, UpdateView,
                                   DetailView, ListView, View)
 from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse, redirect
 from django.db.models import F, Sum, Avg, Count
 

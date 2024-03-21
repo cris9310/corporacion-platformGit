@@ -248,7 +248,7 @@ function mostrarErroresCreacion(errores) {
   for (let index = 0; index < datos.length; index++) {
     const element = datos[index];
     console.log(errores.responseJSON[0].error)
-    $("#errores").append(`<div class ="alert alert-danger" <strong>'${element.error}</strong></div>`);
+    $("#errores").append(`<div class ="alert alert-danger" <strong>${element.error}</strong></div>`);
   }
 
 }
