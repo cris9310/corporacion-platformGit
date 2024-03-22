@@ -1,8 +1,16 @@
 
-
-
 $(document).ready(function () {
-  window.onload = codeAddress;
+  var URLinicial = (window.location.pathname).toString().split("/")[1];
+
+  if (URLinicial == "home" || URLinicial == "programs" || URLinicial == "contact") {
+    window.onload = codeAddressHomepage;
+
+  } else {
+    window.onload = codeAddress;
+
+  }
+
+
 });
 
 function codeAddress() {
@@ -21,25 +29,30 @@ function codeAddress() {
     }
   }
 
-  if (urlParams == "order=todos") {
-    $("#todos").prop("checked", true);
-    $("#activos").prop("checked", false);
-    $("#inactivos").prop("checked", false);
-  } else if (urlParams == "order=activos") {
-    $("#activos").prop("checked", true);
-    $("#todos").prop("checked", false);
-    $("#inactivos").prop("checked", false);
-  } else if (urlParams == "order=inactivos") {
-    $("#inactivos").prop("checked", true);
-    $("#todos").prop("checked", false);
-    $("#activos").prop("checked", false);
+}
+
+function codeAddressHomepage() {
+  var URLactual = (window.location.pathname).toString().split("/")[1];
+  if (URLactual == "home") {
+    $(".navegacion #uno").removeClass("active");
+    $(".navegacion #dos").removeClass("active");
+    $(".navegacion #tres").removeClass("active");
+    $(".navegacion #uno").addClass("active");
+
+  } else if (URLactual == "programs") {
+    $(".navegacion #uno").removeClass("active");
+    $(".navegacion #dos").removeClass("active");
+    $(".navegacion #tres").removeClass("active");
+    $(".navegacion #dos").addClass("active");
 
   } else {
-    $("#inactivos").prop("checked", false);
-    $("#todos").prop("checked", false);
-    $("#activos").prop("checked", false);
+    $(".navegacion #uno").removeClass("active");
+    $(".navegacion #dos").removeClass("active");
+    $(".navegacion #tres").removeClass("active");
+    $(".navegacion #tres").addClass("active");
 
   }
+
 }
 
 

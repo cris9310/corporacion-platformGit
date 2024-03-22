@@ -29,8 +29,15 @@
       
             <div class="col-lg" >
         
-                <!-- Default Card Example -->
                 <div class="card shadow mb-4" style=" height: 100%">
+                <div class="card-header">
+                    <div class="row encabezado">
+                        <div class="titulo ">
+                          <span class=""><h2 ><i class="fa-solid fa-right-to-bracket"></i> CNE Login </h2></span>
+                        </div>
+                        
+                    </div>
+                </div>
                  <div class="card-body">
                     <form method="POST">
                         {% csrf_token %}
@@ -40,12 +47,13 @@
                         {% endif %}
 
                         <div class="col-md ms-auto" style=" margin-bottom: 20px">
-                            <label for="{{ form.username.id_for_label }}">Usuario:</label>
+                            <label for="{{ form.username.id_for_label }}">
+                                <i class="fa-regular fa-user"></i> &nbsp;Usuario:</label>
                             {{ form.username }}
                         </div>
 
                         <div class="col-md ms-auto" style=" margin-bottom: 20px">
-                            <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+                            <label for="{{ form.password.id_for_label }}"><i class="fa-solid fa-lock"></i> &nbsp; Contraseña:</label>
                             {{ form.password }}
                         </div>
                         <div class="col-md ms-auto " style=" margin-bottom: 20px">

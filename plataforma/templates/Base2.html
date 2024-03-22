@@ -22,10 +22,37 @@
   
 </div>
 {% else %}
-<div>
-  <a class="navbar-brand" href="{% url 'homepage_app:login'%}">
-    iniciar sesión
-  </a>
+<div class="body-login">
+
+  <div class="container-fluid center-block " style="">
+    <div class="row tarjetasConfig">
+  
+        <div class="col-lg" >
+    
+            <div class="card shadow mb-4" style=" height: 100%">
+            <div class="card-header">
+                <div class="row encabezado">
+                    <div class="titulo ">
+                      <span class=""><h2 ><i class="fa-solid fa-right-to-bracket"></i> CNE Login </h2></span>
+                    </div>
+                    
+                </div>
+            </div>
+             <div class="card-body">
+              <a href="{% url 'homepage_app:login'%}" class="btn btn-sm">iniciar sesión</a>
+              
+             </div>
+                
+            </div>
+            
+    
+        </div>
+        
+    
+    </div>
+  
+  </div>
+  
   
 </div>
 {% endif %}

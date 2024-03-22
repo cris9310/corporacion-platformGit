@@ -765,10 +765,7 @@ label strong {
     filter: brightness(60%);
 }
 
-.carousel-caption {
-    text-align: left !important;
-    padding-bottom: 180px !important;
-}
+
 
 .buttonCarruosel {
     background: var(--text-color-activos) !important;
@@ -1076,6 +1073,31 @@ label strong {
 .body-login .container-fluid {
     width: 450px;
 
-    margin-top: 150px;
+    margin-top: 120px;
+
+}
+
+.body-login h2,
+.body-login label {
+    color: var(--primary-color)
+}
+
+
+
+/* Mediaquery homepage */
+
+@media (width <=700px) {
+    .barra-uno-home-dos {
+        display: none !important;
+    }
+
+    .estudiar-imagen {
+        display: inline-table;
+        width: auto;
+    }
+
+    .estudiar-imagen img {
+        width: 500px;
+    }
 
 }
