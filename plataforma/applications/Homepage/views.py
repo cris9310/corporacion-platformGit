@@ -91,6 +91,12 @@ class ContactView(FormView):
 
 
 
+
+
+
+class Error404View(TemplateView):
+    template_name = "homepage/Error404.html"
+
 class AdminLogin(LoginView):
     template_name = 'homepage/LoginView_form.html'
     form_class = UserLoginForm

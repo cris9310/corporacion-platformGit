@@ -63,6 +63,14 @@ urlpatterns = [
       name='contact'
    ),
 
+   path(
+      'mirando/',
+      views.Error404View.as_view(), 
+      name='mirando'
+   ),
+
+   
+
    
 
    

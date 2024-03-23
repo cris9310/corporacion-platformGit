@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/dataquery.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/unique.css' %}" type="text/css">
+    
+    <link rel="shortcut icon" href="{% static 'img/home/Recurso-7@2x.png' %}">
+    {% block extracss %}
+    {% endblock extracss %}
+    {% load bootstrap4 %}
+	{% bootstrap_css %}
+    {% load bootstrap_icons %}
+    {% load javascript_settings_tags %}
+    <title>CNE - Palmira</title>
+</head>
+
+<body class="error404">
+
+    <div class="container-fluid " >
+        <div class="card shadow mb-4 ">
+           <div class="card-body ">
+            <div class="row" >
+                <div class="col " >
+    
+                    <img class="mx-auto d-block" src="{% static 'img/home/man404.jpg' %}" alt="" width="200" height="300">
+    
+                </div>
+                <div class="col adicional error4" >
+                    <div class="row encabezado">
+                        <div class="titulo">
+                          <span class=""><h2> <i class="fa-solid fa-circle-exclamation"></i> &nbsp;Error (404)</h2></span>
+                        </div>
+                        
+                    </div>
+                    <div class="">
+                        <figcaption>No hemos encontrado la página que buscas.</figcaption>
+                        <figcaption>Aquí tienes algunos enlaces que pueden ayudar:</figcaption>
+                        &nbsp;
+                        <figcaption> <a class="btn btn-sm" href="{% url 'homepage_app:home'%}">
+                            <i class="fa-solid fa-house"></i> &nbsp; Inicio 
+                        </a></figcaption>
+                        &nbsp;
+                        <figcaption><a class="btn btn-sm" href="{% url 'homepage_app:login'%}">
+                            <i class="fa-solid fa-right-to-bracket"></i>  &nbsp; Login </a></figcaption>
+                        &nbsp;
+                        <figcaption><a class="btn btn-sm" href="{% url 'homepage_app:tecnico-general'%}">
+                            <i class="fa-solid fa-graduation-cap"></i> &nbsp; Programas</a></figcaption>
+                        &nbsp;
+                        
+                    </div>
+                    
+
+                </div>
+    
+            </div>
+           </div>
+              
+        </div>
+
+        
+
+    </div>
+    
+    {% bootstrap_javascript jquery='full' %}
+
+    <script type="text/javascript"  src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/dataqyery.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/js-global.js' %}"></script>
+    <script type="text/javascript"  src="{% static 'js/alert.js' %}"></script>
+
+</body>
+
+</html>
+
+

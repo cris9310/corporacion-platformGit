@@ -1100,4 +1100,17 @@ label strong {
         width: 500px;
     }
 
+    .error4 h2 {
+        font-size: 25px !important;
+    }
+
+}
+
+
+/* error404 */
+
+.error404 .container-fluid {
+
+    max-width: 800px;
+    margin-top: 120px;
 }

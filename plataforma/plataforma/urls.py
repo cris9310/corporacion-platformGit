@@ -16,6 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler404
+
+
+from applications.Homepage.views import Error404View
 
 urlpatterns = [
 
@@ -29,4 +33,7 @@ urlpatterns = [
     #path('finance/', include('applications.Financiero.urls')),
 
 ]
+
+handler404 = Error404View.as_view()
+
 
