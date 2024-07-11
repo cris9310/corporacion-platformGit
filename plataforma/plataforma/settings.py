@@ -46,9 +46,9 @@ def get_secret(secret_name, secrets= secret):
 SECRET_KEY =  get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['167.88.36.68', 'wwww.corporacionnacionaldeestudios.edu.co', 'corporacionnacionaldeestudios.edu.co']
 
 MESSAGE_STORAGE= "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -205,3 +205,12 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 MEDIA_URL= '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Configuraciones de seguridad
+
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Asegúrate de que el resto de tu configuración esté correctamente organizada y accesible
