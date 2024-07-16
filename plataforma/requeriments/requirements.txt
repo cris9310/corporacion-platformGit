@@ -1,4 +1,4 @@
-anyio==3.6.1
+anyio==3.6.1p
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
 asgiref==3.5.2
@@ -110,8 +110,8 @@ prompt-toolkit==3.0.30
 protobuf==4.21.9
 psutil==5.9.1
 psycopg2
-psycopg2-binary==2.9.3
-psycopg2-pool==1.1
+psycopg2-binary
+psycopg2-pool
 pure-eval==0.2.2
 py==1.11.0
 pyasn1==0.4.8
