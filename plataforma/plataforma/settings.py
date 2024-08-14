@@ -42,13 +42,14 @@ def get_secret(secret_name, secrets= secret):
     except:
         mgs= 'la variable %s no existe' % secret_name
         raise ImproperlyConfigured(mgs)
+        
 
 SECRET_KEY =  get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['167.88.36.68', 'wwww.corporacionnacionaldeestudios.edu.co', 'corporacionnacionaldeestudios.edu.co']
+ALLOWED_HOSTS = []
 
 MESSAGE_STORAGE= "django.contrib.messages.storage.cookie.CookieStorage"
 

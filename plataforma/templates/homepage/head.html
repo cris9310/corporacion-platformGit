@@ -1,6 +1,8 @@
 {% load  static %}
 
-<div class="barra-uno-home " id="barra-uno-home">
+<div>
+
+<div class="barra-uno-home" id="barra-uno-home">
   <div class="col barra-uno-home-uno">
     {% if request.user.is_authenticated %}
     
@@ -30,7 +32,7 @@
 </div>
 <nav class="">
 
-  <nav class="navbar  navbar-expand-lg navbar-light bg-light shadow">
+  <nav class="navbar   navbar-expand-lg navbar-light bg-light shadow">
     <a class="navbar-brand" href="{% url 'homepage_app:home'%}">
 
       <img src="{% static 'img/home/act.png' %}" alt="" width="100" height="65" class="d-inline-block align-text-top">
@@ -53,16 +55,34 @@
             <a class="dropdown-item" href="{% url 'homepage_app:administracion'%}">Técnico en Administración de empresas</a>
             <a class="dropdown-item" href="{% url 'homepage_app:primera-infancia'%}">Técnico Atención Integral A La Primera Infancia</a>
             <a class="dropdown-item" href="{% url 'homepage_app:secretariado'%}">Técnico en Secretariado ejecutivo</a>
+            
           </div>
         </li>
         <li class="nav-item"  id="tres">
           <a class="nav-link" href="{% url 'homepage_app:contact' %}">Contáctanos </a>
+        </li>
+        <li class="nav-item"  id="tres">
+        {% if request.user.is_authenticated %}
+            
+            <a class="nav-link apreciar" href="{% url 'user_app:list-user' %}">
+              <span class="">Hola {{request.user.nombres}} &nbsp; | &nbsp;</span>
+                <i class="fas fa-user"></i> &nbsp;
+                Acceder
+            </a>
+            {% else %}
+            <a class="nav-link apreciar" href="{% url 'homepage_app:login'%}">
+              <i class="fa-solid fa-right-to-bracket"></i> &nbsp;
+              Iniciar Sesión
+            </a>
+            {% endif %}
         </li>
         
       </ul>
     </div>
   </nav>
 </nav>
+
+</div>
   
 
   

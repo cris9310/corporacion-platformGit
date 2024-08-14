@@ -67,17 +67,7 @@
 /* Resuable Css */
 
 
-@media (max-width: 800px) {
-    .sidebar {
-        width: 85px;
 
-    }
-
-    .sidebar .text {
-        opacity: 0;
-
-    }
-}
 
 
 .sidebar .text {
@@ -687,6 +677,10 @@ label strong {
 
 }
 
+.apreciar {
+    display: none !important;
+}
+
 .barra-uno-home a {
     text-decoration: none !important;
     color: var(--primary-color-light) !important;
@@ -807,7 +801,7 @@ label strong {
 
 .estudiar {
     margin-top: 20px;
-    width: auto;
+    width: 100%;
     position: relative;
     display: inline-block;
     text-align: center;
@@ -816,7 +810,7 @@ label strong {
 
 .estudiar-imagen {
     display: inline-flex;
-    width: auto;
+    width: 100%;
     margin-bottom: 20px;
 }
 
@@ -926,6 +920,7 @@ label strong {
 
 }
 
+
 .estudiar-imagen .estudiar-imagen-cursos h3 {
     color: var(--primary-color-light);
     font-weight: bold;
@@ -987,8 +982,8 @@ label strong {
     text-align: center;
     color: var(--sidebar-color);
     font-size: 13px !important;
-    height: 330px;
-    width: auto;
+    height: 100%;
+    width: 100%;
     background: var(--primary-color-dark);
 }
 
@@ -1086,23 +1081,158 @@ label strong {
 
 /* Mediaquery homepage */
 
-@media (width <=700px) {
-    .barra-uno-home-dos {
+@media screen and (max-width: 767px) {
+    .sidebar {
+        width: 85px;
+
+    }
+
+
+    .sidebar .text {
+        opacity: 0;
+
+    }
+
+
+
+    .carousel-item h1 {
+        font-size: 20px;
+    }
+
+    .barra-uno-home {
         display: none !important;
+    }
+
+    .apreciar {
+        display: block !important;
+    }
+
+    .barra-nav {
+        height: 350px !important;
+    }
+
+    .estudiar {
+        width: 100%;
+
     }
 
     .estudiar-imagen {
         display: inline-table;
-        width: auto;
+        width: 100%;
     }
 
     .estudiar-imagen img {
-        width: 500px;
+        width: 100%;
+        height: 200px;
     }
+
+
+
+    .estudiar-titulo h3,
+    .estudiar-imagen .estudiar-imagen-bachillerato h3,
+    .estudiar-imagen .estudiar-imagen-tecnicos h3,
+    .estudiar-imagen .estudiar-imagen-cursos h3,
+    .estudiar-imagen .estudiar-imagen-primaria h3 {
+        font-size: 20px;
+    }
+
+    .tituloCard,
+    .adicional .encabezado .titulo span h2 {
+
+        font-size: 20px;
+    }
+
+    .tarjetasConfig .card-body {
+        height: auto;
+    }
+
+
 
     .error4 h2 {
         font-size: 25px !important;
     }
+
+
+    .iconosBase {
+        margin-top: 0px;
+    }
+
+    .iconosBase button {
+
+        margin: 20px;
+        height: auto !important;
+    }
+
+    .iconosBase button i {
+
+        font-size: 30px !important;
+
+
+    }
+
+    .iconosBase h2 {
+        font-size: 20px !important;
+    }
+
+    .valores-info-uno-titulo h3,
+    .valores-info-dos-mision-titulo h3,
+    .valores-info-dos-vision-titulo h3 {
+        font-size: 20px;
+    }
+
+    .valores-info {
+        font-size: 20px;
+    }
+
+    .adicional {
+        margin-top: 50px;
+    }
+
+    .adicional h6 {
+        font-size: 20px;
+    }
+
+    .adicional .texto-movil p {
+
+        font-size: 12px;
+    }
+
+    .footter {
+        height: auto;
+
+    }
+
+    .footter-final-datos h5,
+    .footter-final-datos p {
+        font-size: 12px;
+        margin-left: 15px;
+        text-align: center;
+    }
+
+    .footter-final-social {
+        display: none;
+    }
+
+    .footter-footer {
+        margin-top: 50px;
+
+    }
+
+    .footter-footer p {
+
+        font-size: 12px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+    }
+
+    .btn-wsp {
+        right: 25px;
+    }
+
+
+
+
+
 
 }
 
