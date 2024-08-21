@@ -286,12 +286,12 @@ class InventarioCreateView(CreateView):
 #Vista de actualizacion de programas ok
 class InventarioUpdateView(UpdateView):
     model = Inventario
-    template_name = 'inventario/inventarioUpdate.html'
+    template_name = 'inventario/InventarioUpdate.html'
     form_class = InventarioRegisterForm
     success_url = reverse_lazy('settings_app:list-inventario')
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object
+        self.object = self.get_object()
         user_c = self.model.objects.get(pk=self.kwargs['pk'])
         form = InventarioRegisterForm(request.POST, instance=user_c)
         
@@ -324,8 +324,8 @@ class InventarioMasiveView(View):
     def get(self, request, *args, **kwargs):
         form = InventarioMasiveForm()
         context = {"form": form}
-        return render(request, r"inventario\inventarioMasive.html", context)
-    
+        return render(request, r"inventario/inventarioMasive.html", context)
+
     def post(self, request, *args, **kwargs):
 
         listaEncabezados = ["Nombre_asignatura", "Programa"]

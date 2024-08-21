@@ -14,7 +14,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-laptop-code"></i> Pensum académico</h1></span>
+          <span class=""><h2><i class="ri-macbook-line"></i> Pensum académico</h2></span>
         </div>
         
     </div>
@@ -32,13 +32,13 @@
               <div class="col-7 botones-miltiples">
                 <button  type="button" title="Carga masiva de asignaturas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-masive-asignaturas' %}')">
                     <a >
-                        <i class="fa-solid fa-upload"></i>
+                      <i class="ri-upload-2-fill"></i>
                       &nbsp; Carga masiva
                     </a>
                   </button>
                 <button  type="button" title="Crear asignatura" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-inventario' %}')">
                   <a >
-                    <i class="fa-solid fa-laptop-code"></i>
+                    <i class="ri-macbook-fill"></i>
                     &nbsp; Crear asignatura
                   </a>
                 </button>
@@ -68,18 +68,18 @@
                           <td>{{i.programa_name}}</td>
                           <td>{{i.nombre_materia}}</td>
                           {% if i.estado %}
-                          <td><span class="estado"><i class="fa-regular fa-circle-check "></i> &nbsp; Asignada</span></td>
+                          <td><span class="estado"><i class="ri-checkbox-circle-fill"></i> &nbsp; Asignada</span></td>
                           <td>
-                            <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk %}')" title="Asignar"><i class="fa-regular fa-square-plus iconos"></i></a>
-                            <a href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="fa-solid fa-magnifying-glass iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk %}')" title="Asignar"><i class="ri-add-box-fill iconos"></i></a>
+                            <a href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="ri-search-fill iconos"></i> </a>
                             
                            </td>
                           {% else %}
-                          <td><span class="iconos"><i class="fa-regular fa-circle-check "></i> &nbsp; Sin asignar</span></td>
+                          <td><span class="iconos"><i class="ri-checkbox-circle-fill"></i> &nbsp; Sin asignar</span></td>
                           <td>
-                            <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk  %}')" title="Asignar"><i class="fa-regular fa-square-plus iconos"></i></a>
-                            <a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk  %}')" title="Asignar"><i class="ri-add-box-fill iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-inventario' i.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
                             
                            </td>
 
@@ -90,7 +90,7 @@
                     </tbody>
                   </table> 
                 {% else %}
-                <table id=""  class="hover" style="width:100%; ">
+                <table id="table_general"  class="hover" style="width:100%; ">
                   <thead >
                     <th>Código</th>
                     <th>Nombre asignatura</th>

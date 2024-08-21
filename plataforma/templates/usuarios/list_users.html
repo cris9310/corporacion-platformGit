@@ -14,7 +14,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-regular fa-user"></i> Usuarios</h1></span>
+          <span class=""><h2><i class="ri-user-3-line"></i> Usuarios</h2></span>
         </div>
         
     </div>
@@ -31,7 +31,7 @@
               <div class="col-7 boton">
                 <button  type="button" title="Crear usuario" class="btn btn-sm" onclick="abrir_modal_general('{% url 'user_app:create-user' %}')">
                   <a >
-                    <i class="fa-regular fa-user"></i>
+                    <i class="ri-user-add-fill"></i>
                     &nbsp; Crear usuario
                   </a>
                 </button>
@@ -62,9 +62,9 @@
                           <td>{{i.apellidos}} {{i.nombres}}</td>
                           <td>{{i.username}}</td>
                           {% if i.is_active %}
-                          <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                          <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                           {% else %}
-                          <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                          <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                           {% endif %}
                           {% if i.last_login %}
                           <td>{{i.last_login |date:'d M Y'}}</td>
@@ -72,13 +72,13 @@
                           <td>NC</td>
                           {% endif %}
                           <td>
-                            <a  onclick="abrir_modal_edicion('{% url 'user_app:detail-user' i.pk  %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
-                            <a onclick="abrir_modal_edicion('{% url 'user_app:update-user' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                            <a onclick="abrir_modal_edicion('{% url 'user_app:deleted-user' i.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                            <a  onclick="abrir_modal_edicion('{% url 'user_app:detail-user' i.pk  %}')" title="Ver"><i class="ri-eye-fill iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'user_app:update-user' i.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'user_app:deleted-user' i.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
                             {% if i.is_active  %}
-                            <a  onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'inhabilitar')" title="Inhabilitar"><i   class="fa-solid fa-user-xmark iconos"></i></a>
+                            <a  onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
                             {% else %}
-                            <a onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'habilitar')" title="Habilitar"><i   class="fa-solid fa-user-check iconos"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'habilitar')" title="Habilitar"><i class="ri-user-follow-fill iconos"></i>
                             {% endif %}
                           </td>
 

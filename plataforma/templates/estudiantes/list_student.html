@@ -10,7 +10,7 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1></span>
+        <span class=""><h2><i class="ri-user-2-fill"></i> Estudiantes</h2></span>
       </div>
       
   </div>
@@ -25,20 +25,20 @@
         <div class="col-5 botones-miltiples">
           <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
               <a >
-                <i class="fa-solid fa-user-plus "></i>
+                <i class="ri-user-add-fill"></i>
                 &nbsp; Nuevo
               </a>
             </button>
           <button  type="button" title="Crear multiples estudiantes" class="btn btn-sm"  onclick="abrir_modal_general('{% url 'student_app:list-top-asignar'%}')">
             <a >
-              <i class="fa-solid fa-people-group"></i></a>
+              <i class="ri-group-fill"></i></a>
               &nbsp; Múltiples
             </a>
           </button>
           {% if masivo > 0 %}
           <span id="group">
             <button type="button" class="btn btn-sm" title="Ver estudiantes pendientes"  onclick="location.href='{% url 'student_app:list-student-cargue'%}'">
-              <i class="fas fa-bell" ></i>
+              <i class="ri-notification-fill"></i>
               &nbsp; Pendientes
             </button>
             <span class="badge badge-light">{{masivo}}</span>
@@ -46,7 +46,7 @@
           {% else %}
           <span id="group">
             <button type="button" class="btn btn-sm" title="Sin estudiantes pendientes" href="#">
-              <i class="fas fa-bell" ></i>
+              <i class="ri-notification-fill"></i>
               &nbsp; Pendientes
             </button>
             <span class="badge badge-light sin-student">0</span>
@@ -81,7 +81,7 @@
                         <td>{{estudiante.carrera}}</td>
 
                         {% if estudiante.is_active == True and estudiante.estado == True  %}
-                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                         <td>
                           
                         <a href="{% url 'student_app:student-notes' estudiante.pk   %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
@@ -93,7 +93,7 @@
 
                         {% elif estudiante.is_active == False and estudiante.estado == True  %}
                         
-                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                         <td>
                         <a href="{% url 'student_app:student-notes' estudiante.pk  %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
@@ -104,7 +104,7 @@
                         </td>
 
                         {% elif estudiante.is_active == True and estudiante.estado == False %}
-                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                         <td>
                         <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>
@@ -114,7 +114,7 @@
                         </td>
 
                         {% else   %}
-                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                         <td>
                         <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="fa-solid fa-square-plus iconos"></i></a>

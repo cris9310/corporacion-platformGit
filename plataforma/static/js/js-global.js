@@ -494,8 +494,8 @@ $(document).ready(function () {
       null,
       null,
       null,
-      { "width": "2%", "className": 'dt-body-center' },
-      { "width": "2%", "className": 'dt-body-center' },
+      null,
+      null,
     ],
 
 

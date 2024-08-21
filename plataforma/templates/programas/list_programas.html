@@ -9,7 +9,7 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="fa-solid fa-pencil"></i> Programas</h1></span>
+        <span class=""><h2><i class="ri-edit-2-line"></i> Programas</h1></span>
       </div>
       
   </div>
@@ -26,7 +26,7 @@
             <div class="col-7 boton">
               <button  type="button" title="Crear" class="btn btn-sm" onclick="abrir_modal_edicion('{% url 'settings_app:create-programas' %}')">
                 <a >
-                  <i class="fa-solid fa-pencil"></i>
+                  <i class="ri-edit-2-fill"></i>
                   &nbsp; Crear programas
                 </a>
               </button>
@@ -56,19 +56,19 @@
                       <td>{{programa.codigo}}</td>
                       <td>{{programa.programa}}</td>
                       {% if programa.is_active == True %}
-                      <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                      <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                       {% else %}
-                      <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                      <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                       {% endif %}
                       <td>
                         {% if programa.estado == True %}
-                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i class="ri-eye-fill iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
                          
                         {% else %}
-                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
-                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                        <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-Program' programa.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'settings_app:detail-program' programa.pk %}')" title="Ver"><i class="ri-eye-fill iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:update-Program' programa.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                        <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-Program' programa.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
                  
                         {% endif %}
                       </td>

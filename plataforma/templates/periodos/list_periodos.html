@@ -12,7 +12,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-book"></i> Periodos</h1></span>
+          <span class=""><h2><i class="ri-contacts-book-3-line"></i> Periodos</h2></span>
         </div>
         
     </div>
@@ -26,7 +26,7 @@
               <div class="col-12 boton">
                 <button  type="button" title="Crear periodo" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-periodo' %}')">
                   <a >
-                    <i class="fa-solid fa-book"></i>
+                    <i class="ri-contacts-book-fill"></i>
                     &nbsp; Crear periodo
                   </a>
                 </button>
@@ -52,10 +52,10 @@
                           <td><a>{{teach.periodo}}</a></td>
                           
                           {% if teach.estado == True %}
-                          <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Utilizado</span></td>
+                          <td><span class="estado"><i class="ri-checkbox-circle-fill "></i>&nbsp;En uso</span></td>
                           {% else %}
                           <td>
-                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-periodo' teach.id %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'settings_app:delete-periodo' teach.id %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i> </a>
                           </td>
                             {% endif %}
                         </tr>

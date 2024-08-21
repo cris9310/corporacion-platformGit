@@ -400,6 +400,11 @@ th.sorting {
     color: var(--text-color-activos) !important;
 }
 
+.estado i {
+    font-size: 1.17em !important;
+}
+
+
 .nonEstado {
     color: var(--text-color-inactivos) !important;
 }
@@ -407,6 +412,7 @@ th.sorting {
 
 .iconos {
     color: var(--primary-color) !important;
+    font-size: 1.17em !important;
 }
 
 .datos {

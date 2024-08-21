@@ -4,7 +4,7 @@
 <div class="modal-dialog" role="document" >
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"> <i class="fa-solid fa-book"></i> Eliminación de periodos</h5>
+      <h5 class="modal-title" id="exampleModalLabel"> <i class="ri-delete-bin-fill "></i> Eliminación de periodos</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
           <span aria-hidden="true">&times;</span>
       </button>
@@ -14,8 +14,7 @@
             <div class="cell medium-7">
                 <div >
                     <div >
-                      <h6>Desea eliminar al periodo:</h6>  
-                      <h6>{{ object.periodo }}</h6>
+                      <h6>¿Está seguro de que desea eliminar el periodo  {{ object.periodo }}?</h6>
                     </div>
                 </div>
             </div>
@@ -26,7 +25,7 @@
             </button>
   
             <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="deleteUser()" >
-              Eliminar usuario
+              Eliminar periodo 
             </button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
           </div>
