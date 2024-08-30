@@ -11,7 +11,7 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes pendientes </h2></span>
+        <span class=""><h2><i class="ri-user-2-fill"></i> Estudiantes pendientes </h2></span>
       </div>
       
   </div>
@@ -42,13 +42,13 @@
                       <td>{{estudiante.carrera}}</td>
 
                       {% if estudiante.is_active %}
-                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                         {% else %}
-                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Inactivo</span></td>
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                         {% endif %}
                         <td>
-                          <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                          <a onclick="abrir_modal_general('{% url 'student_app:delete-student-finally' estudiante.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'student_app:update-student' estudiante.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'student_app:delete-student-finally' estudiante.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
 
                         </td>
 

@@ -774,7 +774,7 @@ class BannerNoteMasive(View):
         form = BannerFormCharge()
         pk = self.kwargs['pk']
         context = {"form": form, "pk":pk }
-        return render(request, r"banner\bannerNotes.html", context)
+        return render(request, r"banner/bannerNotes.html", context)
     
     def post(self, request, *args, **kwargs):
         conteo = 0

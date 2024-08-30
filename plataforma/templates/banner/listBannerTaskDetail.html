@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-xl" role="document" >
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <i class="fa-solid fa-laptop-code"></i>&nbsp; Detalle de tareas y trabajos</h5>
+        <h5 class="modal-title" id="exampleModalLabel"> <i class="ri-macbook-line"></i>&nbsp; Detalle de tareas y trabajos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
             <span aria-hidden="true">&times;</span>
         </button>
@@ -33,8 +33,8 @@
                             <td > {{i.tarea}} </td >
                             <td > {{i.observacion}} </td >
                             <td >
-                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Task-Delete-View' i.codigo %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
-                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Banner-Note-Masive' i.codigo %}')" title="Cargar notas"><i   class="fa-solid fa-upload iconos"></i></a>
+                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Task-Delete-View' i.codigo %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Banner-Note-Masive' i.codigo %}')" title="Cargar notas"><i class="ri-upload-line iconos"></i></a>
                               
                             </td >
                           </tr>
@@ -54,8 +54,8 @@
                             <td > {{i.tarea}} </td >
                             <td > {{i.observacion}} </td >
                             <td >
-                              <span class="nonEstado"><i   class="fa-regular fa-trash-can "></i></span>
-                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Banner-Note-Masive' i.codigo %}')" title="Cargar notas"><i   class="fa-solid fa-upload iconos"></i></a>
+                              <span class="nonEstado"><i class="ri-delete-bin-fill"></i></span>
+                              <a onclick="abrir_modal_edicion('{% url 'settings_app:Banner-Note-Masive' i.codigo %}')" title="Cargar notas"><i class="ri-upload-line iconos"></i></a>
                               
                             </td >
                           </tr>

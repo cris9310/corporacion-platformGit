@@ -1,21 +1,25 @@
 
+
+
 {% load  static %}
 
 <div class="modal-dialog" role="document" >
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"> <i class="ri-user-2-fill"></i> Eliminación de estudiante</h5>
+      <h5 class="modal-title" id="exampleModalLabel"> <i class="ri-presentation-line"></i> Eliminación de docente</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
           <span aria-hidden="true">&times;</span>
       </button>
       </div>
       <div class="modal-body">
-        <form  method="POST" id="dataGeneralForm" action="{% url 'student_app:delete-student-finally' object.codigo %}">{% csrf_token %}
+        <form  method="POST" id="dataGeneralForm" action="{% url 'teacher_app:teacher-delete' object.pk %}">{% csrf_token %}
             <div class="cell medium-7">
                 <div >
                     <div >
                         <h6>Desea eliminar a:</h6>  
-                      <h6>{{ object.nombre }}, {{ object.apellidos }}</h6>
+                      <h6>{{ object.nombres }}, {{ object.apellidos }}</h6>
+                      
+                      <input type="hidden" name="codigo" id="codigo" class="codigo" value="{{object.codigo}}">
                     </div>
                 </div>
             </div>
@@ -26,7 +30,7 @@
             </button>
   
             <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
-              Eliminar estudiante
+              Eliminar docente
             </button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
           </div>
@@ -46,11 +50,11 @@
         $('#spinner-div-real').hide();
         var request = $.ajax({
           type: "POST",
-          url: "{% url 'student_app:delete-student-finally' object.codigo %}",
+          url: "{% url 'teacher_app:teacher-delete' object.pk %}",
           data: serializedData,
           success: function (response) {
             $("#edicion").modal("hide");
-            window.location = "{% url 'student_app:list-student' %}";
+            window.location = "{% url 'teacher_app:teacher-list' %}";
             mostrarOk();  
           },
           error: function (error) {
@@ -64,5 +68,4 @@
   </script>
   
   {% endblock js %}
-  
   

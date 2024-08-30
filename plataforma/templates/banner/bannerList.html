@@ -8,7 +8,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-laptop-code"></i> {{informacion.materia.nombre_materia}} ({{informacion.periodo}})</h1></span>
+          <span class=""><h2><i class="ri-macbook-line"></i> {{informacion.materia.nombre_materia}} ({{informacion.periodo}})</h1></span>
         </div>
         
     </div>
@@ -20,20 +20,20 @@
 
               <div style="display: flex"  >
               
-                  <strong><p  class="card-title">Código de la asignatura:</p></strong>
+                  <strong><p  class="card-title"><i class="ri-barcode-box-line"></i> &nbsp; Código de la asignatura:</p></strong>
                   <p class="card-text">&nbsp; {{informacion.materia.codigo}} - {{informacion.materia.programa}} </p>
                 
                 </div>
                 
                 <div style="display: flex" >
                 
-                  <strong><p  class="card-title">Docente:</strong>
+                  <strong><p  class="card-title"><i class="ri-presentation-line"></i>&nbsp; Docente:</strong>
                   <p class="card-text">&nbsp; {{informacion.docente}}</p>
                 
                 </div>
                 <div style="display: flex" >
                 
-                  <strong><p  class="card-title">Promedio general:</strong>
+                  <strong><p  class="card-title"><i class="ri-slideshow-line"></i> &nbsp; Promedio general:</strong>
                   <p class="card-text">&nbsp; {{general}}</p>
                 
                 </div>
@@ -56,7 +56,7 @@
               <strong><p  class="card-title">Fecha de cierre:</strong>
               <p class="card-text">&nbsp; {{informacion.cierre}}</p>
               {% if not informacion.is_active %}
-              &nbsp; - &nbsp; <span class="iconos"><i class="fa-regular fa-circle-check "></i> &nbsp; Asignatura cerrada</span>
+              &nbsp; - &nbsp; <span class="iconos"><i class="ri-close-circle-line "></i> &nbsp; Asignatura cerrada</span>
               {% endif %}
             
             </div>
@@ -66,13 +66,13 @@
 
             <button  type="button" title="Nueva tarea" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-banner-task' informacion.pk %}')">
               <a >
-                <i class="fa-solid fa-book"></i>
+                <i class="ri-contacts-book-fill"></i>
                 &nbsp; Crear
               </a>
             </button>
             <button  type="button" title="Detalle de tareas" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:Task-Detail-View' informacion.pk %}')">
               <a >
-                <i  class="fa-regular fa-eye"></i>
+                <i class="ri-eye-fill"></i>
                 &nbsp; Consultar
               </a>
             </button>

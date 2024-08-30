@@ -194,7 +194,7 @@ class StudentAsigView(View):
     def get(self, request, *args, **kwargs):
         form = StudentAsigMate()
         context = {"form": form}
-        return render(request, r"estudiantes\asig_topics.html", context)
+        return render(request, r"estudiantes/asig_topics.html", context)
 
     def post(self, request, *args, **kwargs):
 

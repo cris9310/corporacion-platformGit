@@ -404,15 +404,20 @@ th.sorting {
     font-size: 1.17em !important;
 }
 
-
 .nonEstado {
     color: var(--text-color-inactivos) !important;
+    text-decoration: none !important;
+    font-size: 1.17em !important;
 }
 
 
 .iconos {
     color: var(--primary-color) !important;
     font-size: 1.17em !important;
+}
+
+.buscar-iconos {
+    text-decoration: none !important;
 }
 
 .datos {
@@ -1241,6 +1246,8 @@ label strong {
 
 
 }
+
+
 
 
 /* error404 */

@@ -1,0 +1,104 @@
+{% extends "Base2.html" %} 
+{% load static %} 
+
+{% block title %}Cursos | Portal CNE{% endblock title %}
+
+{% block extracontent %} 
+
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-contacts-book-line"></i> Cursos</h2></span>
+      </div>
+      
+  </div>
+  <div class="datos">
+    
+    <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            {% if teacherTp %} 
+            {% for i in topics %}
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Nombre del docente:</p></strong>
+              <p class="card-text">&nbsp; {{i.apellidos}} {{i.nombres}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Código:</strong>
+              <p class="card-text">&nbsp; {{i.codigo}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Total asignaturas:</strong>
+              <p class="card-text">&nbsp; {{Tmaterias}}</p>
+            
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        
+    </div>
+  </div>
+
+  <div class="card">
+    
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if teacherTp %}
+                <table id="table_id4"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código clase</th>
+                    <th>Programa</th>
+                    <th>Asignatura</th>
+                    <th>Alumnos</th>
+                    <th>Periodo</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for i in teacherTp %}
+                    <tr>
+                      <td >{{i.codigo}}</td>
+                      <td>{{i.programa}}</td>
+                      <td>{{i.materia}}</td>
+                      <td>{{i.total}}</td>
+                      <td>{{i.periodo}}</td>
+                      {% if i.total > 0  %}
+                      <td><a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                      {% else %}
+                      <td ><a  class="buscar-iconos" href="#" title="Consultar" ><i class="ri-search-line nonEstado"></i></a></td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>    
+              {% endif %}
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+{% endblock extracontent %}
+
+
+
+

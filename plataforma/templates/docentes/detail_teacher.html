@@ -1,0 +1,158 @@
+
+<div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="ri-presentation-line icon"></i>&nbsp; 
+          {{ object.nombres }}&nbsp;{{ object.apellidos }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          <div class="container-fluid personal">
+            <div class="card">
+              <div class="card-header">
+                <div class="titulo">
+                  Información personal
+                </div>
+                
+              </div>
+              
+              <div class="card-body" style="display: flex">
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-id-card-line"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        T. Documento:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.tDocument }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-id-card-line"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Identificación:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.codigo }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-phone-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Teléfono:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.telefono }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-map-pin-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Dirección:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.direccion }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-calendar-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Fecha de Nacimiento:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nacimiento }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-mail-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Correo electrónico:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.email}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-user-5-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Género:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {% if object.sexo == 'Masculino' %}
+                         Masculino
+                        {% elif object.sexo == "Otros" %}
+                        Otro
+                        {% else %}
+                          Femenino
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-user-3-line"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Usuario
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.username }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="ri-calendar-fill"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Creado desde
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.fecha_reg }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                  
+                </div>
+              </div>        
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
