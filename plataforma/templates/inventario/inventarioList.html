@@ -71,11 +71,11 @@
                           <td><span class="estado"><i class="ri-checkbox-circle-fill"></i> &nbsp; Asignada</span></td>
                           <td>
                             <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk %}')" title="Asignar"><i class="ri-add-box-fill iconos"></i></a>
-                            <a href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="ri-search-fill iconos"></i> </a>
+                            <a class="buscar-iconos" href="{% url 'settings_app:list-materias' i.pk  %}" title="Consultar"><i class="ri-search-line iconos"></i> </a>
                             
                            </td>
                           {% else %}
-                          <td><span class="iconos"><i class="ri-checkbox-circle-fill"></i> &nbsp; Sin asignar</span></td>
+                          <td><span class="nonEstado"><i class="ri-close-circle-line"></i> &nbsp; Sin asignar</span></td>
                           <td>
                             <a onclick="abrir_modal_edicion('{% url 'settings_app:create-materias' i.pk  %}')" title="Asignar"><i class="ri-add-box-fill iconos"></i></a>
                             <a onclick="abrir_modal_edicion('{% url 'settings_app:update-inventario' i.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>

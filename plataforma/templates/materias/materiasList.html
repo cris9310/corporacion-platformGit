@@ -14,7 +14,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-laptop-code"></i> {{asignatura.nombre_materia}}</h1></span>
+          <span class=""><h2><i class="ri-macbook-line"></i> {{asignatura.nombre_materia}}</h2></span>
         </div>
         
     </div>
@@ -32,7 +32,7 @@
               <div class="col-7 boton">
                 <button  type="button" title="Asignar" class="btn btn-sm" onclick="abrir_modal_general('{% url 'settings_app:create-materias' pk %}')">
                   <a >
-                    <i class="fa-regular fa-square-plus"></i>
+                    <i class="ri-add-circle-line"></i>
                     &nbsp; Nueva asignación
                   </a>
                 </button>
@@ -67,21 +67,21 @@
                           <td>{{i.jornada}}</td>
                           <td>{{i.cierre}}</td>
                           {% if i.is_active %}
-                          <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                          <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                           <td>
                             {% if i.total > 0 %}
-                            <a href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
                             {% else %}
-                            <a href="#" title="Consultar"><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                            <a class="buscar-iconos" href="#" title="Consultar"><i class="ri-search-line nonEstado" ></i></a>
                             {% endif %}
                            </td>
                           {% else %}
-                          <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                          <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                           <td>
                             {% if i.total > 0 %}
-                            <a href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
                             {% else %}
-                            <a href="#" title="Consultar"><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                            <aclass="buscar-iconos"  href="#" title="Consultar"><i class="ri-search-line nonEstado" ></i></aclass=>
                             {% endif %}
                           </td>
                           {% endif %}

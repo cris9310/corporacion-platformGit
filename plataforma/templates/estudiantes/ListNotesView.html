@@ -8,7 +8,7 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}} </h1></span>
+        <span class=""><h2><i class="ri-user-2-fill"></i> Asignaturas de {{estudiante.nombre}} {{estudiante.apellidos}} </h2></span>
       </div>
       
   </div>
@@ -19,19 +19,19 @@
           <div class="" style="">
             <div style="display: flex"  >
             
-              <strong><p  class="card-title">Código del estudiante:</p></strong>
+              <strong><p  class="card-title"><i class="ri-barcode-box-line"></i>&nbsp; Código del estudiante:</p></strong>
               <p class="card-text">&nbsp; {{estudiante.codigo}}</p>
             
             </div>
             <div style="display: flex" >
             
-              <strong><p  class="card-title">Programa:</strong>
+              <strong><p  class="card-title"><i class="ri-presentation-line"></i>&nbsp; Programa:</strong>
               <p class="card-text">&nbsp; {{estudiante.carrera}}</p>
 
             </div>
             <div style="display: flex" >
             
-              <strong><p  class="card-title">Promedio:</strong>
+              <strong><p  class="card-title"><i class="ri-slideshow-line"></i>&nbsp; Promedio:</strong>
               <p class="card-text">&nbsp; {{final.promedio}}</p>
             
             </div>
@@ -81,18 +81,18 @@
                         <td>{{student.nombre}}</td> 
                         <td>{{student.periodo}}</td> 
                         {% if student.estado %}
-                        <td><span ><i class="fa-solid fa-hourglass-half iconos"></i> &nbsp; En curso</span></td>
+                        <td><span ><i class="ri-indeterminate-circle-line iconos"></i> &nbsp; En curso</span></td>
                         <td>{{student.promedio}}</td>
                         {% else %}
-                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp; Cerrada</span></td>
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp; Cerrada</span></td>
                         <td>{{student.promedio}}</td>
                         {% endif %}
 
                         {% if student.tiene == "si" %}
-                        <td><a href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk  %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a></td>
+                        <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
                         {% else %}
-                        <td><a href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
-                        <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.pk %}')" title="Eliminar"><i  class="fa-regular fa-trash-can iconos"></i></a>
+                        <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.pk %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
                         </td>
                         {% endif %}
 

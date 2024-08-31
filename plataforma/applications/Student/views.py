@@ -706,9 +706,7 @@ class StudentNotesListview(ListView):
 
         datos = Banner.objects.filter(student_id=self.kwargs['pk'], materia__is_active=False).values("materia_id", 
                                                                            "materia__an_creacion", 
-                                                                           "materia__materia__codigo").distinct(
-                                                                               
-                                                                           ).order_by(
+                                                                           "materia__materia__codigo").distinct().order_by(
             'materia__materia__codigo','-materia__an_creacion'
         )
         dataLista=[]

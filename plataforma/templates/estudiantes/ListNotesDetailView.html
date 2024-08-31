@@ -8,7 +8,7 @@
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
-          <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> {{estudiante.nombre}} {{estudiante.apellidos}} - {{estudiante.carrera}}</h1></span>
+          <span class=""><h2><i class="ri-user-2-fill"></i> {{estudiante.nombre}} {{estudiante.apellidos}} - {{estudiante.carrera}}</h2></span>
         </div>
         
     </div>
@@ -21,20 +21,20 @@
                 {% for i in informacion %}
                 <div style="display: flex"  >
                 
-                    <strong><p  class="card-title">Código de la asignatura:</p></strong>
+                    <strong><p  class="card-title"><i class="ri-barcode-box-line"></i>&nbsp; Código de la asignatura:</p></strong>
                     <p class="card-text">&nbsp; {{i.codigo}}</p>
                   
                   </div>
                   
                   <div style="display: flex" >
                   
-                    <strong><p  class="card-title">Asignatura:</strong>
+                    <strong><p  class="card-title"><i class="ri-presentation-line"></i>&nbsp; Asignatura:</strong>
                     <p class="card-text">&nbsp; {{i.nombre}}</p>
                   
                   </div>
                   <div style="display: flex" >
                   
-                    <strong><p  class="card-title">Promedio:</strong>
+                    <strong><p  class="card-title"><i class="ri-slideshow-line"></i>&nbsp;Promedio:</strong>
                     <p class="card-text">&nbsp; {{i.promedio}}</p>
                   
                   </div>
