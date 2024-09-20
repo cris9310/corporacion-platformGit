@@ -15,6 +15,7 @@ class Facturas(models.Model):
     codigo = models.CharField(max_length=200, blank=True, null=True)
     email=models.EmailField( verbose_name='Em@il', blank=True)
     monto =  models.DecimalField(max_digits= 30, decimal_places=0)
+    due_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     descripcion = models.CharField(max_length=200, unique=False)

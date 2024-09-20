@@ -134,6 +134,14 @@ class ProgramaForm(forms.ModelForm):
                     'class':'form-control'
                 }
             ),
+            "tiene_grado": CheckboxInput(
+                attrs={
+                    'id':'tiene_grado',
+                    'class':'custom-control-input',
+                    'onchange':"toggleText()",
+                    'role':"switch"
+                }
+            ),
 
 
         }

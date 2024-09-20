@@ -109,7 +109,8 @@ class ProgramaCreateView(CreateView):
                 costo=form.cleaned_data['costo'],
                 derechosGrado=form.cleaned_data['derechosGrado'],
                 programa_name=form.cleaned_data['programa_name'],
-                aceptado=form.cleaned_data['aceptado']
+                aceptado=form.cleaned_data['aceptado'],
+                tiene_grado=form.cleaned_data['tiene_grado']
 
             )
             mensaje = f'{self.model.__name__} creado correctamente'
@@ -139,7 +140,7 @@ class ProgramaDetailView(DetailView):
             pk=self.kwargs['pk'])
         datos_final = {"cod_prog": datos.cod_prog, 'programa_name': datos.programa_name,
                 'matricula': f'$ {datos.matricula:,.2f}', 'costo': f'$ {datos.costo:,.2f}', 'cuota_valor': f'$ {datos.cuota_valor:,.2f}',
-                'Dgrado': f'$ {datos.derechosGrado:,.2f}', "cuotas": datos.cuotas
+                'Dgrado': f'$ {datos.derechosGrado:,.2f}', "cuotas": datos.cuotas, "tieneGrado":  datos.tiene_grado
             }
 
         context['datos'] = datos_final

@@ -33,6 +33,7 @@ class Programas(models.Model):
     an_creacion=models.CharField(max_length=50, default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True)
     tipe = models.ForeignKey(CatalogsTypesProg, on_delete=models.CASCADE)
+    tiene_grado=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
     objects = BuscadorManager()
 

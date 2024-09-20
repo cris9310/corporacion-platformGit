@@ -1,6 +1,5 @@
-from typing import Any
-from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
+
+
 from .models import *
 from .forms import *
 from applications.Finance.models import *
@@ -12,18 +11,19 @@ from django.views.generic import (TemplateView,
                                   DetailView, ListView, View)
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse, redirect
-from django.db.models import F, Sum, Avg, Count
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.db.models import Avg
+from django.db.models.base import Model as Model
 
 
 import warnings
 import pandas as pd
-from pandas import json_normalize
 import re
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
-import json
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -101,45 +101,113 @@ class StudentCreateView(CreateView):
                 is_superuser=False,
                 is_active=True,
                 is_staff=False,
+
             )
             # Generamos las facturas relacionadas con el estudiante, hace referencia a matrícula y a las facturas de las pensiones mensuales
-           
-            matricula = Facturas.objects.create(
-                user=User.objects.get(
-                    username=form.cleaned_data.get('username')),
-                codigo=Facturas.objects.code_invoice(),
-                email=form.cleaned_data.get('email'),
-                monto=Programas.objects.get(
-                    programa_name=form.cleaned_data.get('carrera')).matricula,
-                descripcion="Matricula",
-                estado=CatalogsTypesInvoices.objects.get(
-                    estado="Pendiente"),
-            )
-            derechosGrado = Facturas.objects.create(
-                user=User.objects.get(
-                    username=form.cleaned_data.get('username')),
-                codigo=Facturas.objects.code_invoice(),
-                email=form.cleaned_data.get('email'),
-                monto=Programas.objects.get(
-                    programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                descripcion="Derechos de grado",
-                estado=CatalogsTypesInvoices.objects.get(
-                    estado="Pendiente"),
-            )
-            for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
-                inv_list.append(Facturas(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
-                    codigo=int(Facturas.objects.code_invoice()) + i,
-                    email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).cuota_valor,
-                    descripcion="Mensualidad número " + str(i+1),
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
 
-                ))
-            Facturas.objects.bulk_create(inv_list)
+            # vamos a realizar una validacion extra, verificamos que el programa al cual se matricula tenga o no grado y asi decidimos si 
+            # generamos o no factura de derecho a grado. A cursos y diplomados no se genera facturas de matriculas
+            # Recordar incluir las fechas de vencimiento de las facturas y analizar el hecho de incluir botones de cerrar o graduar a estudiante
+            # si ya termina un programa que no tiene grado
+
+            programa = Programas.objects.get(programa_name=form.cleaned_data.get('carrera'))
+            cuotas = int(programa.cuotas)
+
+            if programa.tiene_grado:
+                # Calcular la fecha de vencimiento para el certificado de grado
+                fechafacturacertificados = datetime.now() + relativedelta(months=cuotas)
+                fechafacturacertificados = fechafacturacertificados.replace(day=5)
+
+                # Crear factura de matrícula
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.matricula,
+                    due_at= datetime.now(),
+                    descripcion="Matrícula",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+
+                # Crear factura de derechos de grado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
+                    descripcion="Derechos de Grado",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+
+                # Crear facturas de mensualidades
+                for i in range(cuotas):
+                    if i == 0:
+                        fechafacturamensualidades = datetime.now()
+                    else:
+                        fechafacturamensualidades = datetime.now() + relativedelta(months=i)
+                        fechafacturamensualidades = fechafacturamensualidades.replace(day=5)
+
+                    inv_list.append(Facturas(
+                        user=User.objects.get(username=form.cleaned_data.get('username')),
+                        codigo=int(Facturas.objects.code_invoice()) + i,
+                        email=form.cleaned_data.get('email'),
+                        monto=programa.cuota_valor,
+                        due_at=fechafacturamensualidades,
+                        descripcion="Mensualidad número " + str(i + 1),
+                        estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                    ))
+
+                # Crear todas las facturas de mensualidades en bulk
+                Facturas.objects.bulk_create(inv_list)
+
+            else:
+                # Calcular la fecha de vencimiento para el certificado de grado
+                fechafacturacertificados = datetime.now() + relativedelta(months=cuotas)
+                fechafacturacertificados = fechafacturacertificados.replace(day=5)
+
+                # Crear factura de inscripción
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.matricula,
+                    due_at= datetime.now(),
+                    descripcion="Inscripción",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+
+                # Crear factura de certificado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
+                    descripcion="Certificado",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+
+                # Crear facturas de mensualidades
+                for i in range(cuotas):
+                    if i == 0:
+                        fechafacturamensualidades = datetime.now()
+                    else:
+                        fechafacturamensualidades = datetime.now() + relativedelta(months=i)
+                        fechafacturamensualidades = fechafacturamensualidades.replace(day=5)
+                    
+                    inv_list.append(Facturas(
+                        user=User.objects.get(username=form.cleaned_data.get('username')),
+                        codigo=int(Facturas.objects.code_invoice()) + i,
+                        email=form.cleaned_data.get('email'),
+                        monto=programa.cuota_valor,
+                        due_at=fechafacturamensualidades,
+                        descripcion="Mensualidad número " + str(i + 1),
+                        estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                    ))
+
+                # Crear todas las facturas de mensualidades en bulk
+                Facturas.objects.bulk_create(inv_list)
 
             mensaje = f'{self.model.__name__} registrado correctamente'
             error = "No hay error!"
@@ -484,53 +552,110 @@ class StudentMasiveUpdateView(UpdateView):
                 pk=self.kwargs['pk']).update(masivo=False)
             
             
-            matricula = Facturas.objects.create(
-                user=User.objects.get(
-                    username=form.cleaned_data.get('username')),
-                codigo=Facturas.objects.code_invoice(),
-                email=form.cleaned_data.get('email'),
-                monto=Programas.objects.get(
-                    programa_name=form.cleaned_data.get('carrera')).matricula,
-                descripcion="Matricula",
-                estado=CatalogsTypesInvoices.objects.get(
-                    estado="Pendiente"),
-            )
-            derechosGrado = Facturas.objects.create(
-                user=User.objects.get(
-                    username=form.cleaned_data.get('username')),
-                codigo=Facturas.objects.code_invoice(),
-                email=form.cleaned_data.get('email'),
-                monto=Programas.objects.get(
-                    programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                descripcion="Derechos de grado",
-                estado=CatalogsTypesInvoices.objects.get(
-                    estado="Pendiente"),
-            )
-            for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
-                inv_list.append(Facturas(
+            if Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).tiene_grado:
+
+                fechafacturagrado= datetime.now() + relativedelta(months=int(
+                    Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas))
+                fechafacturagrado= fechafacturagrado.replace(day=5)
+                matricula = Facturas.objects.create(
                     user=User.objects.get(
                         username=form.cleaned_data.get('username')),
-                    codigo=int(Facturas.objects.code_invoice()) + i,
+                    codigo=Facturas.objects.code_invoice(),
                     email=form.cleaned_data.get('email'),
                     monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).cuota_valor,
-                    descripcion="Mensualidad número " + str(i+1),
+                        programa_name=form.cleaned_data.get('carrera')).matricula,
+                    descripcion="Matricula",
                     estado=CatalogsTypesInvoices.objects.get(
                         estado="Pendiente"),
+                )
+                
+                derechosGrado = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
+                    due_at = fechafacturagrado,
+                    descripcion="Derechos de grado",
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
+                for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
+                    fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
+                    fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
+                    inv_list.append(Facturas(
+                        user=User.objects.get(
+                            username=form.cleaned_data.get('username')),
+                        codigo=int(Facturas.objects.code_invoice()) + i,
+                        email=form.cleaned_data.get('email'),
+                        monto=Programas.objects.get(
+                            programa_name=form.cleaned_data.get('carrera')).cuota_valor,
+                            due_at = fechafacturamensualidades, 
+                        descripcion="Mensualidad número " + str(i+1),
+                        estado=CatalogsTypesInvoices.objects.get(
+                            estado="Pendiente"),
 
-                ))
-            Facturas.objects.bulk_create(inv_list)
+                    ))
+                Facturas.objects.bulk_create(inv_list)
 
-            mensaje1.append({"error": 'Registrado correctamente'})
-            response = JsonResponse(mensaje1, safe=False)
+            else:
+
+                fechafacturacertificados= datetime.now() + relativedelta(months=int(
+                    Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas))
+                fechafacturacertificados= fechafacturacertificados.replace(day=5)
+                inscripcion = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).matricula,
+                    descripcion="Inscripción",
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
+                
+                certificado = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
+                    due_at = fechafacturacertificados,
+                    descripcion="Certificado",
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
+                for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
+                    fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
+                    fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
+                    inv_list.append(Facturas(
+                        user=User.objects.get(
+                            username=form.cleaned_data.get('username')),
+                        codigo=int(Facturas.objects.code_invoice()) + i,
+                        email=form.cleaned_data.get('email'),
+                        monto=Programas.objects.get(
+                            programa_name=form.cleaned_data.get('carrera')).cuota_valor,
+                            due_at = fechafacturamensualidades, 
+                        descripcion="Mensualidad número " + str(i+1),
+                        estado=CatalogsTypesInvoices.objects.get(
+                            estado="Pendiente"),
+
+                    ))
+                Facturas.objects.bulk_create(inv_list)
+
+
+            mensaje = f'{self.model.__name__} registrado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
             response.status_code = 201
             return response
         else:
-            mensaje1 =[]
-            mensaje1.append(
-                {"error": form.errors}
-            )
-            response = JsonResponse(mensaje1, safe=False)
+            mensaje = f'{self.model.__name__} no se ha podido registrar'
+            error = form.errors
+            response = JsonResponse({"mensaje": mensaje, "error": error})
             response.status_code = 400
             return response
 
@@ -740,17 +865,44 @@ class StudentNotesListview(ListView):
 
     def get_queryset(self):
 
-        data = [] 
-        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).order_by("student_id").distinct("student_id", "materia_id")
+        data = []
+    
+        # Obtener los datos sin usar distinct(), pero usando values() para reducir la carga de datos
+        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).values(
+            'student_id', 'materia_id', 'materia__materia__codigo', 
+            'materia__materia__nombre_materia', 'materia__is_active', 
+            'materia__periodo'
+        ).order_by('student_id', 'materia_id')
+
+        # Crear un diccionario para asegurarnos de que no haya duplicados por 'materia_id'
+        materias_vistas = set()
+
         for i in estudiante:
-            promedio = round (Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i.materia.pk ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
-            
-            data_json = {
-                'pk': i.pk, 'pkmateria':i.materia.pk, "codigo": i.materia.materia.codigo, "nombre": i.materia.materia.nombre_materia,
-                "estado": i.materia.is_active, "promedio": promedio,'periodo': i.materia.periodo,
-                "tiene": "si" if promedio != 0.00 else "no"
-            }
-            data.append(data_json)
+            # Verificar si ya hemos procesado la materia
+            if i['materia_id'] not in materias_vistas:
+                # Agregar la materia al set para evitar duplicados
+                materias_vistas.add(i['materia_id'])
+                
+                # Calcular el promedio de calificaciones para esta materia
+                promedio = round(
+                    Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i['materia_id']).aggregate(Avg('calificacion'))['calificacion__avg'], 
+                    2
+                )
+                
+                # Crear el diccionario con los datos de la materia
+                data_json = {
+                    'pk': i['student_id'], 
+                    'pkmateria': i['materia_id'], 
+                    "codigo": i['materia__materia__codigo'], 
+                    "nombre": i['materia__materia__nombre_materia'],
+                    "estado": i['materia__is_active'], 
+                    "promedio": promedio, 
+                    'periodo':  Periodos.objects.get(pk=i['materia__periodo']).periodo,
+                    "tiene": "si" if promedio != 0.00 else "no"
+                }
+                
+                # Agregar los datos al arreglo
+                data.append(data_json)
 
         return data
     

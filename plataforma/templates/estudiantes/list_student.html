@@ -22,7 +22,7 @@
         <div class="col filtro">
           
         </div>
-        <div class="col-5 botones-miltiples">
+        <div class="col botones-miltiples">
           <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
               <a >
                 <i class="ri-user-add-fill"></i>
@@ -33,6 +33,12 @@
             <a >
               <i class="ri-group-fill"></i></a>
               &nbsp; Múltiples
+            </a>
+          </button>
+          <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+            <a >
+              <i class="ri-graduation-cap-fill"></i>
+              &nbsp; Estados
             </a>
           </button>
           {% if masivo > 0 %}
@@ -52,6 +58,7 @@
             <span class="badge badge-light sin-student">0</span>
           </span>
           {% endif %}
+          
         </div>
 
       </div>

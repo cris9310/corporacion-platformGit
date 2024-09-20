@@ -51,9 +51,11 @@ class TeacherCreateView(CreateView):
         formulario = TeacherForm(self.request.POST)
         if formulario.is_valid():
             formulario.save()
+            # Generador de código para un nuevo docente
+            codigo = User.objects.code_generator()
             crea_user = User.objects.create_user(
                 tipe=CatalogsTypesRol.objects.get(rol="Docente"),
-                codigo=formulario.cleaned_data.get('codigo'),
+                codigo=codigo,
                 username=formulario.cleaned_data.get('username'),
                 email=formulario.cleaned_data.get('email'),
                 password=Docente.objects.get_secret("RANDOM"),

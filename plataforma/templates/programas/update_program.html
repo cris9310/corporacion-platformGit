@@ -57,23 +57,29 @@
             </div>
           </div>
           <div class="container-fluid" style="margin-top: 15px;"> 
-              <div class="row">
-                  
-                  <div class="col-md-6 ms-auto"">
-                  <div class="{{ form.tipe.id_for_label }}" ></div>
-                  <label for="{{ form.tipe.id_for_label }}">Tipo de programa:</label>
-                  {{ form.tipe }}
-                  </div>
-              </div>
-          </div>
-          <div class="container-fluid" style="margin-top: 15px;"> 
             <div class="row">
-                <div class="col">
-                  <h6><strong> Costo del programa: </strong> <p id="parrafo"></p></h6>
+              <div class="col-md-6">
+                <div class="{{ form.tipe.id_for_label }}" ></div>
+                <label for="{{ form.tipe.id_for_label }}">Tipo de programa:</label>
+                {{ form.tipe }}
+              </div>
+              <div class="col-md-6 ms-auto">
+                <div class="form-group">
+                  <label for="{{ form.tiene_grado.id_for_label }}">¿Este programa incluye ceremonia de grado?</label>
+                  <div class="custom-control custom-switch mt-2">
+                    {{ form.tiene_grado }}
+                    <label class="custom-control-label" for="{{ form.tiene_grado.id_for_label }}" id="gradoStatus">No</label>
+                  </div>
+                  
                 </div>
-                
+              </div>
             </div>
-        </div>
+          </div>
+          <div class="col-md-6">
+            <div class="alert alert-primary" role="alert">
+              <strong> El costo del programa es de:</strong>  <p id="parrafo" ></p>
+            </div>
+          </div>
             <div class="modal-footer" style="margin-top: 15px;">
               
               <button class="btn btn-primary" type="button" id="spinner-div" disabled>
@@ -93,12 +99,18 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    const formatter = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',  // Cambia 'COP' por el código de tu moneda, por ejemplo 'USD' para dólares
+        minimumFractionDigits: 2, // Número mínimo de decimales
+        maximumFractionDigits: 2  // Número máximo de decimales
+    });
     $('#matricula').on('change', function() {
       var matricula= document.getElementById('matricula').value;
       var cuota_value= document.getElementById('cuota_valor').value;
       var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
       var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
-      $("#parrafo").text(total);
+      $("#parrafo").text(formatter.format(total));
       $("#costo").val(total);
     });
     $('#cuota_valor').on('change', function() {
@@ -106,7 +118,7 @@
       var cuota_value= document.getElementById('cuota_valor').value;
       var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
       var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
-      $("#parrafo").text(total);
+      $("#parrafo").text(formatter.format(total));
       $("#costo").val(total);
     });
     $('#cuotas').on('change', function() {
@@ -114,7 +126,7 @@
       var cuota_value= document.getElementById('cuota_valor').value;
       var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
       var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
-      $("#parrafo").text(total);
+      $("#parrafo").text(formatter.format(total));
       $("#costo").val(total);
     });
     $('#derechosGrado').on('change', function() {
@@ -122,11 +134,17 @@
       var cuota_value= document.getElementById('cuota_valor').value;
       var cuotas= document.getElementById('cuotas').value, Dgrado= document.getElementById('derechosGrado').value ;
       var total = parseFloat(matricula) + parseFloat(Dgrado) + parseFloat(cuota_value * cuotas)
-      $("#parrafo").text(total);
+      $("#parrafo").text(formatter.format(total));
       $("#costo").val(total);
     });
           
-  });  
+  });
+  function toggleText() {
+    var checkbox = document.getElementById("tiene_grado");
+    var statusText = document.getElementById("gradoStatus");
+    statusText.textContent = checkbox.checked ? "Si" : "No";
+  }
+  toggleText();
 
     function sendUser() {
       var serializedData = $("#dataGeneralForm").serialize();

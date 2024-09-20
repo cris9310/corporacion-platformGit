@@ -58,3 +58,18 @@ class Estudiante(models.Model):
         self.updated_at = datetime.now()
         return super(Estudiante, self).save(*args, **kwargs)
     
+
+class Graduated(models.Model):
+    student = models.ForeignKey(Estudiante, verbose_name='Estudiante', on_delete=models.CASCADE)
+    carrera = models.ForeignKey("Programs.Programas", verbose_name='Programa', on_delete=models.CASCADE)
+    periodo_grado = models.CharField(max_length=15, blank=False, null=False)
+    libro = models.PositiveIntegerField(null=False, blank=False, verbose_name='Libro')
+    folio = models.PositiveIntegerField(null=False, blank=False, verbose_name='Folio')
+    fecha_reg=models.DateField()
+    objects = BuscadorManager()
+
+    def __str__(self): 
+        
+        return "{0}, {1}".format(self.student.nombre, self.student.apellidos)
+
+    
