@@ -1,0 +1,420 @@
+{% extends "Base2.html" %} 
+{% load static %} 
+{% block title %}Progresos | Portal CNE{% endblock title %}
+{% block extracontent %}
+
+{% if finaly %}
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-graduation-cap-line"></i> Progresos estudiantiles </h2></span>
+      </div>
+      
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class=" boton">
+          <button  type="button" title="Graduar estudiante"  onclick="abrir_modal_edicion('{% url 'student_app:student-graduate' %}')" id="button" class="btn btn-sm bloq">
+                 
+            <i class="ri-graduation-cap-fill"></i> &nbsp; Graduar
+          </button>
+          <button  type="button" title="Generar informe"  onclick="generar()" id="button" class="btn btn-sm">
+            
+            <i class="ri-file-download-line"></i>&nbsp; Informe
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              {% if finaly %}
+                  <table id="table_id4"  class="hover" style="width:100%; ">
+                    <thead>
+                      <th>Seleccionar</th>
+                      <th>Código</th>
+                      <th>Estudiante</th>
+                      <th>Programa</th>
+                      <th>Indicador académico</th>
+                      <th>Indicador financiero</th>
+                    </thead>
+                    <tbody>
+                      {% for i in finaly %} 
+                      {% if i.indicador == 100 and i.financiero == 100 %}
+                      <tr>
+                        <td>
+                          <span class="estado" style="width:100%"><input  type="checkbox" id="materia" name="materia" value="{{i.pk}}"> &nbsp; Apto</span>
+                        </td>
+                        <td>{{i.codigo}}</td>
+                        <td>{{i.estudiante}}</td>
+                        <td>{{i.programa}}</td>
+                        <td >
+                          <div >
+                            <div class="progress" >
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
+                                <a class="barra" href="{% url 'student_app:student-notes' i.pk %}">{{i.indicador}} %</a> 
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="progress" >
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
+                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.pk %}">{{i.financiero}} %</a>
+                            </div>
+                          </div>
+                          
+                        </td>
+                      </tr>
+                      {% else %}
+                      <tr>
+                        <td class='dt-control-no' defaultContent="" orderable='false' data= "null" >
+                          No apto
+                        </td>
+                        <td>{{i.codigo}}</td>
+                        <td>{{i.estudiante}}</td>
+                        <td>{{i.programa}}</td>
+                        <td>
+                          <div >
+                            <div class="progress" >
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
+                                <a class="barra" href="{% url 'student_app:student-notes' i.pk %}">{{i.indicador}} %</a>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="progress" >
+                            <div   class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
+                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.pk %}">{{i.financiero}} %</a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %} 
+                      {% endfor %}
+                    </tbody>
+                  </table> 
+                {% else %}
+                <table id="table_id4"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Seleccionar</th>
+                    <th>Código</th>
+                    <th>Estudiante</th>
+                    <th>Programa</th>
+                    <th>Indicador académico</th>
+                    <th>Indicador financiero</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+<div class="col-10" style="margin-top: 2em">
+  
+  <div
+    class="modal fade"
+    id="edicion"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    
+  </div>
+
+  <div
+    class="modal fade"
+    id="edicion-no"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="ri-file-download-line"></i> Parámetros de grado</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body"> <h6 id="inactivo"><i class="ri-error-warning-line"></i> Selecciona al menos 1 estudiante <h4></div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="edicion-informe"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="ri-file-download-line"></i> Parámetros del informe</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table id="table_idinf"  class="hover" style="width:100%; ">
+              <thead>
+                <th ><input  type="checkbox"> Código</th>
+                <th >Estudiante</th>
+              </thead>
+              <tbody>
+                {% for i in finaly %}
+                <tr>
+                  <td ><span ><input  type="checkbox"  value="{{i.pk}}"></span> {{i.codigo}}</td>
+                  <td>{{i.estudiante}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          <div class="linea"></div>
+        <div style="padding-top: 15px">
+          <form  method="POST" id="dataGeneralForm" action="{% url 'finance_app:download-report' %}" >{% csrf_token %}
+            
+            <div>
+              <label  id="informe1" for="informe1">Seleccione el tipo de informe:</label>
+              <select class="form-control" name="informe12" id="informe12">
+                <option disabled selected value> -- seleccione una opción  -- </option>
+                <option value="1">Académico</option>
+                <option value="2">Financiero</option>
+              </select>
+            </div>
+            <h3 id="cantChulos"> </h3>
+            <input type="hidden" name="concat2" id="concat2" class="concat2" />
+            <div class="modal-footer" >
+              <button type="button"  class="btn btn-primary" onclick="SendDataInform()" >Generar informe</button>
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+          </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+{% else %}
+
+
+<div
+  class="modal fade"
+  id="edicion-no-m"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-file" ></i> Parámetros de grado</h5>
+        
+        <a href="{% url 'student_app:list-student' %}" class="close">
+          <i class="ri-close-circle-line"></i>
+        </a>
+      </div>
+      <div class="modal-body"><h6 class="estado"><i class="ri-information-line"></i> No tenemos estudiantes con progreso</h6></div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+
+{% endblock extracontent %} 
+
+
+
+{% block js %}
+<script type="text/javascript">
+
+  var $=jQuery.noConflict();
+
+  function SendDataInform() {
+    var serializedData = $("#dataGeneralForm")
+    var informe1Datos = document.getElementById("informe12");
+    var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+    var cont = 0;
+
+    for (var x=0; x < checkboxes.length; x++) {
+      if (checkboxes[x].checked) {
+        cont = cont + 1;
+      }
+    }
+
+    
+    if (cont == 0 || informe1Datos.value == "" ) {
+
+      if (cont == 0 ) {
+      
+        Swal.fire({
+          "title": "Aún falta algo",
+          "text": "Por favor verifique que haya seleccionado por lo menos 1 estudiante",
+          "icon": "error"
+        })
+      }
+      else{
+      
+        Swal.fire({
+          "title": "Aún falta algo",
+          "text": "Seleccione el tipo de informe",
+          "icon": "error"
+        })
+      }
+    }
+    else{
+      serializedData.submit();
+      $("#edicion-informe").modal("hide");
+      mostrarOkInformes();
+      
+    }
+     
+  }
+
+  function abrir_modal_edicion(url) {
+    var arr = $('[name="materia"]:checked').map(function () {
+      return this.value;
+    }).get();
+    if (arr != "") {
+      $('#edicion').load(url, function(){
+        $(this).modal('show');
+        var str = arr.join(",");
+        $("#concat").val(arr);
+      });
+    } else {
+      $("#edicion-no").modal("show");
+    }
+    
+  }
+
+  $(document).ready(function () {
+    if ($("#materia").length) {
+      $(".bloq").prop("disabled", false);
+    } else {
+      $(".bloq").prop("disabled", true);
+    }
+  });
+
+  $(document).ready(function () {
+    $("#edicion-no-m").modal({ backdrop: "static", keyboard: false });
+  });
+
+  function generar() {
+    var checkboxes = $('#table_idinf input[type="checkbox"]');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = false;
+    }
+    $('#informe12 option').prop('selected', function() {
+      return this.defaultSelected;
+    });
+    $('#edicion-informe').modal("show");
+  }
+
+  $(document).ready(function () {
+
+    $('#table_idinf thead input[type="checkbox"]').change(function() {
+      var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+      var texto = document.getElementById('informe1');
+      
+      if ($(this).is(':checked')) {
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+          checkboxes[i].checked = true;
+        }
+        var checkboxesSelect = $('#table_idinf tbody input[type="checkbox"]:checked');
+        var text = i.toString();
+        var arr = checkboxesSelect.map(function () {
+          return this.value;
+        }).get();
+        var str = arr.join(",");
+        $("#concat2").val(arr);
+        texto.innerHTML = 'Seleccione el tipo de informe para los ' + text + ' estudiantes:';
+      }
+      else {
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+          checkboxes[i].checked = false;
+        }
+        $("#concat2").val("");
+        texto.innerHTML = 'Seleccione el tipo de informe:';
+      } 
+         
+  }); 
+
+
+    $('#table_idinf tbody input[type="checkbox"]').click(function() {
+      var checkboxesTodos = $('#table_idinf thead input[type="checkbox"]');
+      var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+      var texto = document.getElementById('informe1');
+      var cont = 0;
+      var checkboxesSelect = $('#table_idinf tbody input[type="checkbox"]:checked'); 
+      var arr = checkboxesSelect.map(function () {
+        return this.value;
+      }).get();
+      var str = arr.join(",");
+      $("#concat2").val(arr);
+
+      
+      checkboxesTodos.prop("checked", false) ;
+      for (var x=0; x < checkboxes.length; x++) {
+      if (checkboxes[x].checked) {
+        cont = cont + 1;
+      }
+      }
+      if (cont > 1) {
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe para los ' + text + ' estudiantes:';
+      }else if (cont == 1) {
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe para este estudiante:';
+      }else{
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe:';
+      }   
+  });
+});
+
+</script>
+{% endblock js %}

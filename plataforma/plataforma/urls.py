@@ -32,7 +32,7 @@ urlpatterns = [
     path('teacher/', include('applications.Teacher.urls')),
 
     #path('agenda/', include('applications.Agenda.urls')),
-    #path('finance/', include('applications.Financiero.urls')),
+    path('finance/', include('applications.Finance.urls')),
 
 ]
 

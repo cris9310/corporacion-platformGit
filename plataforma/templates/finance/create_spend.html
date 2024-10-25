@@ -1,0 +1,103 @@
+
+
+
+
+{% load  static %}
+
+<div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="ri-bank-card-fill"></i> Nuevo gasto</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body" spellcheck="true">
+        <form  method="post" id="dataGeneralForm" action="{% url 'finance_app:finance-create-spend' %}" >{% csrf_token %}
+            <div id="errores" ></div>
+
+            <div class="row"  style="margin-top: 10px;">
+                <div class="col">
+                <div class="{{ form.consecutivo.id_for_label }}" ></div>
+                <label for="{{ form.consecutivo.id_for_label }}">Número del cosecutivo:</label>
+                {{ form.consecutivo }}
+                </div>
+            </div>
+            <div class="row"  style="margin-top: 10px;">
+                <div class="col">
+                <div class="{{ form.descripcion.id_for_label }}" ></div>
+                <label for="{{ form.descripcion.id_for_label }}">Descripción del gasto:</label>
+                {{ form.descripcion }}
+                </div>
+            </div>
+            <div class="row"  style="margin-top: 10px;">
+                <div class="col">
+                <div class="{{ form.tipo.id_for_label }}" ></div>
+                <label for="{{ form.tipo.id_for_label }}">Tipo de gasto:</label>
+                {{ form.tipo }}
+                </div>
+            </div>
+            <div class="row"  style="margin-top: 10px;">
+                <div class="col">
+                <div class="{{ form.fecha.id_for_label }}" ></div>
+                <label for="{{ form.fecha.id_for_label }}">Fecha del gasto:</label>
+                {{ form.fecha }}
+                </div>
+            </div>
+            <div class="row"  style="margin-top: 10px;">
+                <div class="col">
+                <div class="{{ form.monto.id_for_label }}" ></div>
+                <label for="{{ form.monto.id_for_label }}">Monto del gasto:</label>
+                {{ form.monto }}
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 15px;">
+              <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+              </button>
+    
+              <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+                Registrar
+              </button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+      </div> 
+    </div>
+  </div>
+
+
+  
+{% block js %}
+<script type="text/javascript">
+    $('#materia').val("{{pk}}")
+  function sendUser() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'finance_app:finance-create-spend' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location.reload();
+          mostrarOk();
+          
+          
+        },
+        error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
+          mostrarErroresCreacionEditar(error);
+          mostrarError();
+        }
+      });
+    } 
+  }
+
+</script>
+
+{% endblock js %}

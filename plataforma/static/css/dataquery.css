@@ -7,15 +7,19 @@
 }
 
 table.dataTable td.dt-control {
-  text-align: center;
+  text-align: left;
+  cursor: pointer;
+}
+
+table.dataTable td.dt-control-no {
+  text-align: left;
   cursor: pointer;
 }
 
 table.dataTable td.dt-control:before {
   width: 30px;
-  margin-top: 5px;
   display: inline-block;
-  color: #507bfc;
+  color: #266897;
   border-radius: 5px;
   box-sizing: content-box;
   text-align: center;
@@ -28,8 +32,22 @@ table.dataTable td.dt-control:before {
 
 table.dataTable tr.dt-hasChild td.dt-control:before {
   content: "-";
-  color: #f97b7b;
+  color: #ff6466;
   background-color: #fce4e4;
+}
+
+table.dataTable td.dt-control-no:before {
+  width: 30px;
+  display: inline-block;
+  color: #ff6466;
+  border-radius: 5px;
+  box-sizing: content-box;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  line-height: 1em;
+  content: "-";
+  background-color: #fce4e4;
+
 }
 
 table.dataTable thead>tr>th.sorting,

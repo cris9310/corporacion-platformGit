@@ -407,13 +407,21 @@ th.sorting {
 .nonEstado {
     color: var(--text-color-inactivos) !important;
     text-decoration: none !important;
-    font-size: 1.17em !important;
 }
 
+.nonEstado2 {
+    color: var(--text-color-inactivos) !important;
+    text-decoration: none !important;
+}
+
+.iconos2 {
+    color: var(--primary-color) !important;
+}
 
 .iconos {
     color: var(--primary-color) !important;
     font-size: 1.17em !important;
+    text-decoration: none !important;
 }
 
 .buscar-iconos {
@@ -641,7 +649,8 @@ th.sorting {
     font-size: 15px !important;
 }
 
-.conteTabla th {
+.conteTabla th,
+th {
     color: var(--primary-color) !important;
 }
 

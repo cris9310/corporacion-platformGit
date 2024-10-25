@@ -1,0 +1,102 @@
+<div class="modal-dialog " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"><i class="ri-money-dollar-box-line"></i> 
+        Detalle de la factura</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      <div class="modal-body">
+        <div class="container-fluid personal">
+          <div class="card">
+            <div class="card-header">
+              <div class="titulo">
+                Detalle del pago:
+              </div>
+              
+            </div>
+            
+            <div class="card-body" style="display: flex">
+              <div class="col">
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="ri-barcode-box-line"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Consecutivo:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.consecutivo }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="ri-money-dollar-box-line"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Valor pagado:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      $ {{ object.pagado }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="ri-calendar-check-fill"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Fecha de pago:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.created_at|date:"d/m/y" }}
+                    </div>
+                  </div>
+                </div>
+                <div class="personal-general">
+                  <div class="personal-icon text-center align-self-center">
+                    <i class="ri-information-line"></i>
+                  </div>
+                  <div class="personal-text">
+                    <div class="personal-text-text">
+                      Observación:
+                    </div>
+                    <div class="personal-text-text-origin">
+                      {{ object.observacion }}
+                    </div>
+                  </div>
+                </div>
+                
+                
+              </div>
+              
+              
+                
+              </div>
+            </div>        
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+  {% block js %}
+
+  <script>
+  $(document).ready(function () {
+    var result = {{ object.pagado}}
+    document.getElementById("monto").innerHTML = result.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+    });
+  });
+  </script>
+  
+  
+  
+  {% endblock js %}

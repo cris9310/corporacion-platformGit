@@ -61,11 +61,9 @@ class Estudiante(models.Model):
 
 class Graduated(models.Model):
     student = models.ForeignKey(Estudiante, verbose_name='Estudiante', on_delete=models.CASCADE)
-    carrera = models.ForeignKey("Programs.Programas", verbose_name='Programa', on_delete=models.CASCADE)
-    periodo_grado = models.CharField(max_length=15, blank=False, null=False)
     libro = models.PositiveIntegerField(null=False, blank=False, verbose_name='Libro')
     folio = models.PositiveIntegerField(null=False, blank=False, verbose_name='Folio')
-    fecha_reg=models.DateField()
+    fecha_reg=models.DateField(default=datetime.now)
     objects = BuscadorManager()
 
     def __str__(self): 

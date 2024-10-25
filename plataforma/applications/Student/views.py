@@ -39,7 +39,7 @@ class StudentCreateView(CreateView):
     model = Estudiante
     form_class = StudentRegisterForm
     template_name = 'estudiantes/register_student.html'
-    success_url = reverse_lazy('academico_app:list-student')
+    success_url = reverse_lazy('student_app:list-student')
 
     def post(self, request, *args, **kwargs):
 
@@ -129,17 +129,6 @@ class StudentCreateView(CreateView):
                     estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
 
-                # Crear factura de derechos de grado
-                Facturas.objects.create(
-                    user=User.objects.get(username=form.cleaned_data.get('username')),
-                    codigo=Facturas.objects.code_invoice(),
-                    email=form.cleaned_data.get('email'),
-                    monto=programa.derechosGrado,
-                    due_at=fechafacturacertificados,
-                    descripcion="Derechos de Grado",
-                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
-                )
-
                 # Crear facturas de mensualidades
                 for i in range(cuotas):
                     if i == 0:
@@ -161,6 +150,17 @@ class StudentCreateView(CreateView):
                 # Crear todas las facturas de mensualidades en bulk
                 Facturas.objects.bulk_create(inv_list)
 
+                # Crear factura de derechos de grado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
+                    descripcion="Derechos de Grado",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+
             else:
                 # Calcular la fecha de vencimiento para el certificado de grado
                 fechafacturacertificados = datetime.now() + relativedelta(months=cuotas)
@@ -174,17 +174,6 @@ class StudentCreateView(CreateView):
                     monto=programa.matricula,
                     due_at= datetime.now(),
                     descripcion="Inscripción",
-                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
-                )
-
-                # Crear factura de certificado
-                Facturas.objects.create(
-                    user=User.objects.get(username=form.cleaned_data.get('username')),
-                    codigo=Facturas.objects.code_invoice(),
-                    email=form.cleaned_data.get('email'),
-                    monto=programa.derechosGrado,
-                    due_at=fechafacturacertificados,
-                    descripcion="Certificado",
                     estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
 
@@ -208,6 +197,17 @@ class StudentCreateView(CreateView):
 
                 # Crear todas las facturas de mensualidades en bulk
                 Facturas.objects.bulk_create(inv_list)
+
+                # Crear factura de certificado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
+                    descripcion="Certificado",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
 
             mensaje = f'{self.model.__name__} registrado correctamente'
             error = "No hay error!"
@@ -530,7 +530,7 @@ class StudentMasiveUpdateView(UpdateView):
     model = Estudiante
     template_name = 'estudiantes/update_student.html'
     form_class = StudentUpdateForm
-    success_url = reverse_lazy('academico_app:list-student')
+    success_url = reverse_lazy('student_app:list-student')
 
 
     def post(self, request, *args, **kwargs):
@@ -540,8 +540,6 @@ class StudentMasiveUpdateView(UpdateView):
         form = StudentUpdateForm(request.POST, instance=estudiante_c)
 
         if form.is_valid():
-            codigo_invoice = Facturas.objects.code_invoice()
-            mensaje1 =[]
             inv_list =[]
             form.save()
             crea_user = User.objects.filter(
@@ -569,18 +567,7 @@ class StudentMasiveUpdateView(UpdateView):
                         estado="Pendiente"),
                 )
                 
-                derechosGrado = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
-                    codigo=Facturas.objects.code_invoice(),
-                    email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                    due_at = fechafacturagrado,
-                    descripcion="Derechos de grado",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
-                )
+                
                 for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
                     fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
                     fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
@@ -598,6 +585,21 @@ class StudentMasiveUpdateView(UpdateView):
 
                     ))
                 Facturas.objects.bulk_create(inv_list)
+
+
+                #Creamos la fctura de los derechos a grado
+                derechosGrado = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
+                    due_at = fechafacturagrado,
+                    descripcion="Derechos de grado",
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
 
             else:
 
@@ -616,18 +618,6 @@ class StudentMasiveUpdateView(UpdateView):
                         estado="Pendiente"),
                 )
                 
-                certificado = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
-                    codigo=Facturas.objects.code_invoice(),
-                    email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                    due_at = fechafacturacertificados,
-                    descripcion="Certificado",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
-                )
                 for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
                     fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
                     fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
@@ -645,6 +635,20 @@ class StudentMasiveUpdateView(UpdateView):
 
                     ))
                 Facturas.objects.bulk_create(inv_list)
+
+                #Creamos factura de certificados
+                certificado = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=Facturas.objects.code_invoice(),
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
+                    due_at = fechafacturacertificados,
+                    descripcion="Certificado",
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
 
 
             mensaje = f'{self.model.__name__} registrado correctamente'
@@ -664,7 +668,7 @@ class StudentUpdateView(UpdateView):
     model = Estudiante
     template_name = 'estudiantes/update_student_normal.html'
     form_class = StudentUpdateForm
-    success_url = reverse_lazy('academico_app:list-student')
+    success_url = reverse_lazy('student_app:list-student')
 
 
     def post(self, request, *args, **kwargs):
@@ -856,12 +860,15 @@ class StudentNotesListview(ListView):
                 else:
                     pasadas.append(0)
             mean = round(sum(mean) / len(mean),2)
-            context['final'] = {"pasadas":round((sum(pasadas)/int(estudiante.carrera.aceptado))*100,2), "promedio": mean}
-        
+            final = int(round((sum(pasadas)/int(estudiante.carrera.aceptado))*100,0))
+            context['promedio'] = mean
+            context['pasadas'] = final
+            return context
         else:
-            context['final'] = {"pasadas":0, "promedio": 0.00}
+            context['promedio'] = 0.00
+            context['pasadas'] = 0
         #promedio, cumplimiento
-        return context
+            return context
 
     def get_queryset(self):
 
@@ -970,3 +977,130 @@ class StudentNotesDeleteview(DeleteView):
         estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student_id=self.kwargs['pk2']  ).delete()
 
         return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
+    
+
+#---------Desde aqui comenzamos con todo lo relacionado al grado ------------------------------------
+
+
+# Con esta vista mostramos los estudiantes aptos para graduarse, se encuentra ok
+class StudentListFinalily(ListView):
+    model = Banner
+    second_model = Programas
+    template_name = 'estudiantes/list_aptos.html'
+    context_object_name = 'finaly'
+
+    def get_queryset(self):
+        estudiante_list = []
+        #Ordenamos las asignaturas que tienen un promedio mayor a 2.99
+
+        aceptado = Banner.objects.filter(
+            materia__is_active=False  # Solo materias cerradas
+        ).values('student','materia').annotate(
+            promedio_calificacion=Avg('calificacion') # Contamos la cantidad de materias por estudiante
+        ).filter(
+            promedio_calificacion__gt=2.99  # Solo aquellos estudiantes con promedio mayor a 2.99
+        )
+
+        estudiantes = [item['student'] for item in aceptado]
+
+        # Contar cuántas veces aparece cada estudiante usando una list comprehension y dict comprehension
+        aceptado = [{'student__id': estudiante, 'materias_aprobadas': estudiantes.count(estudiante)} for estudiante in set(estudiantes)]
+
+        
+            
+        for i in list(aceptado):
+            st = Estudiante.objects.get(id=i['student__id'])
+            if Graduated.objects.filter(student_id=st.pk).count() == 0:
+                carrera = Programas.objects.get(id=st.carrera_id)
+                pagadas = Facturas.objects.filter(
+                    user_id=st.codigo, estado_id=3).count()
+                rr = {'pk': st.pk, 'codigo': st.codigo, 'estudiante': st.apellidos + ' ' + st.nombre, 'programa': carrera.programa_name,
+                      'indicador': int((int(i['materias_aprobadas'])/int(carrera.aceptado))*100), 'financiero': int((int(pagadas)/(2 + int(carrera.cuotas)))*100)}
+
+                estudiante_list.append(rr)
+
+        #Ordenamos los resultados antes de enviarlos al html
+        def get_age(indica):
+            return indica.get('indicador')
+
+        estudiante_list.sort(key=get_age, reverse=True)
+        return estudiante_list
+
+
+#Con esta vista graduamos a los estudiantes, se puede hacer de uno en uno o por multiples estudiantes **
+class StudentGraduateView(CreateView):
+    model = Graduated
+    form_class = GraduateRegisterForm
+    template_name = 'estudiantes/list_aptos.html'
+    success_url = reverse_lazy('student_app:list-student')
+
+    def get(self, request, *args, **kwargs):
+        form = GraduateRegisterForm()
+        context = {"form": form}
+        return render(request, r"estudiantes/studentGraduated.html", context)
+
+    def post(self, request, *args, **kwargs):
+        todos = []
+        date = datetime.now()
+        studen_graduate = str(self.request.POST.get('concat'))
+        studen_folio = str(self.request.POST.get('folio'))
+        studen_libro = str(self.request.POST.get('libro'))
+        studen_graduate = studen_graduate.split(sep=",")
+
+        for i in studen_graduate:
+            consulta = Estudiante.objects.get(pk=i)
+            individual = Graduated(student_id=consulta.pk, libro=studen_libro, folio=studen_folio)
+            todos.append(individual)
+            Estudiante.objects.filter(id=int(i)).update(is_active=False, is_graduado=True)
+        Graduated.objects.bulk_create(todos)
+        return HttpResponseRedirect(
+            self.request.META.get("HTTP_REFERER")
+
+        )
+    
+
+#Listar graduados
+class GraduatedListView(ListView):
+    model = Graduated
+    template_name = 'estudiantes/GraduadoList.html'
+    context_object_name = 'graduados'
+
+    def get_queryset(self):
+        graduatedList=[]
+        dataGraduated = Graduated.objects.all()
+        for i in dataGraduated:
+            TotalpromedioSum = Banner.objects.filter(student_id=i.student_id).aggregate(Avg('calificacion'))
+            Totalpromedio = round( TotalpromedioSum['calificacion__avg'],2)
+            data = {'estudiante_id': i.student_id, 'codigo': i.student.codigo, 
+                    'estudiante': i.student.apellidos + ' ' + i.student.nombre, 
+                    'programa': i.student.carrera.programa_name,
+                      'promedio': Totalpromedio, 'pk': i.pk}
+
+            graduatedList.append(data)
+        return graduatedList
+
+
+
+#La siguiente vista elimina estudiantes de la zona de graduados y los devuelve a ser estudiantes activos
+
+
+class StudentGraduatedDeleteview(DeleteView):
+    template_name = 'estudiantes/StudentGraduatedDeleteview.html'
+    model = Graduated
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["estudiante"] = Estudiante.objects.get(pk=Graduated.objects.get(pk=self.kwargs['pk']).student_id )
+        return context
+
+    def post(self, request, *args, **kwargs):
+        estudiante2 = Estudiante.objects.get(pk=Graduated.objects.get(pk=self.kwargs['pk']).student_id)
+         # Actualizar los campos
+        estudiante2.is_active = True
+        estudiante2.is_graduado = False
+
+        # Guardar los cambios
+        estudiante2.save()
+        estudiante = Graduated.objects.get(pk=self.kwargs['pk'] ).delete()
+
+        return HttpResponseRedirect(reverse_lazy('student_app:list-graduated'))

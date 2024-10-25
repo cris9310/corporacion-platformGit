@@ -596,3 +596,47 @@ class StudentAsigNewForm(forms.Form):
                 'id':'estudiante'
         }
     )
+
+
+#Formulario para graduar estudiantes
+class GraduateRegisterForm(forms.ModelForm):
+
+    concat = forms.CharField(
+        widget=forms.HiddenInput(
+            attrs={
+                'class':'form-control',
+                'id':'concat',
+                'name':'concat',
+            }
+        )
+
+    )
+
+    
+    class Meta:
+        
+        model = Graduated
+        fields = ('__all__')
+        exclude =['student', 'fecha_reg']
+
+        widgets={
+
+            'libro': NumberInput(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id':'libro',
+                    'name':'libro',
+                    'placeholder':"Ingrese número de libro",
+                }
+            ),
+            'folio': NumberInput(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id':'folio',
+                    'name':'folio',
+                    'placeholder':"Ingrese número de folio",
+                }
+            ),
+        }

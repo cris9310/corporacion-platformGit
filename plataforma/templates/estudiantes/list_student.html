@@ -10,7 +10,7 @@
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
-        <span class=""><h2><i class="ri-user-2-fill"></i> Estudiantes</h2></span>
+        <span class=""><h2><i class="ri-user-2-line"></i> Estudiantes</h2></span>
       </div>
       
   </div>
@@ -35,7 +35,7 @@
               &nbsp; Múltiples
             </a>
           </button>
-          <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'student_app:create-student'%}')">
+          <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="location.href='{% url 'student_app:student-list-Finalily'%}'">
             <a >
               <i class="ri-graduation-cap-fill"></i>
               &nbsp; Estados
@@ -95,6 +95,7 @@
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                        <a class="buscar-iconos" href="{% url 'finance_app:finance-list-student-invoice' estudiante.pk  %}" title="Pagos" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
                         
                         </td>
 
@@ -102,33 +103,37 @@
                         
                         <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                         <td>
-                        <a href="{% url 'student_app:student-notes' estudiante.pk  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                        <a class="buscar-iconos" href="{% url 'student_app:student-notes' estudiante.pk  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
 
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+                         <a class="buscar-iconos" href="{% url 'finance_app:finance-list-student-invoice' estudiante.pk  %}" title="Pagos" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
+                        
 
                         </td>
 
                         {% elif estudiante.is_active == True and estudiante.estado == False %}
                         <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                         <td>
-                        <a  title="Consultar" ><i class="ri-search-line nonEstado"></i></a>
+                        <a  class="buscar-iconos" title="Consultar" ><i class="ri-search-line nonEstado"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
                         <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
-                        </td>
+                        <a class="buscar-iconos" href="{% url 'finance_app:finance-list-student-invoice' estudiante.pk  %}" title="Pagos" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
+                        
+                      </td>
 
                         {% else   %}
                         <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                         <td>
-                        <a href="#" title="Consultar" ><i class="ri-search-line iconos nonEstado"></i></a>
+                        <a class="buscar-iconos" href="#" title="Consultar" ><i class="ri-search-line iconos nonEstado"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
                         <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'student_app:update-student-normal' estudiante.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
                         <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
-
+                        <a class="buscar-iconos" href="{% url 'finance_app:finance-list-student-invoice' estudiante.pk  %}" title="Pagos" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
                         
                         </td>
                         

@@ -235,7 +235,7 @@ function mostrarErroresDetalle(error) {
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
     'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', 'consecutivo', 'cedulaAcudiente',
-    "document", "fotos"];
+    "document", "fotos", "observacion", "consecutivo", "pagado"];
 
   for (const i in array1) {
     const lista = array1[i]
@@ -265,14 +265,37 @@ function mostrarErroresCreacion(errores) {
   }
 
 }
+function mostrarErroresCreacionEditarModificado(errores) {
+  // Limpiar los errores previos
+  $('div.alert').remove(); // Remueve todos los mensajes de error previos
 
+  // Comprobar que hay errores en la respuesta
+  if (errores.responseJSON && errores.responseJSON[0] && errores.responseJSON[0].error) {
+    let erroresDetalles = errores.responseJSON[0].error;
+
+    // Iterar sobre los campos que contienen errores
+    for (const campo in erroresDetalles) {
+      if (erroresDetalles.hasOwnProperty(campo)) {
+        const mensajeError = erroresDetalles[campo][0];  // Obtener el primer mensaje de error
+
+        // Buscar el campo en el DOM por el nombre (name) del campo del formulario
+        let inputField = $('input[name="' + campo + '"], select[name="' + campo + '"], textarea[name="' + campo + '"]');
+
+        if (inputField.length > 0) {
+          // Añadir mensaje de error después del campo correspondiente
+          inputField.after('<div class="alert alert-danger"><strong>' + mensajeError + '</strong></div>');
+        }
+      }
+    }
+  }
+}
 function mostrarErroresCreacionEditar(errores) {
 
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
     'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', "password1", "password2",
     "tipe", "anio", "periodo", 'programa_name', "aceptado", "matricula", "cuotas", "cuota_valor", "nombre_materia", "programa",
-    "tarea", "observacion"
+    "tarea", "observacion", "consecutivo", "pagado"
   ];
 
   for (const i in array1) {
@@ -526,10 +549,6 @@ $(document).ready(function () {
         "previous": "Anterior"
       }
     },
-    "columns": [
-      null,
-      null,
-    ],
 
   });
 

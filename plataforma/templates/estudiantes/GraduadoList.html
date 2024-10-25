@@ -1,0 +1,106 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+
+
+{% block title %}Graduados | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-graduation-cap-line"></i> Estudiantes graduados </h2></span>
+      </div>
+      
+  </div>
+
+  <div class="card">
+    
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              {% if graduados %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead>
+                  <th>Código</th>
+                  <th>Estudiante</th>
+                  <th>Programa</th>
+                  <th>Promedio</th>
+                  <th>Acciones</th>
+                </thead>
+                <tbody>
+                  {% for i in graduados %}
+                  <tr>
+                    <td>
+                      {{i.codigo}}
+                    </td>
+                    <td>{{i.estudiante}}</td>
+                    <td>{{i.programa}}</td>
+                    <td>{{i.promedio}}</td>
+                    <td><a class="buscar-iconos" href="{% url 'student_app:student-notes' i.estudiante_id %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                      <a onclick="abrir_modal_edicion('{% url 'student_app:student-graduated-Delete' i.pk %}')" title="Reversar"><i class="ri-reply-all-fill iconos"></i></a>
+                      <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' i.estudiante_id  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+              {% else %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Estudiante</th>
+                    <th>Programa</th>
+                    <th>Promedio</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+
+{% block js %}
+<script type="text/javascript">
+
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+
+
+</script>
+{% endblock js %}
+
+
+

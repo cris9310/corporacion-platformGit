@@ -78,16 +78,30 @@ urlpatterns = [
         views.StudentNotesDeleteview.as_view(),
         name='student-notes-delete'
     ),
+    path(
+        'student-graduate/',
+        views.StudentGraduateView.as_view(),
+        name='student-graduate'
+    ),
 
-    
+    path(
+        'student-list-Finalily/',
+        views.StudentListFinalily.as_view(),
+        name='student-list-Finalily'
+    ),
 
-    
+    path(
+        'list-graduated',
+        views.GraduatedListView.as_view(),
+        name='list-graduated'
+    ),
+    path(
+        'student-graduated-Delete/<pk>/',
+        views.StudentGraduatedDeleteview.as_view(),
+        name='student-graduated-Delete'
+    ),
 
 
-    
-
-    
-    
 
     
 ]

@@ -1,0 +1,131 @@
+
+{% load  static %}
+{% for i in datos %}
+<div class="modal-dialog " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i class="ri-money-dollar-circle-fill"></i> Nuevo pago</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex" class="mt-3"  >
+            
+              <strong><p  class="card-title">Código de la factura:</p></strong>
+              <p class="card-text">&nbsp; {{i.codigo}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor inicial:</strong>
+              <p class="card-text">&nbsp; {{i.monto}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor pagado:</strong>
+              <p class="card-text">&nbsp; {{i.pagado}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor pendiente:</strong>
+              <p class="card-text">&nbsp; {{i.pendiente}}</p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
+      <form  method="POST" id="dataGeneralForm"  action="{% url 'finance_app:finance-update-student-invoice' i.pk  %}" >{% csrf_token %}
+        <div id="errores" ></div>
+        <input type="hidden" name="facturas" id="facturas" class="accion" value="{{i.codigo}}">
+        <input type="hidden" name="pendiente" id="pendiente" class="accion" value="{{i.pendiente2}}">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.consecutivo.id_for_label }}" ></div>
+              <label for="{{ form.consecutivo.id_for_label }}">Número del consecutivo:</label>
+              {{ form.consecutivo }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.pagado.id_for_label }}" ></div>
+              <label for="{{ form.pagado.id_for_label }}">Valor a pagar:</label>
+              {{ form.pagado }}
+            </div>
+          </div>
+        </div>
+        <div class="col ms-auto">
+          <div class="row" style="margin-top: 20px">
+            <div class="col">
+              <div class="{{ form.observacion.id_for_label }}" ></div>
+              <label for="{{ form.observacion.id_for_label }}">Observación:</label>
+              {{ form.observacion }}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top: 15px;">
+        <button type="button" id="button2" class="btn btn-primary" onclick="sendpayment()" >Registrar pago</button>
+        <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+      
+    </div> 
+  </div>
+</div>
+
+
+{% block js %}
+<script type="text/javascript">
+
+  function sendpayment() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    var pagado = parseFloat(document.getElementById("pagado").value);
+    var consecutivo = parseFloat(document.getElementById("consecutivo").value);
+    var observaciones = document.getElementById("observacion").value;
+    var pendiente = parseFloat(document.getElementById("pendiente").value);
+
+    if (pagado == "" || consecutivo == "" || observaciones == "") {
+      mostrarErrorblanco();
+    }else if(pagado < 0 || consecutivo < 0){
+      Swal.fire({
+        "title": "Aún falta algo",
+        "text": "El valor a pagar y el consecutivo no pueden ser negativo",
+        "icon": "error"
+      })
+    }else if(pagado > pendiente){
+      Swal.fire({
+        "title": "Aún falta algo",
+        "text": "El valor a pagar no puede ser mayor al saldo pendiente",
+        "icon": "error"
+      })
+    } else {
+      var request = $.ajax({
+        type: 'POST',
+        url: "{% url 'finance_app:finance-update-student-invoice' i.pk %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          location.reload(true);
+          mostrarOkpayments();
+        },
+        error: function (error) {;
+          mostrarErroresCreacionEditarModificado(error);
+          mostrarError();
+        }
+      });
+    }
+  }
+
+
+</script>
+
+{% endblock js %}
+
+{% endfor %}

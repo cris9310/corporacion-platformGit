@@ -1,0 +1,126 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Ingresos | Portal CNE{% endblock title %}
+
+
+
+    
+
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="ri-money-dollar-box-line"></i> Flujo de caja</h2></span>
+        </div>
+        
+    </div>
+    
+  
+    <div class="card shadow">
+        <div class="card-header">
+            <div class="row">
+
+                <div class="col filtro">
+              
+              
+                </div>
+              
+              <div class="col-7 botones-miltiples">
+                <button  type="button" title="Crear gasto" class="btn btn-sm" onclick="abrir_modal_general('{% url 'finance_app:finance-create-spend' %}')">
+                    <a >
+                        <i class="ri-bank-card-fill"></i>
+                      &nbsp; Nuevo gasto
+                    </a>
+                  </button>
+                <button  type="button" title="Crear ingreso" class="btn btn-sm" onclick="abrir_modal_general('{% url 'finance_app:finance-create-other-incomes' %}')">
+                  <a >
+                    <i class="ri-money-dollar-circle-fill"></i>
+                    &nbsp; Nuevo ingreso
+                  </a>
+                </button>
+              </div>
+            </div>
+          </div>
+      
+      <div class="card-body">
+          <div class="container-fluid" style="">
+            <div  class="row">
+              <div class="conte">
+                <div class ="conteTabla">
+  
+                  {% if income %}
+                  <table  id="table_general" class="hover" style="width:100%; ">
+                    <thead >
+                      <th>Concepto</th>
+                      <th>Consecutivo</th>
+                      <th>Fecha</th>
+                      <th>Tipo</th>
+                      <th>Monto</th>
+                    </thead>
+                    <tbody>
+                      {% for i in income %}
+                        <tr>
+                            {% if i.factor == 'Gasto' %}
+                            
+                                <td><span class="nonEstado2"><i class="ri-arrow-down-fill"></i>&nbsp;{{i.factor}}</span></td>
+                                <td >{{i.consecutivo}}</td>
+                                <td >{{i.fecha |date:"d/m/Y"}}</td>
+                                <td >{{i.tipo}}</td>
+                                <td ><span class="nonEstado2">- {{i.monto}}</span></td>
+                            {% else %}
+                                <td ><span class="estado"><i class="ri-arrow-up-fill"></i>&nbsp;{{i.factor}}</span></td>
+                                <td >{{i.consecutivo}}</td>
+                                <td >{{i.fecha |date:"d/m/Y"}}</td>
+                                <td >{{i.tipo}}</td>
+                                <td ><span class="estado">+ {{i.monto}}</span></td>
+                            {% endif %}
+                          
+                        </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table> 
+                {% else %}
+                <table id="table_general"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Concepto</th>
+                    <th>Consecutivo</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+                  
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  
+  
+    </div>
+  </div>
+  
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+
