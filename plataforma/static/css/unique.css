@@ -52,22 +52,26 @@
     display: flex !important;
 }
 
+.contenido {
+    margin-left: 220px;
+    padding: 5px;
+    height: 100vh;
+}
+
 /* sidebar */
 .sidebar {
 
     top: 0;
     left: 0;
-    height: auto;
+    height: 100vh;
     width: 250px;
     padding: 10px 14px;
     background: var(--sidebar-color);
     transition: var(--tran-05);
+    position: fixed;
 }
 
 /* Resuable Css */
-
-
-
 
 
 .sidebar .text {
@@ -1256,6 +1260,35 @@ label strong {
 
 }
 
+/* dashboard*/
+
+/* Estilo del contenedor del gráfico */
+.grafico-uno {
+    width: 80%;
+    /* Reducir el ancho del contenedor (puedes ajustarlo) */
+    margin: 0 auto;
+    /* Centrar el gráfico */
+}
+
+
+/* Estilo de la tabla */
+#dataTable-graficos {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 12px;
+    /* Reducir el tamaño de la fuente */
+}
+
+/* Estilo de las celdas de la tabla */
+#dataTable-graficos td,
+#dataTable-graficos th {
+    padding: 5px;
+    /* Reducir el espaciado dentro de las celdas */
+}
+
+.text-gray-300 {
+    font-size: 35px;
+}
 
 
 

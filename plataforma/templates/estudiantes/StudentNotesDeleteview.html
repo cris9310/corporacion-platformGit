@@ -12,7 +12,7 @@
       </button>
       </div>
       <div class="modal-body">
-        <form  method="POST" id="dataGeneralForm" action="{% url 'student_app:student-notes-delete' materias.pk estudiante.pk %}">{% csrf_token %}
+        <form  method="POST" id="dataGeneralForm" action="{% url 'student_app:student-notes-delete' materias.pk estudiante.slug %}">{% csrf_token %}
             <div class="cell medium-7">
                 <div >
                     <div >
@@ -46,7 +46,7 @@
       $('#spinner-div-real').hide();
       var request = $.ajax({
         type: "POST",
-        url: "{% url 'student_app:student-notes-delete' materias.pk estudiante.pk %}",
+        url: "{% url 'student_app:student-notes-delete' materias.pk estudiante.slug %}",
         data: serializedData,
         success: function (response) {
           $("#edicion").modal("hide");

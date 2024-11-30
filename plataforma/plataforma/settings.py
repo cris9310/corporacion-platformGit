@@ -80,6 +80,7 @@ LOCAL_APPS = (
     'applications.Student',
     'applications.Teacher',
     'applications.User',
+    'applications.Dashboard',
 
 
     
@@ -165,7 +166,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = reverse_lazy('user_app:list-user') # terminar el login
+LOGIN_REDIRECT_URL = reverse_lazy('dashboard_app:dashboard-admin') # terminar el login
 LOGOUT_REDIRECT_URL = reverse_lazy('homepage_app:login') 
 
 #Variables de envio de emails

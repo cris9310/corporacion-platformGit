@@ -64,17 +64,17 @@ urlpatterns = [
         name='assign'
     ),
     path(
-        'home-student/student-notes/<pk>/',
+        'home-student/student-notes/<slug:slug>/',
         views.StudentNotesListview.as_view(),
         name='student-notes'
     ),
     path(
-        'home-student/student-notes-detail/<int:pk1>/<int:pk2>/',
+        'home-student/student-notes-detail/<int:pk1>/<slug:slug>/',
         views.StudentNotesDetailListview.as_view(),
         name='student-notes-detail'
     ),
     path(
-        'student-notes-delete/<int:pk1>/<int:pk2>/',
+        'student-notes-delete/<int:pk1>/<slug:slug>/',
         views.StudentNotesDeleteview.as_view(),
         name='student-notes-delete'
     ),

@@ -153,16 +153,16 @@ class FinanceInvoiceListviewStudent(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FinanceInvoiceListviewStudent, self).get_context_data(**kwargs)
-        context["datos"] = Estudiante.objects.get(pk=self.kwargs['pk'])
-        context['progreso'] = int(int(Facturas.objects.filter(user_id=Estudiante.objects.get(pk=self.kwargs['pk']).codigo, estado_id=3).count())/int(Programas.objects.get(
-            id=Estudiante.objects.get(pk=self.kwargs['pk']).carrera_id
+        context["datos"] = Estudiante.objects.get(slug=self.kwargs['slug'])
+        context['progreso'] = int(int(Facturas.objects.filter(user_id=Estudiante.objects.get(slug=self.kwargs['slug']).codigo, estado_id=3).count())/int(Programas.objects.get(
+            id=Estudiante.objects.get(slug=self.kwargs['slug']).carrera_id
         ).cuotas+2)*100)
         return context
 
     def get_queryset(self):
         info = []
         datos = Facturas.objects.filter(user_id=Estudiante.objects.get(
-            pk=self.kwargs['pk']).codigo).order_by("codigo")
+            slug=self.kwargs['slug']).codigo).order_by("codigo")
         
         fecha_hoy = timezone.now()
         
@@ -172,7 +172,7 @@ class FinanceInvoiceListviewStudent(ListView):
             data = pagado['pagados'] if pagado['pagados'] is not None else 0
             
            
-            datos_final = {'pk': i.pk, "codigo": i.codigo, 'descripcion': i.descripcion, "fecha": i.due_at,
+            datos_final = {'pk': i.pk, 'slug':self.kwargs['slug'], "codigo": i.codigo, 'descripcion': i.descripcion, "fecha": i.due_at,
                         'estado': "Vencida" if i.due_at < fecha_hoy and (data < i.monto or data == 0) else i.estado, 
                         'monto': f'$ {i.monto:,.0f}', 'pagado': f'$ {data if data else 0.0 :,.0f}'}
 

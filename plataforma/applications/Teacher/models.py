@@ -1,6 +1,7 @@
 from django.db import models
 
 from datetime import datetime
+import uuid
 
 from applications.User.choices import *
 from applications.User.validators import *
@@ -9,6 +10,7 @@ from applications.User.models import *
 
 
 class Docente(models.Model):
+    slug = models.SlugField(unique=True, editable=False, blank=True)
     tDocument = models.ForeignKey(CatalogsTypesDocuement, on_delete=models.CASCADE, verbose_name='Tipo de documento')
     codigo = models.CharField(unique=True, max_length=20, verbose_name='Número de cédula', validators=[validate_cero])
     nombres = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombres')
@@ -32,4 +34,8 @@ class Docente(models.Model):
         if not self.id:
             self.fecha_reg = datetime.now()
         self.updated_at = datetime.now()
+
+        # Generar un slug único al guardar el objeto
+        if not self.slug:
+            self.slug = str(uuid.uuid4())
         return super(Docente, self).save(*args, **kwargs)

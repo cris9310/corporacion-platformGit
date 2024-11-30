@@ -46,7 +46,7 @@
                 <div class ="conteTabla">
   
                     {% if teacher %}
-                    <table id="table_id2"  class="hover" style="width:100%; ">
+                    <table id="table_id2"  class="hover" style="width:100%; "> 
                       <thead >
                         <th>Salones </th>
                         <th>Nro. Documento</th>
@@ -58,7 +58,7 @@
                         {% for teach in teacher %}
                         <tr>
                           {% if teach.estado  %}
-                          <td ><a class="buscar-iconos" href="{% url 'teacher_app:teacher-topic-list' teach.pk %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                          <td ><a class="buscar-iconos" href="{% url 'teacher_app:teacher-topic-list' teach.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
                           {% else %}
                           <td ><a  title="Consultar" ><i class="ri-search-line nonEstado"></i></a></td>
                           {% endif %}

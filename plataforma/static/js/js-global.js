@@ -379,6 +379,38 @@ function abrir_modal_crearEvent(url) {
 
 // Esta función modifica el css del menú, teniendo en cuenta el url actual
 
+
+
+$(document).ready(function () {
+  var $ = jQuery.noConflict();
+  var tabla = $('#dataTable-graficos').DataTable({
+    searching: false,
+    paginate: false,
+
+    language: {
+      decimal: "",
+      emptyTable: "",
+      info: "",
+      infoEmpty: "",
+      infoFiltered: "",
+      infoPostFix: "",
+      thousands: "",
+      lengthMenu: "",
+      loadingRecords: "",
+      processing: "",
+      search: "",
+      zeroRecords: "",
+      paginate: {
+        first: "",
+        last: "",
+        next: "",
+        previous: ""
+      }
+    }
+
+  });
+})
+
 $(document).ready(function () {
   var $ = jQuery.noConflict();
   var tabla = $('#table_general').DataTable({

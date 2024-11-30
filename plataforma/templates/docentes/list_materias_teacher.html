@@ -73,7 +73,7 @@
                       <td>{{i.total}}</td>
                       <td>{{i.periodo}}</td>
                       {% if i.total > 0  %}
-                      <td><a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                      <td><a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
                       {% else %}
                       <td ><a  class="buscar-iconos" href="#" title="Consultar" ><i class="ri-search-line nonEstado"></i></a></td>
                       {% endif %}

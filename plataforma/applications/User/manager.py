@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ImproperlyConfigured
-from .models import *
-from django.db.models import Q
+from django.utils import timezone
 
-import random
 from datetime import datetime
 import json
+from .models import *
+from applications.Finance.models import *
 
 
 
@@ -170,5 +170,14 @@ class BuscadorManager(models.Manager):
         
     
 
+def actualizar_estados_facturas():
+    # Obtén la fecha actual
+    hoy = timezone.now()
 
+    
+    facturas_pendientes = Facturas.objects.filter(
+        estado__in=['Pendiente', 'Abono'],  
+        due_at__lt=hoy  
+    )
 
+    facturas_pendientes.update(estado='Vencida')

@@ -54,7 +54,7 @@ class Inventario(models.Model):
     
 
 class Materias(models.Model):
-
+    slug = models.SlugField(unique=True, editable=False, blank=True)
     materia  = models.ForeignKey(Inventario, on_delete=models.CASCADE )
     sede=models.ForeignKey(CatalogsSede, verbose_name='Sede', on_delete=models.CASCADE)
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE )
@@ -66,6 +66,13 @@ class Materias(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active=models.BooleanField(default=True)
     objects = BuscadorManager()
+
+    def save(self, *args, **kwargs):
+
+        # Generar un slug único al guardar el objeto
+        if not self.slug:
+            self.slug = str(uuid.uuid4())
+        return super(Materias, self).save(*args, **kwargs)
 
 
     class Meta:

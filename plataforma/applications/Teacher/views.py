@@ -11,6 +11,7 @@ from django.contrib import messages
 from applications.Programs.models import *
 from .forms import *
 from .models import *
+from applications.User.mixins import *
 
 
 
@@ -27,12 +28,12 @@ class Teacherlistview(ListView):
         data_teacher = []
         data_prin = Docente.objects.all()
         for i in data_prin:
-            if Materias.objects.filter(docente_id=i.id).exists():
-                data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombres,
+            if Materias.objects.filter(docente__slug=i.slug).exists():
+                data_json = {"pk": i.id, 'slug':i.slug, "codigo": i.codigo, "nombres": i.nombres,
                                 "apellidos": i.apellidos, "estado": True, "is_active": i.is_active}
                 data_teacher.append(data_json)
             else:
-                data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombres,
+                data_json = {"pk": i.id, 'slug':i.slug, "codigo": i.codigo, "nombres": i.nombres,
                                 "apellidos": i.apellidos, "estado": False, "is_active": i.is_active}
                 data_teacher.append(data_json)
         queryset = data_teacher
@@ -128,7 +129,7 @@ class TeacherDetailView(DetailView):
     model = Docente
 
 
-# Esta vista se enceuntra ok, muestra el detalle de las asignaturas que tiene el docente. ok
+# Esta vista se encuentra ok, muestra el detalle de las asignaturas que tiene el docente. ok
 class TeacherTopicsListview(ListView):
     model = Docente
     second_model = Materias
@@ -136,26 +137,26 @@ class TeacherTopicsListview(ListView):
     context_object_name = 'teacherTp'
 
     def get_context_data(self, **kwargs):
-        cod = self.kwargs['pk']
+        cod = self.kwargs['slug']
         context = super(TeacherTopicsListview, self).get_context_data(**kwargs)
-        context['topics'] = Docente.objects.filter(pk=cod)
-        context['Tmaterias'] = Materias.objects.filter(docente=cod).count()
+        context['topics'] = Docente.objects.filter(slug=cod)
+        context['Tmaterias'] = Materias.objects.filter(docente__slug=cod).count()
         return context
 
     def get_queryset(self):
 
-        cod = self.kwargs['pk']
+        cod = self.kwargs['slug']
         data = []
-        for i in Materias.objects.filter(docente=cod):
+        for i in Materias.objects.filter(docente__slug=cod):
             try:
                 info = Banner.objects.values("materia__materia__codigo").annotate(
                     total=Coalesce(Count("materia"), 0)).filter(materia__materia__codigo=i.materia.codigo)
-                info1 = {"pk": i.pk, "codigo": i.materia.codigo, "programa": i.materia.programa,
+                info1 = {"pk": i.pk, 'slug':i.slug, "codigo": i.materia.codigo, "programa": i.materia.programa,
                             "materia": i.materia, "total": info[0]['total'], "periodo": i.periodo}
                 data.append(info1)
 
             except:
-                info1 = {"pk": i.pk, "codigo": i.materia.codigo, "programa": i.materia.programa,
+                info1 = {"pk": i.pk, 'slug':i.slug, "codigo": i.materia.codigo, "programa": i.materia.programa,
                             "materia": i.materia, "total": 0, "periodo": i.periodo}
                 data.append(info1)
         return data

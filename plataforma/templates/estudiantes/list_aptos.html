@@ -57,7 +57,7 @@
                           <div >
                             <div class="progress" >
                               <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
-                                <a class="barra" href="{% url 'student_app:student-notes' i.pk %}">{{i.indicador}} %</a> 
+                                <a class="barra" href="{% url 'student_app:student-notes' i.slug %}">{{i.indicador}} %</a> 
                                 
                               </div>
                             </div>
@@ -66,7 +66,7 @@
                         <td>
                           <div class="progress" >
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
-                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.pk %}">{{i.financiero}} %</a>
+                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.slug %}">{{i.financiero}} %</a>
                             </div>
                           </div>
                           
@@ -84,7 +84,7 @@
                           <div >
                             <div class="progress" >
                               <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
-                                <a class="barra" href="{% url 'student_app:student-notes' i.pk %}">{{i.indicador}} %</a>
+                                <a class="barra" href="{% url 'student_app:student-notes' i.slug %}">{{i.indicador}} %</a>
                                 
                               </div>
                             </div>
@@ -93,7 +93,7 @@
                         <td>
                           <div class="progress" >
                             <div   class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
-                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.pk %}">{{i.financiero}} %</a>
+                              <a class="barra" href="{% url 'finance_app:finance-list-student-invoice' i.slug %}">{{i.financiero}} %</a>
                             </div>
                           </div>
                         </td>

@@ -240,13 +240,13 @@ class Studentlistview(ListView):
         data_student = []
         data_prin = Estudiante.objects.filter(is_graduado=False).exclude(masivo=True)
         for i in data_prin:
-            if Banner.objects.filter(student_id=i.id).exists():
-                data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+            if Banner.objects.filter(student__slug=i.slug).exists():
+                data_json = {"pk": i.id, "slug":i.slug, "codigo": i.codigo, "nombres": i.nombre,
                                 "apellidos": i.apellidos, "estado": True, "carrera": i.carrera,
                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado}
                 data_student.append(data_json)
             else:
-                data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+                data_json = {"pk": i.id, "slug":i.slug, "codigo": i.codigo, "nombres": i.nombre,
                                 "apellidos": i.apellidos, "estado": False, "carrera": i.carrera,
                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado}
                 data_student.append(data_json)
@@ -830,10 +830,10 @@ class StudentNotesListview(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        estudiante = Estudiante.objects.get(pk=self.kwargs['pk'])
+        estudiante = Estudiante.objects.get(slug=self.kwargs['slug'])
         context['estudiante'] = estudiante
 
-        datos = Banner.objects.filter(student_id=self.kwargs['pk'], materia__is_active=False).values("materia_id", 
+        datos = Banner.objects.filter(student__slug=self.kwargs['slug'], materia__is_active=False).values("materia_id", 
                                                                            "materia__an_creacion", 
                                                                            "materia__materia__codigo").distinct().order_by(
             'materia__materia__codigo','-materia__an_creacion'
@@ -853,7 +853,7 @@ class StudentNotesListview(ListView):
             df = df['materia_id']
 
             for i in df:
-                promedio = round (Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+                promedio = round (Banner.objects.filter(student__slug=self.kwargs['slug'], materia_id=i ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
                 mean.append( promedio )
                 if promedio >= 3.0:
                     pasadas.append(1)
@@ -875,11 +875,11 @@ class StudentNotesListview(ListView):
         data = []
     
         # Obtener los datos sin usar distinct(), pero usando values() para reducir la carga de datos
-        estudiante = Banner.objects.filter(student_id=self.kwargs['pk']).values(
-            'student_id', 'materia_id', 'materia__materia__codigo', 
+        estudiante = Banner.objects.filter(student__slug=self.kwargs['slug']).values(
+            'student__slug', 'materia_id', 'materia__materia__codigo', 
             'materia__materia__nombre_materia', 'materia__is_active', 
             'materia__periodo'
-        ).order_by('student_id', 'materia_id')
+        ).order_by('student__slug', 'materia_id')
 
         # Crear un diccionario para asegurarnos de que no haya duplicados por 'materia_id'
         materias_vistas = set()
@@ -892,13 +892,13 @@ class StudentNotesListview(ListView):
                 
                 # Calcular el promedio de calificaciones para esta materia
                 promedio = round(
-                    Banner.objects.filter(student_id=self.kwargs['pk'], materia_id=i['materia_id']).aggregate(Avg('calificacion'))['calificacion__avg'], 
+                    Banner.objects.filter(student__slug=self.kwargs['slug'], materia_id=i['materia_id']).aggregate(Avg('calificacion'))['calificacion__avg'], 
                     2
                 )
                 
                 # Crear el diccionario con los datos de la materia
                 data_json = {
-                    'pk': i['student_id'], 
+                    'slug': i['student__slug'], 
                     'pkmateria': i['materia_id'], 
                     "codigo": i['materia__materia__codigo'], 
                     "nombre": i['materia__materia__nombre_materia'],
@@ -923,13 +923,13 @@ class StudentNotesDetailListview(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        estudiante_data = Estudiante.objects.get(pk=self.kwargs['pk2'])
+        estudiante_data = Estudiante.objects.get(slug=self.kwargs['slug'])
         context['estudiante'] = estudiante_data
         data = [] 
         estudiante = Materias.objects.filter(pk=self.kwargs['pk1'] )
 
         for i in estudiante:
-            promedio = round (Banner.objects.filter(student_id=self.kwargs['pk2'], materia_id=self.kwargs['pk1'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+            promedio = round (Banner.objects.filter(student__slug=self.kwargs['slug'], materia_id=self.kwargs['pk1'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
             
             data_json = {
                 'pk': i.pk, "codigo": i.materia.codigo, "nombre": i.materia.nombre_materia,
@@ -941,7 +941,7 @@ class StudentNotesDetailListview(ListView):
     
     def get_queryset(self):
         data = []
-        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student_id=self.kwargs['pk2']  )
+        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student__slug=self.kwargs['slug']  )
 
         for i in estudiante:
             datos = {"estudiante": i.student.nombre + " " + i.student.apellidos, "cod_tarea": i.cod_tarea, "tarea": i.tarea.tipo, "calificacion": i.calificacion }
@@ -962,19 +962,20 @@ class StudentNotesDeleteview(DeleteView):
             queryset = self.get_queryset()
 
         materias = self.kwargs['pk1']
-        estudiante = self.kwargs['pk2']
+        estudiante = self.kwargs['slug']
         context = {'materias':materias, 'estudiante':estudiante}
         return context
     
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["estudiante"] = Estudiante.objects.get(pk=self.kwargs['pk2'] )
+        context["estudiante"] = Estudiante.objects.get(slug=self.kwargs['slug'] )
         context["materias"] = Materias.objects.get(pk=self.kwargs['pk1'] )
         return context
     
     def post(self, request, *args, **kwargs):
-        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student_id=self.kwargs['pk2']  ).delete()
+        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], 
+                                           student_id=Estudiante.objects.get(slug=self.kwargs['slug'] ).pk  ).delete()
 
         return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
     
@@ -1014,7 +1015,7 @@ class StudentListFinalily(ListView):
                 carrera = Programas.objects.get(id=st.carrera_id)
                 pagadas = Facturas.objects.filter(
                     user_id=st.codigo, estado_id=3).count()
-                rr = {'pk': st.pk, 'codigo': st.codigo, 'estudiante': st.apellidos + ' ' + st.nombre, 'programa': carrera.programa_name,
+                rr = {'pk': st.pk, 'slug':st.slug, 'codigo': st.codigo, 'estudiante': st.apellidos + ' ' + st.nombre, 'programa': carrera.programa_name,
                       'indicador': int((int(i['materias_aprobadas'])/int(carrera.aceptado))*100), 'financiero': int((int(pagadas)/(2 + int(carrera.cuotas)))*100)}
 
                 estudiante_list.append(rr)

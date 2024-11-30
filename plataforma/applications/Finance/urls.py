@@ -23,7 +23,7 @@ urlpatterns = [
     ),
 
     path(
-        'finance-list-student-invoice/<pk>/',
+        'finance-list-student-invoice/<slug:slug>/',
         views.FinanceInvoiceListviewStudent.as_view(),
         name='finance-list-student-invoice'
     ),

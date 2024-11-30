@@ -1,6 +1,7 @@
 from django.db import models
 
 from datetime import datetime
+import uuid
 
 from applications.User.choices import *
 from applications.User.validators import *
@@ -8,6 +9,7 @@ from applications.User.models import *
 
 
 class Estudiante(models.Model):
+    slug = models.SlugField(unique=True, editable=False, blank=True)
     codigo = models.CharField(unique=True, max_length=50, verbose_name='código')
     tDocument = models.ForeignKey(CatalogsTypesDocuement, on_delete=models.CASCADE, verbose_name='Tipo de documento')
     cedula = models.CharField(unique=False, max_length=20, verbose_name='Identificación del Estudiante', validators=[validate_cero])
@@ -56,7 +58,14 @@ class Estudiante(models.Model):
         if not self.id:
             self.fecha_reg = datetime.now()
         self.updated_at = datetime.now()
-        return super(Estudiante, self).save(*args, **kwargs)
+
+        # Generar un slug único al guardar el objeto
+        if not self.slug:
+            self.slug = str(uuid.uuid4())
+        
+        super().save(*args, **kwargs)
+
+        
     
 
 class Graduated(models.Model):

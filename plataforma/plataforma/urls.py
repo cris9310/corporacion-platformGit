@@ -33,6 +33,8 @@ urlpatterns = [
 
     #path('agenda/', include('applications.Agenda.urls')),
     path('finance/', include('applications.Finance.urls')),
+    path('dashboard/', include('applications.Dashboard.urls')),
+
 
 ]
 

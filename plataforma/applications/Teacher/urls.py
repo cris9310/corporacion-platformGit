@@ -41,7 +41,7 @@ urlpatterns = [
     ),
 
     path(
-        'teacher-topic-list/<pk>/',
+        'teacher-topic-list/<slug:slug>/',
         views.TeacherTopicsListview.as_view(),
         name='teacher-topic-list'
     ),

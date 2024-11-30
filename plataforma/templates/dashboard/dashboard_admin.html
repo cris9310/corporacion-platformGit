@@ -1,0 +1,268 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Dashboard | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="ri-dashboard-line icon"></i> Dashboard</h2></span>
+        </div>
+        
+    </div>
+    <div class="row">
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color:#266897">
+                            Ingresos del mes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{IndIniciales.totalIngresoMes}}</div>
+                        <div class="text-xs font-weight-bold  mb-1" style="color:#707070">
+                          Total anual {{IndIniciales.totalIngresosAnio}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="ri-money-dollar-box-line text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2" >
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1 text-danger" >
+                            Gastos del mes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{IndIniciales.totalGastos}}</div>
+                        <div class="text-xs font-weight-bold  mb-1" style="color:#707070">
+                          Total anual {{IndIniciales.gastosAnio}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="ri-money-dollar-box-line text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+        <!-- Earnings (Annual) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Indicador de cartera vencida</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{IndIniciales.icv}}</div>
+                            <div class="text-xs font-weight-bold  mb-1" style="color:#707070">
+                              Total {{IndIniciales.icvdinero}}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="ri-percent-line text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Estudiantes Activos
+                            </div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">{{IndIniciales.activos}}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="ri-team-line text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container-fluid">
+
+      
+      <div class="row">
+
+          <div class="col-xl-7 col-lg-7">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold " style="color:#707070">Ingresos vs Gastos</h6>
+                </div>
+                  <div class="card-body">
+                    <div class="chart-bar">
+                      <canvas id="myChart"></canvas>
+                  </div>
+                  </div>
+              </div>
+
+
+          </div>
+
+          <!-- Donut Chart -->
+          <div class="col-xl-5 col-lg-5">
+              <div class="card shadow mb-4">
+                  <div class="card-body">
+                    <table id="dataTable-graficos" class="cell-border">
+                      <thead></thead>
+                      <tbody></tbody>
+                  </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
+
+
+
+
+  
+    <div class="card dashboard-card">
+      
+      <div class="card-body">
+        
+          <div class="container-fluid grafico-uno" style="">
+            <div>
+                <canvas id="myChart"></canvas>
+                <div style="margin-top: 20px;">
+                  
+              </div>
+            </div>
+            
+          </div>
+      </div>
+
+      
+
+        
+  
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  // Cargar los datos dinámicos desde Django
+const rawData = JSON.parse('{{ ingresosGastosGrafica|safe }}');
+
+// Extraer meses y conceptos únicos
+const meses = [...new Set(rawData.map(item => item.mes))];
+const conceptos = ["ingresos", "gastos"]; // Conceptos fijos
+
+// Estructurar los datos para la tabla dinámica
+const tablaDatos = conceptos.map(concepto => {
+    const fila = { concepto };
+    meses.forEach(mes => {
+        fila[mes] = rawData
+            .filter(item => item.mes === mes && item.concepto === concepto)
+            .reduce((sum, item) => sum + item.valor, 0);
+    });
+    return fila;
+});
+
+// Construir la tabla HTML
+const table = document.getElementById("dataTable-graficos");
+const thead = table.querySelector("thead");
+const tbody = table.querySelector("tbody");
+
+// Crear encabezado de columnas
+const headerRow = document.createElement("tr");
+headerRow.innerHTML = `<th>Mes</th><th>Ingreso</th><th>Gasto</th><th>PyG</th><th>%PyG</th>`;
+thead.appendChild(headerRow);
+
+// Crear filas con datos
+meses.forEach(mes => {
+    const row = document.createElement("tr");
+
+    // Agregar el mes como la primera celda
+    row.innerHTML = `<td>${mes}</td>`;
+
+    // Obtener los valores de Ingreso y Gasto para cada mes
+    let ingreso = tablaDatos.find(fila => fila.concepto === "ingresos")[mes] || 0;
+    let gasto = tablaDatos.find(fila => fila.concepto === "gastos")[mes] || 0;
+
+    // Calcular PyG (Ingreso - Gasto)
+    let PyG = ingreso - gasto;
+
+    // Calcular %PyG (PyG / Ingreso * 100)
+    let porcentajePyG = ingreso !== 0 ? (PyG / ingreso) * 100 : 0;
+
+    // Agregar los valores de Ingreso, Gasto, PyG y %PyG a la fila
+    row.innerHTML += `
+        <td>${ingreso.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${gasto.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${PyG.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+        <td>${porcentajePyG.toFixed(1)}%</td>
+    `;
+
+    tbody.appendChild(row);
+});
+
+  // Configurar el gráfico usando los datos procesados
+  const ingresos = meses.map(mes => tablaDatos.find(f => f.concepto === "ingresos")[mes] || 0);
+  const gastos = meses.map(mes => tablaDatos.find(f => f.concepto === "gastos")[mes] || 0);
+
+  const data = {
+      labels: meses,
+      datasets: [
+          {
+              label: "Ingresos",
+              data: ingresos,
+              borderColor: "rgb(38, 104, 151, 1)",
+              backgroundColor: "rgba(38, 104, 151, 0.2)",
+              tension: 0.4,
+          },
+          {
+              label: "Gastos",
+              data: gastos,
+              borderColor: "rgba(255, 99, 132, 1)",
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              tension: 0.4,
+          },
+      ],
+  };
+
+  const config = {
+      type: "line",
+      data: data,
+      options: {
+          responsive: true,
+          plugins: {
+              legend: {
+                  position: "top",
+              },
+              
+          },
+      },
+  };
+
+  // Renderizar el gráfico
+  const ctx = document.getElementById("myChart").getContext("2d");
+  new Chart(ctx, config);
+  
+
+</script>
+
+{% endblock js %}

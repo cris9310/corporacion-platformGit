@@ -115,7 +115,7 @@ urlpatterns = [
     ),
     
     path(
-        'config/list-banner/<pk>/',
+        'config/list-banner/<slug:slug>/',
         views.Bannerlistview.as_view(),
         name='list-banner'
     ),

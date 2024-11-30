@@ -586,15 +586,15 @@ class Bannerlistview(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Bannerlistview, self).get_context_data(**kwargs)
-        context["informacion"] = Materias.objects.get(pk=self.kwargs['pk'])
+        context["informacion"] = Materias.objects.get(slug=self.kwargs['slug'])
         
-        context["general"]  = round (Banner.objects.filter(materia_id=self.kwargs['pk'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+        context["general"]  = round (Banner.objects.filter(materia__slug=self.kwargs['slug'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
         return context
     
 
     def get_queryset(self):
         data = []
-        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk'])
+        estudiante = Banner.objects.filter(materia__slug=self.kwargs['slug'])
 
         for i in estudiante:
             datos = {"Código": i.student.codigo, "Estudiante": i.student.nombre + " " + i.student.apellidos, 
@@ -718,6 +718,7 @@ class BannerCreateTaskView(CreateView):
             response = JsonResponse(mensaje, safe=False)
             response.status_code = 400
             return response
+
 
 class ListBannerTaskDetailView(ListView):
     model = Banner

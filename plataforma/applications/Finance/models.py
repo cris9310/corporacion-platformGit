@@ -39,7 +39,7 @@ class Facturas(models.Model):
         return self.user
 
 class FacturasSub(models.Model):
-    facturas = models.ForeignKey(Facturas, on_delete=models.CASCADE)
+    facturas = models.ForeignKey(Facturas, on_delete=models.CASCADE, related_name='pagos')
     observacion=models.CharField(max_length=100, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     pagado =  models.DecimalField(max_digits= 25, decimal_places=0, null=False, blank=False)
