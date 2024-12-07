@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import timezone
+from django.utils.text import slugify
 
 from datetime import datetime
 import json
 from .models import *
+import uuid
 
 
 
@@ -167,6 +168,13 @@ class BuscadorManager(models.Manager):
             return "1"
         else:
             return "2"
+        
+    def generate_unique_slug(self,base_value, existing_slugs):
+        slug = f"{slugify(base_value)}-{uuid.uuid4().hex[:8]}"
+        while slug in existing_slugs:
+            slug = f"{slugify(base_value)}-{uuid.uuid4().hex[:8]}"
+        existing_slugs.add(slug)
+        return slug
         
     
 

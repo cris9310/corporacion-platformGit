@@ -91,6 +91,7 @@
         </div>
 
     </div>
+    
 
 
     <div class="container-fluid">
@@ -128,31 +129,69 @@
 
   </div>
 
+  <div class="container-fluid">
 
-
-
-
-  
-    <div class="card dashboard-card">
       
-      <div class="card-body">
-        
-          <div class="container-fluid grafico-uno" style="">
-            <div>
-                <canvas id="myChart"></canvas>
-                <div style="margin-top: 20px;">
-                  
+    <div class="row">
+
+        <div class="col-xl-7 col-lg-7">
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold " style="color:#707070">Total Matriculados vs graduados</h6>
               </div>
+                <div class="card-body">
+                  <div class="chart-bar">
+                    <canvas id="barChart"></canvas>
+                </div>
+                </div>
             </div>
-            
-          </div>
-      </div>
 
-      
 
-        
-  
+        </div>
+
+        <div class="col-xl-5 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    {% if dfdocentes %}
+                  <table id="dataTable-docentes" class="cell-border">
+                    <thead>
+                        <th>Docente</th>
+                        <th>Total asignaturas</th>
+                    </thead>
+                    <tbody>
+                        {% for  i in dfdocentes  %}
+                        <tr>
+                        <td >{{i.docente}}</td>
+                        <td >{{i.total}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                  {% else %}
+                  <table id="dataTable-docentes" class="cell-border">
+                    <thead>
+                        <th>Docente</th>
+                        <th>Total asignaturas</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td >-</td>
+                        <td >-</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
+
+
+
+
 </div>
 
 
@@ -164,105 +203,93 @@
 
 {% block js %}
 <script>
-  // Cargar los datos dinámicos desde Django
-const rawData = JSON.parse('{{ ingresosGastosGrafica|safe }}');
+    // Cargar datos del backend (asegúrate de usar safe para JSON seguro)
+    const rawData = JSON.parse('{{ ingresosGastosGrafica|safe }}');
+    const rawDataProgramas = JSON.parse('{{ dfprogramas|safe }}');
 
-// Extraer meses y conceptos únicos
-const meses = [...new Set(rawData.map(item => item.mes))];
-const conceptos = ["ingresos", "gastos"]; // Conceptos fijos
-
-// Estructurar los datos para la tabla dinámica
-const tablaDatos = conceptos.map(concepto => {
-    const fila = { concepto };
-    meses.forEach(mes => {
-        fila[mes] = rawData
-            .filter(item => item.mes === mes && item.concepto === concepto)
-            .reduce((sum, item) => sum + item.valor, 0);
+    // Procesamiento y estructuración de datos
+    const meses = [...new Set(rawData.map(item => item.mes))];
+    const conceptos = ["ingresos", "gastos"];
+    const tablaDatos = conceptos.map(concepto => {
+        const fila = { concepto };
+        meses.forEach(mes => {
+            fila[mes] = rawData
+                .filter(item => item.mes === mes && item.concepto === concepto)
+                .reduce((sum, item) => sum + item.valor, 0);
+        });
+        return fila;
     });
-    return fila;
-});
 
-// Construir la tabla HTML
-const table = document.getElementById("dataTable-graficos");
-const thead = table.querySelector("thead");
-const tbody = table.querySelector("tbody");
+    // Renderización de tabla dinámica
+    const table = document.getElementById("dataTable-graficos");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+    const headerRow = `<tr><th>Mes</th><th>Ingreso</th><th>Gasto</th><th>PyG</th><th>%PyG</th></tr>`;
+    thead.innerHTML = headerRow;
 
-// Crear encabezado de columnas
-const headerRow = document.createElement("tr");
-headerRow.innerHTML = `<th>Mes</th><th>Ingreso</th><th>Gasto</th><th>PyG</th><th>%PyG</th>`;
-thead.appendChild(headerRow);
+    meses.forEach(mes => {
+        const ingreso = tablaDatos.find(f => f.concepto === "ingresos")[mes] || 0;
+        const gasto = tablaDatos.find(f => f.concepto === "gastos")[mes] || 0;
+        const PyG = ingreso - gasto;
+        const porcentajePyG = ingreso !== 0 ? (PyG / ingreso) * 100 : 0;
 
-// Crear filas con datos
-meses.forEach(mes => {
-    const row = document.createElement("tr");
+        tbody.innerHTML += `
+            <tr>
+                <td>${mes}</td>
+                <td>${ingreso.toLocaleString("en-US", { style: "currency", currency: "USD" })}</td>
+                <td>${gasto.toLocaleString("en-US", { style: "currency", currency: "USD" })}</td>
+                <td>${PyG.toLocaleString("en-US", { style: "currency", currency: "USD" })}</td>
+                <td>${porcentajePyG.toFixed(1)}%</td>
+            </tr>
+        `;
+    });
 
-    // Agregar el mes como la primera celda
-    row.innerHTML = `<td>${mes}</td>`;
+    // Configuración del gráfico de lineas
+    const ingresos = meses.map(mes => tablaDatos.find(f => f.concepto === "ingresos")[mes] || 0);
+    const gastos = meses.map(mes => tablaDatos.find(f => f.concepto === "gastos")[mes] || 0);
+    const data = {
+        labels: meses,
+        datasets: [
+            { label: "Ingresos", data: ingresos, borderColor: "rgb(38, 104, 151)", backgroundColor: "rgba(38, 104, 151, 0.2)", tension: 0.4 },
+            { label: "Gastos", data: gastos, borderColor: "rgba(255, 99, 132)", backgroundColor: "rgba(255, 99, 132, 0.2)", tension: 0.4 },
+        ],
+    };
+    const config = { type: "line", data: data, options: { responsive: true } };
+    new Chart(document.getElementById("myChart").getContext("2d"), config);
 
-    // Obtener los valores de Ingreso y Gasto para cada mes
-    let ingreso = tablaDatos.find(fila => fila.concepto === "ingresos")[mes] || 0;
-    let gasto = tablaDatos.find(fila => fila.concepto === "gastos")[mes] || 0;
 
-    // Calcular PyG (Ingreso - Gasto)
-    let PyG = ingreso - gasto;
 
-    // Calcular %PyG (PyG / Ingreso * 100)
-    let porcentajePyG = ingreso !== 0 ? (PyG / ingreso) * 100 : 0;
 
-    // Agregar los valores de Ingreso, Gasto, PyG y %PyG a la fila
-    row.innerHTML += `
-        <td>${ingreso.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${gasto.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${PyG.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-        <td>${porcentajePyG.toFixed(1)}%</td>
-    `;
+    const labels = rawDataProgramas.map(item => item.programa);
+    const totalMatriculados = rawDataProgramas.map(item => item.totalMatriculados);
+    const totalGraduados = rawDataProgramas.map(item => item.totalGraduados);
+    const variaciones = rawDataProgramas.map(item => item.variacion);
 
-    tbody.appendChild(row);
-});
 
-  // Configurar el gráfico usando los datos procesados
-  const ingresos = meses.map(mes => tablaDatos.find(f => f.concepto === "ingresos")[mes] || 0);
-  const gastos = meses.map(mes => tablaDatos.find(f => f.concepto === "gastos")[mes] || 0);
-
-  const data = {
-      labels: meses,
-      datasets: [
-          {
-              label: "Ingresos",
-              data: ingresos,
-              borderColor: "rgb(38, 104, 151, 1)",
-              backgroundColor: "rgba(38, 104, 151, 0.2)",
-              tension: 0.4,
-          },
-          {
-              label: "Gastos",
-              data: gastos,
-              borderColor: "rgba(255, 99, 132, 1)",
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              tension: 0.4,
-          },
-      ],
-  };
-
-  const config = {
-      type: "line",
-      data: data,
-      options: {
-          responsive: true,
-          plugins: {
-              legend: {
-                  position: "top",
-              },
-              
-          },
-      },
-  };
-
-  // Renderizar el gráfico
-  const ctx = document.getElementById("myChart").getContext("2d");
-  new Chart(ctx, config);
-  
+    const ctx = document.getElementById('barChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Matriculados',
+                        data: totalMatriculados,
+                        borderColor: "rgb(38, 104, 151)" ,
+                        backgroundColor: "rgba(38, 104, 151, 0.2)",
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Total Graduados',
+                        data: totalGraduados,
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        borderColor: "rgba(255, 99, 132)",
+                        borderWidth: 2
+                    }
+                ]
+            },
+            
+        });
 
 </script>
-
 {% endblock js %}

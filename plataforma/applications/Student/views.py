@@ -288,6 +288,7 @@ class StudentAsigView(View):
             new_student['NACIMIENTO'] = pd.to_datetime(
                 new_student['NACIMIENTO'])
             new_student['DUPLICADO'] = new_student.duplicated()
+            new_student['DUPLICADO_USERS']= new_student['USERNAME'].duplicated()
 
             # Validamos que no existan valores nulos y en blancos en el archivo.
             miss_values_count = new_student.isnull().sum()
@@ -317,8 +318,8 @@ class StudentAsigView(View):
                         return response
 
                 else:
-                    mensaje1.append({"error": 'La columna con encabezado ' + str(i) +
-                                    ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
+                    mensaje1.append({"error": 'La columna número ' + str(i) +
+                                    ' en su archivo, no tiene un encabezado válido, verifique el archivo y vuelva a cargarlo'})
                     response = JsonResponse(mensaje1, safe=False)
                     response.status_code = 400
                     return response
@@ -346,6 +347,14 @@ class StudentAsigView(View):
                         conteo = 1 + conteo
                         mensaje1.append({"error": "Encontramos filas duplicadas para el usuario: " +
                                         new_student['USERNAME'][i] + " verifique la información"})
+                    else:
+                        conteo = 0 + conteo
+
+                for i in range(len(new_student)):
+                    if new_student['DUPLICADO_USERS'][i] == True:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario: " +
+                                        new_student['USERNAME'][i] + " se encuentra duplicado, por favor verifique la información"})
                     else:
                         conteo = 0 + conteo
 
@@ -441,7 +450,7 @@ class StudentAsigView(View):
                     if not CatalogsSede.objects.filter(sede=new_student['SEDE'][i]):
                         conteo = 1 + conteo
                         mensaje1.append(
-                            {"error": "El usuario " + new_student['USERNAME'][i] + " tipo de sede incorrecta" + new_student['SEDE'][i] + ", seleccione uno de la lista desplegable."})
+                            {"error": "Usted ingresó la sede " + new_student['SEDE'][i] + " para el usuario " + new_student['USERNAME'][i] + ", la cual no existe" + ", seleccione una sede de la lista desplegable."})
 
                     else:
                         conteo = 0 + conteo
@@ -462,6 +471,7 @@ class StudentAsigView(View):
 
                 # si pasa las validaciones, se comienza a procesar
                 else:
+                    existing_slugs = set()
                     for i in range(len(new_student)):
                         carrera = Programas.objects.get(
                             programa_name=new_student['CARRERA_ID'][i]).id
@@ -473,6 +483,7 @@ class StudentAsigView(View):
                             sede=new_student['SEDE'][i]).id
                         periodo= Periodos.objects.get(
                             periodo=new_student['PERIODO'][i]).id
+                        slug = Estudiante.objects.generate_unique_slug(new_student['USERNAME'][i], existing_slugs)
                         data_list.append(Estudiante(codigo=int(codigo) + i, cedula=new_student['CEDULA'][i],
                                                     nombre=new_student['NOMBRE'][i], apellidos=new_student['APELLIDOS'][i],
                                                     nacionalidad=new_student['NACIONALIDAD'][i],
@@ -485,6 +496,7 @@ class StudentAsigView(View):
                                                         i], cedula_acudiente=new_student['CEDULA_ACUDIENTE'][i],
                                                     carrera_id=carrera, masivo=True, periodo_matriculado_id=periodo, tDocument_id=document,
                                                     sede_id=sede, costo_cierre=costo_cierre,
+                                                    slug=slug,
                                                     ))
                         User.objects.create_user(codigo=int(codigo) + i, nombres=new_student['NOMBRE'][i], apellidos=new_student['APELLIDOS'][i],
                                                  email=new_student['EMAIL'][i], username=new_student['USERNAME'][i], tipe=CatalogsTypesRol.objects.get(
@@ -550,106 +562,104 @@ class StudentMasiveUpdateView(UpdateView):
                 pk=self.kwargs['pk']).update(masivo=False)
             
             
-            if Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).tiene_grado:
+            programa = Programas.objects.get(programa_name=form.cleaned_data.get('carrera'))
+            cuotas = int(programa.cuotas)
 
-                fechafacturagrado= datetime.now() + relativedelta(months=int(
-                    Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas))
-                fechafacturagrado= fechafacturagrado.replace(day=5)
-                matricula = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
+            if programa.tiene_grado:
+                # Calcular la fecha de vencimiento para el certificado de grado
+                fechafacturacertificados = datetime.now() + relativedelta(months=cuotas)
+                fechafacturacertificados = fechafacturacertificados.replace(day=5)
+
+                # Crear factura de matrícula
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
                     codigo=Facturas.objects.code_invoice(),
                     email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).matricula,
-                    descripcion="Matricula",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
+                    monto=programa.matricula,
+                    due_at= datetime.now(),
+                    descripcion="Matrícula",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
-                
-                
-                for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
-                    fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
-                    fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
+
+                # Crear facturas de mensualidades
+                for i in range(cuotas):
+                    if i == 0:
+                        fechafacturamensualidades = datetime.now()
+                    else:
+                        fechafacturamensualidades = datetime.now() + relativedelta(months=i)
+                        fechafacturamensualidades = fechafacturamensualidades.replace(day=5)
+
                     inv_list.append(Facturas(
-                        user=User.objects.get(
-                            username=form.cleaned_data.get('username')),
+                        user=User.objects.get(username=form.cleaned_data.get('username')),
                         codigo=int(Facturas.objects.code_invoice()) + i,
                         email=form.cleaned_data.get('email'),
-                        monto=Programas.objects.get(
-                            programa_name=form.cleaned_data.get('carrera')).cuota_valor,
-                            due_at = fechafacturamensualidades, 
-                        descripcion="Mensualidad número " + str(i+1),
-                        estado=CatalogsTypesInvoices.objects.get(
-                            estado="Pendiente"),
-
+                        monto=programa.cuota_valor,
+                        due_at=fechafacturamensualidades,
+                        descripcion="Mensualidad número " + str(i + 1),
+                        estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                     ))
+
+                # Crear todas las facturas de mensualidades en bulk
                 Facturas.objects.bulk_create(inv_list)
 
-
-                #Creamos la fctura de los derechos a grado
-                derechosGrado = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
+                # Crear factura de derechos de grado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
                     codigo=Facturas.objects.code_invoice(),
                     email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                    due_at = fechafacturagrado,
-                    descripcion="Derechos de grado",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
+                    descripcion="Derechos de Grado",
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
 
             else:
+                # Calcular la fecha de vencimiento para el certificado de grado
+                fechafacturacertificados = datetime.now() + relativedelta(months=cuotas)
+                fechafacturacertificados = fechafacturacertificados.replace(day=5)
 
-                fechafacturacertificados= datetime.now() + relativedelta(months=int(
-                    Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas))
-                fechafacturacertificados= fechafacturacertificados.replace(day=5)
-                inscripcion = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
+                # Crear factura de inscripción
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
                     codigo=Facturas.objects.code_invoice(),
                     email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).matricula,
+                    monto=programa.matricula,
+                    due_at= datetime.now(),
                     descripcion="Inscripción",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
-                
-                for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
-                    fechafacturamensualidades= datetime.now() + relativedelta(months=int(i))
-                    fechafacturamensualidades= [fechafacturamensualidades.replace(day=5) if i > 0 else fechafacturamensualidades]
+
+                # Crear facturas de mensualidades
+                for i in range(cuotas):
+                    if i == 0:
+                        fechafacturamensualidades = datetime.now()
+                    else:
+                        fechafacturamensualidades = datetime.now() + relativedelta(months=i)
+                        fechafacturamensualidades = fechafacturamensualidades.replace(day=5)
+                    
                     inv_list.append(Facturas(
-                        user=User.objects.get(
-                            username=form.cleaned_data.get('username')),
+                        user=User.objects.get(username=form.cleaned_data.get('username')),
                         codigo=int(Facturas.objects.code_invoice()) + i,
                         email=form.cleaned_data.get('email'),
-                        monto=Programas.objects.get(
-                            programa_name=form.cleaned_data.get('carrera')).cuota_valor,
-                            due_at = fechafacturamensualidades, 
-                        descripcion="Mensualidad número " + str(i+1),
-                        estado=CatalogsTypesInvoices.objects.get(
-                            estado="Pendiente"),
-
+                        monto=programa.cuota_valor,
+                        due_at=fechafacturamensualidades,
+                        descripcion="Mensualidad número " + str(i + 1),
+                        estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                     ))
+
+                # Crear todas las facturas de mensualidades en bulk
                 Facturas.objects.bulk_create(inv_list)
 
-                #Creamos factura de certificados
-                certificado = Facturas.objects.create(
-                    user=User.objects.get(
-                        username=form.cleaned_data.get('username')),
+                # Crear factura de certificado
+                Facturas.objects.create(
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
                     codigo=Facturas.objects.code_invoice(),
                     email=form.cleaned_data.get('email'),
-                    monto=Programas.objects.get(
-                        programa_name=form.cleaned_data.get('carrera')).derechosGrado,
-                    due_at = fechafacturacertificados,
+                    monto=programa.derechosGrado,
+                    due_at=fechafacturacertificados,
                     descripcion="Certificado",
-                    estado=CatalogsTypesInvoices.objects.get(
-                        estado="Pendiente"),
+                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
                 )
-
 
             mensaje = f'{self.model.__name__} registrado correctamente'
             error = "No hay error!"

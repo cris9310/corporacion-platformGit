@@ -312,10 +312,12 @@ class FinanceAcademicInformeView(View):
                 listaDataAcademic.append(dataAcademic)
 
             for l in infoFinance:
+                total = FacturasSub.objects.filter(facturas_id=l.pk).aggregate(Sum('pagado'))['pagado__sum']or 0
                 dataFinance = {
                     "Codigo": l.user.codigo, "Nombre": l.user.nombres + " " +
                     l.user.apellidos, "Tipo": "Financiero",
-                    "Factura": l.codigo, "Estado": l.estado.estado
+                    "Factura": l.codigo, "Estado": l.estado.estado,
+                    "Total":total,
                 }
                 listaDataFinance.append(dataFinance)
 
@@ -379,6 +381,8 @@ class FinanceAcademicInformeView(View):
                 c4.value = dfFinance["Factura"][number]
                 c5 = ws.cell(row=var_est, column=5)
                 c5.value = dfFinance["Estado"][number]
+                c6 = ws.cell(row=var_est, column=6)
+                c6.value = dfFinance["Total"][number]
                 var_est += 1
             content = save_virtual_workbook(wb)
             response = HttpResponse(content)

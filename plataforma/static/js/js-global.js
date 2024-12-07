@@ -385,7 +385,40 @@ $(document).ready(function () {
   var $ = jQuery.noConflict();
   var tabla = $('#dataTable-graficos').DataTable({
     searching: false,
-    paginate: false,
+    order: [[0, 'desc']],
+    pageLength: 10,
+
+    language: {
+      decimal: "",
+      emptyTable: "",
+      info: "",
+      infoEmpty: "",
+      infoFiltered: "",
+      infoPostFix: "",
+      thousands: "",
+      lengthMenu: "",
+      loadingRecords: "",
+      processing: "",
+      search: "",
+      zeroRecords: "",
+      paginate: {
+        first: "",
+        last: "",
+        next: "",
+        previous: ""
+      }
+    }
+
+  });
+})
+
+
+$(document).ready(function () {
+  var $ = jQuery.noConflict();
+  var tabla = $('#dataTable-docentes').DataTable({
+    searching: false,
+    order: [[1, 'desc']],
+    pageLength: 10,
 
     language: {
       decimal: "",

@@ -5,13 +5,13 @@ from django.utils import timezone
 from django.db.models.functions import TruncMonth
 
 
-
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 
 from applications.User.mixins import *
 from applications.Student.models import *
 from applications.Finance.models import *
+from applications.Programs.models import *
 
 class DashboardAdminView(AdminRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard_admin.html"
@@ -104,12 +104,45 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
         df_datos['valor'] = df_datos['valor'].astype(int)
         df_completo = pd.concat([df_base, df_datos]).groupby(['mes', 'concepto'])['valor'].sum().reset_index()
         ingresosGastosGrafica= df_completo.to_json(orient="records")
+
+        #---------------------------franja de indicadores de programas------------
+
+        programas =  Programas.objects.all()
+        listaprogramas=[]
+
+        for i in programas:
+            totalMatriculados=Estudiante.objects.filter(carrera_id=i.pk).count()
+            totalGraduados=Graduated.objects.filter(student__carrera_id=i.pk).count()
+            datosProgramas={'programa':i.programa_name, 'totalMatriculados':totalMatriculados, 
+                            'totalGraduados':totalGraduados, 'variacion':(totalGraduados / totalMatriculados) * 100 
+                            if totalMatriculados > 0 else 0}
+            listaprogramas.append(datosProgramas)
+        dfprogramas= pd.DataFrame(listaprogramas)
+        dfprogramas=dfprogramas.to_json(orient="records")
+
+
+        #----------------------Docentes------------------------
+
+        docentes = Docente.objects.all()
+        listaDocentes=[]
+        for i in docentes:
+            totalAsignaturas = Materias.objects.filter(docente_id=i.pk).count()
+            datosDocentes={"docente":i.nombres + " " + i.apellidos, 'total': totalAsignaturas}
+            listaDocentes.append(datosDocentes)
+        listaDocentesOrganizada = sorted(listaDocentes, key=lambda x: x["total"], reverse=False)
+        dfdocentes = listaDocentesOrganizada[:10]
+        
+
+        #------------------------Contextos-----------------------------------------------------------
+
         context['IndIniciales'] ={'icvdinero': f'$ {monto_vencido:,.0f}', 'icv': indicador_cartera_vencida,
                                   'totalIngresoMes': f'$ {totalIngresoMes:,.0f}', 'totalGastos': f'$ {gastos:,.0f}',
                                   "activos": activos, 'totalIngresosAnio':f'$ {totalIngresosAnio:,.0f}',
                                   'gastosAnio':f'$ {gastosAnio:,.0f}'}
         
         context['ingresosGastosGrafica'] = ingresosGastosGrafica
+        context['dfprogramas'] = dfprogramas
+        context['dfdocentes'] = dfdocentes
         
         return context
     

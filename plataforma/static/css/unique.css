@@ -55,7 +55,7 @@
 .contenido {
     margin-left: 220px;
     padding: 5px;
-    height: 100vh;
+    height: auto;
 }
 
 /* sidebar */

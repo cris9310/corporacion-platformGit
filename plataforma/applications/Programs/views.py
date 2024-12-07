@@ -768,7 +768,7 @@ class BannerTaskDeleteView(DeleteView):
         return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
     
 
-# vista que genera los cargues masivos de notas
+# vista que carga las notas al banner
 class BannerNoteMasive(View):
     
     #momstramos el form que hemos creado
@@ -794,7 +794,6 @@ class BannerNoteMasive(View):
             miss_values_count = notes.isnull().sum()
             miss_values_count = miss_values_count[miss_values_count != 0]
             
-            print(list(notes), l)
             for i, a in zip(list(notes), l):
                 if i != a:
                     break
@@ -815,8 +814,8 @@ class BannerNoteMasive(View):
                         return response
 
                 else:
-                    mensaje.append({"error": 'La columna con encabezado ' + str(i) +
-                                    ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
+                    lista_error=list(notes)
+                    mensaje.append({"error": 'Los encabezados en una o varias de sus columnas no son válidas, verifique el archivo y vuelva a cargarlo'})
                     response = JsonResponse(mensaje, safe=False)
                     response.status_code = 400
                     return response
@@ -839,7 +838,7 @@ class BannerNoteMasive(View):
                     except:
                         conteo = 1 + conteo
                         mensaje.append(
-                            {"error":"Los datos introducidos en el archivo son erróneos, intenta cargar notas para: " + str(notes['Estudiante'][i]) + ", este alumno no tiene matriculada esta materia"})
+                            {"error":"Los datos introducidos en el archivo son erróneos, intenta cargar notas para: " + str(notes['Estudiante'][i]) + ", pero no encontramos este código asociado a esta asignatura, verifique y vuelva a cargar"})
                 
                 for i in range(len(notes)):
                     try:

@@ -188,7 +188,7 @@ EMAIL_USE_SSL = False
 
 LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
