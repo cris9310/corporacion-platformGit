@@ -71,7 +71,10 @@
 {% block js %}
 <script type="text/javascript">
     $('#materia').val("{{pk}}")
+    $('#consecutivo').val("{{preconsecutivo}}")
+    $("#consecutivo").prop('disabled', true);
   function sendUser() {
+    $("#consecutivo").prop('disabled', false);
     var serializedData = $("#dataGeneralForm").serialize();
     if (serializedData) {
       $('#spinner-div').show();
@@ -88,6 +91,7 @@
           
         },
         error: function (error) {
+          $("#consecutivo").prop('disabled', true);
           $('#spinner-div-real').show();
           $('#spinner-div').hide()
           mostrarErroresCreacionEditar(error);

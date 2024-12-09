@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 from applications.Student.models import *
 from applications.Programs.models import *
+from applications.Programs.models import *
 from .models import *
 from .forms import *
 
@@ -24,6 +25,15 @@ class FinanceSpendCreateview(CreateView):
     form_class = SpendForm
     template_name = 'finance/create_spend.html'
     success_url = reverse_lazy('finance_app:finance-general-list-view')
+
+    def get_context_data(self, **kwargs):
+        context = super(FinanceSpendCreateview, self).get_context_data(**kwargs)
+        max_consecutivo_facturasSub = FacturasSub.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_gastos = Gastos.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_otrosIngresos = OtroIngreso.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        preconsecutivo = max(max_consecutivo_facturasSub, max_consecutivo_gastos, max_consecutivo_otrosIngresos) + 1
+        context["preconsecutivo"] = preconsecutivo
+        return context
 
     def post(self, request, *args, **kwargs):
 
@@ -53,6 +63,16 @@ class FinanceOtherIncomesCreateview(CreateView):
     template_name = 'finance/create_OtherIncomes.html'
     success_url = reverse_lazy('finance_app:finance-general-list-view')
 
+
+    def get_context_data(self, **kwargs):
+        context = super(FinanceOtherIncomesCreateview, self).get_context_data(**kwargs)
+        max_consecutivo_facturasSub = FacturasSub.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_gastos = Gastos.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_otrosIngresos = OtroIngreso.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        preconsecutivo = max(max_consecutivo_facturasSub, max_consecutivo_gastos, max_consecutivo_otrosIngresos) + 1
+        context["preconsecutivo"] = preconsecutivo
+        return context
+
     def post(self, request, *args, **kwargs):
 
         formulario = OtherIncomesForm(self.request.POST)
@@ -80,6 +100,10 @@ class FinanceInvoiceUpdateStudent(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(FinanceInvoiceUpdateStudent, self).get_context_data(**kwargs)
+        max_consecutivo_facturasSub = FacturasSub.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_gastos = Gastos.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        max_consecutivo_otrosIngresos = OtroIngreso.objects.aggregate(Max('consecutivo'))['consecutivo__max'] or 0
+        preconsecutivo = max(max_consecutivo_facturasSub, max_consecutivo_gastos, max_consecutivo_otrosIngresos) + 1
         pagado = FacturasSub.objects.filter(
             facturas_id=self.kwargs['pk']).aggregate(pagados=Sum("pagado"))
         data = Facturas.objects.get(pk=self.kwargs['pk'])
@@ -87,7 +111,7 @@ class FinanceInvoiceUpdateStudent(CreateView):
         pagado2 = pagado['pagados']
         pendiente = Facturas.objects.manejo(data, pagado2)
         datos = []
-        info = {'pk':self.kwargs['pk'], "codigo": data.codigo, "monto": f'$ {monto:,.2f}', 'pagado': f'$ {pagado2 if pagado2 else 0.0 :,.2f}',
+        info = {'pk':self.kwargs['pk'], "preconsecutivo":preconsecutivo, "codigo": data.codigo, "monto": f'$ {monto:,.2f}', 'pagado': f'$ {pagado2 if pagado2 else 0.0 :,.2f}',
                 'pendiente': f'$ {pendiente:,.2f}', 'pendiente2': pendiente}
         datos.append(info)
         context["datos"] = datos
@@ -188,7 +212,7 @@ class FinanceGeneralListView(ListView):
     model = FacturasSub
     template_name = 'finance/list_income.html'
     context_object_name = 'income'
-    ordering =  ['-fecha','-consecutivo'  ]
+    ordering =  ['-consecutivo'  ]
 
     def get_queryset(self):
 

@@ -83,28 +83,32 @@
 
 {% block js %}
 <script type="text/javascript">
-
+  $('#consecutivo').val("{{i.preconsecutivo}}")
+  $("#consecutivo").prop('disabled', true);
   function sendpayment() {
+    $("#consecutivo").prop('disabled', false);
     var serializedData = $("#dataGeneralForm").serialize();
     var pagado = parseFloat(document.getElementById("pagado").value);
-    var consecutivo = parseFloat(document.getElementById("consecutivo").value);
     var observaciones = document.getElementById("observacion").value;
     var pendiente = parseFloat(document.getElementById("pendiente").value);
 
-    if (pagado == "" || consecutivo == "" || observaciones == "") {
+    if (pagado == "" || observaciones == "") {
+      $("#consecutivo").prop('disabled', true);
       mostrarErrorblanco();
-    }else if(pagado < 0 || consecutivo < 0){
+    }else if(pagado < 0){
       Swal.fire({
         "title": "Aún falta algo",
-        "text": "El valor a pagar y el consecutivo no pueden ser negativo",
+        "text": "El valor a pagar no pueden ser negativo",
         "icon": "error"
       })
+      $("#consecutivo").prop('disabled', true);
     }else if(pagado > pendiente){
       Swal.fire({
         "title": "Aún falta algo",
         "text": "El valor a pagar no puede ser mayor al saldo pendiente",
         "icon": "error"
       })
+      $("#consecutivo").prop('disabled', true);
     } else {
       var request = $.ajax({
         type: 'POST',
@@ -115,7 +119,8 @@
           location.reload(true);
           mostrarOkpayments();
         },
-        error: function (error) {;
+        error: function (error) {
+          $("#consecutivo").prop('disabled', true);
           mostrarErroresCreacionEditarModificado(error);
           mostrarError();
         }

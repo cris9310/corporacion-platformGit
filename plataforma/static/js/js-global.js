@@ -446,6 +446,36 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   var $ = jQuery.noConflict();
+  var tabla = $('#table_general_finance').DataTable({
+
+    order: [[1, 'desc']],
+
+    language: {
+      "decimal": "",
+      "emptyTable": "No hay información",
+      "info": "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+      "infoEmpty": "Mostrando 0 to 0 of 0 Registros",
+      "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+      "infoPostFix": "",
+      "thousands": ",",
+      "lengthMenu": "Items por rango: _MENU_",
+      "loadingRecords": "Cargando...",
+      "processing": "Procesando...",
+      "search": "Buscar:",
+      "zeroRecords": "Sin resultados encontrados",
+      "paginate": {
+        "first": "Primero",
+        "last": "Ultimo",
+        "next": "Siguiente",
+        "previous": "Anterior"
+      }
+    }
+
+  });
+})
+
+$(document).ready(function () {
+  var $ = jQuery.noConflict();
   var tabla = $('#table_general').DataTable({
 
 
@@ -619,13 +649,12 @@ $(document).ready(function () {
 
 })
 
+function handleChange(selectElement) {
+  const selectedText = selectElement.options[selectElement.selectedIndex].text;
+  if (selectedText === 'Anulado') {
+    $('#monto').val(0)
+  } else {
+    $('#monto').val("")
 
-
-
-
-
-
-
-
-
-
+  }
+}

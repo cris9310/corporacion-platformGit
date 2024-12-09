@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Max
 
 from applications.User.models import *
-from applications.User.manager import *
 
 
 from datetime import datetime
@@ -43,7 +42,7 @@ class FacturasSub(models.Model):
     observacion=models.CharField(max_length=100, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     pagado =  models.DecimalField(max_digits= 25, decimal_places=0, null=False, blank=False)
-    created_at = models.DateField(default=datetime.now)
+    created_at = models.DateTimeField(default=datetime.now)
     def __str__(self):
         return self.facturas
 

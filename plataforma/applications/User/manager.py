@@ -5,9 +5,9 @@ from django.utils.text import slugify
 
 from datetime import datetime
 import json
-from .models import *
 import uuid
 
+from .models import *
 
 
 
@@ -175,6 +175,10 @@ class BuscadorManager(models.Manager):
             slug = f"{slugify(base_value)}-{uuid.uuid4().hex[:8]}"
         existing_slugs.add(slug)
         return slug
+    
+
+
+
         
     
 

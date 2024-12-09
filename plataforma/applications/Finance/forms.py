@@ -20,7 +20,8 @@ class SpendForm(forms.ModelForm):
             'tipo': Select(
                 attrs={
                     'class':'form-control',
-                    'id': 'tipo'
+                    'id': 'tipo',
+                    "onchange":"handleChange(this)"
                 }
             ),
             'consecutivo': NumberInput(
@@ -94,7 +95,8 @@ class OtherIncomesForm(forms.ModelForm):
             'tipo': Select(
                 attrs={
                     'class':'form-control',
-                    'id': 'tipo'
+                    'id': 'tipo',
+                    "onchange":"handleChange(this)"
                 }
             ),
             'descripcion': TextInput(
