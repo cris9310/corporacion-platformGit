@@ -106,6 +106,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'applications.User.middleware.RoleBasedSessionTimeoutMiddleware',
+    'applications.User.middleware.ForcePasswordChangeMiddleware',
 ]
 
 ROOT_URLCONF = 'plataforma.urls'
@@ -154,9 +156,11 @@ AUTH_USER_MODEL = 'User.User'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'OPTIONS': {'max_similarity': 0.6},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 10},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -166,7 +170,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = reverse_lazy('dashboard_app:dashboard-admin') # terminar el login
+LOGIN_REDIRECT_URL = reverse_lazy('dashboard_app:dashboard-user') # terminar el login
 LOGOUT_REDIRECT_URL = reverse_lazy('homepage_app:login') 
 
 #Variables de envio de emails

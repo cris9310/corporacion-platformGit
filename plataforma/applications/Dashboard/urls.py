@@ -9,12 +9,11 @@ urlpatterns = [
         views.DashboardAdminView.as_view(),
         name='dashboard-admin'
     ),
-
-   
-
-    
-
-
+    path(
+        'dashboard-user',
+        views.RedirectUserView,
+        name='dashboard-user'
+    ),
     
 ]
 

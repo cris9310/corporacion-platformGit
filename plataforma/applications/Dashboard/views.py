@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import HttpResponseRedirect
 from django.views.generic import (TemplateView,ListView, View)
 from django.db.models import Sum, F
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
+from django.urls import reverse_lazy
 
 
 import pandas as pd
@@ -12,6 +13,15 @@ from applications.User.mixins import *
 from applications.Student.models import *
 from applications.Finance.models import *
 from applications.Programs.models import *
+
+
+
+def RedirectUserView(request):
+
+    if request.user.is_authenticated and request.user.tipe.rol == 'Administrador':
+        return HttpResponseRedirect(
+            reverse_lazy('dashboard_app:dashboard-admin')
+            )
 
 class DashboardAdminView(AdminRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard_admin.html"

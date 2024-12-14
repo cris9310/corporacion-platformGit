@@ -1,6 +1,7 @@
 from django.forms import *
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.password_validation import validate_password
 
 
 
@@ -226,3 +227,52 @@ class UserUpdateForm(forms.ModelForm):
             raise forms.ValidationError("En este formulario no se pueden crear perfiles para estudiantes ni docentes.")
         return self.cleaned_data.get("tipe")
 
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Contraseña actual'
+        }),
+        label="Contraseña actual"
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nueva contraseña'
+        }),
+        label="Nueva contraseña"
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirmar nueva contraseña'
+        }),
+        label="Confirmar nueva contraseña"
+    )
+
+    def clean_old_password(self):
+
+        old_password = self.cleaned_data.get('old_password')
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError("La contraseña ingresada no es correcta.")
+        return old_password
+    
+    def clean_new_password1(self):
+        new_password = self.cleaned_data.get('new_password1')
+        validate_password(new_password, self.user)
+        return new_password
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get('new_password1')
+        new_password2 = cleaned_data.get('new_password2')
+
+        if new_password1 and new_password2:
+            if new_password1 != new_password2:
+                raise forms.ValidationError("Las nuevas contraseñas no coinciden.")
+            if self.user.check_password(new_password1):
+                raise forms.ValidationError("La nueva contraseña no puede ser igual a la contraseña actual.")
+
+        return cleaned_data

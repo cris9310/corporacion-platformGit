@@ -58,6 +58,7 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True)
     tipe = models.ForeignKey(CatalogsTypesRol, on_delete=models.CASCADE)
+    cambiar_contrasena=models.BooleanField(default=True)
     is_superuser=models.BooleanField(default=False)
     is_active=models.BooleanField(default=False)
     is_staff=models.BooleanField(default=False)

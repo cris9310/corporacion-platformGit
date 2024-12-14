@@ -11,6 +11,7 @@ from django.views.generic import (CreateView, DeleteView, UpdateView,
                                   DetailView, ListView)
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.contrib.auth.views import PasswordChangeView
 
 # Vista que crea usuarios, se encuentra ok
 class UserCreateView(CreateView):
@@ -162,3 +163,17 @@ class UserProfileDetailView(ListView):
             queryset = User.objects.filter(codigo=self.request.user.pk)
             return queryset
 
+
+
+class CambiarPasswordView(PasswordChangeView):
+    template_name = 'homepage/LoginView_update.html'
+    success_url = reverse_lazy('dashboard_app:dashboard-user')
+    form_class = CustomPasswordChangeForm
+
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.request.user
+        user.cambiar_contrasena = False
+        user.save()
+        return response
