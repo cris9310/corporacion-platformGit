@@ -70,7 +70,7 @@
                           <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
                           <td>
                             {% if i.total > 0 %}
-                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
+                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.slug  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
                             {% else %}
                             <a class="buscar-iconos" href="#" title="Consultar"><i class="ri-search-line nonEstado" ></i></a>
                             {% endif %}
@@ -79,7 +79,7 @@
                           <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
                           <td>
                             {% if i.total > 0 %}
-                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.pk  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
+                            <a class="buscar-iconos" href="{% url 'settings_app:list-banner' i.slug  %}" title="Consultar"><i class="ri-search-line iconos"></i></a>
                             {% else %}
                             <aclass="buscar-iconos"  href="#" title="Consultar"><i class="ri-search-line nonEstado" ></i></aclass=>
                             {% endif %}

@@ -14,21 +14,25 @@ from django.views.generic import (TemplateView,
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, HttpResponseRedirect
 from django.db.models import F, Sum, Avg, Count
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 from .models import *
 from .forms import *
 
-
+from applications.User.mixins import *
 
 
 
 # Vista ok
-class ConfigTemplateView(TemplateView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class ConfigTemplateView(AdminRequiredMixin,TemplateView):
     template_name = "configuraciones/setings.html"
 
 
 #------- periodos ---------
-class PeriodoCreateView(CreateView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class PeriodoCreateView(AdminRequiredMixin, CreateView):
     model = Periodos
     form_class = PeriodoForm
     template_name = 'periodos/register_periodo.html'
@@ -55,8 +59,9 @@ class PeriodoCreateView(CreateView):
             response = JsonResponse(mensaje1, safe=False)
             response.status_code = 400
             return response
-
-class PeriodoListView(ListView):
+        
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class PeriodoListView(AdminRequiredMixin,ListView):
     model = Periodos
     template_name = 'periodos/list_periodos.html'
     context_object_name = 'periodos'
@@ -76,7 +81,7 @@ class PeriodoListView(ListView):
         return data
 
 
-class PeriodoDeleteView(DeleteView):
+class PeriodoDeleteView(AdminRequiredMixin,DeleteView):
     template_name = 'periodos/detele_periodo.html'
     model = Periodos
     success_url = reverse_lazy('settings_app:list-periodo')
@@ -88,7 +93,7 @@ class PeriodoDeleteView(DeleteView):
 
 
 #Vista de creacion de programas ok
-class ProgramaCreateView(CreateView):
+class ProgramaCreateView(AdminRequiredMixin, CreateView):
     model = Programas
     form_class = ProgramaForm
     template_name = 'programas/register_program.html'
@@ -149,13 +154,13 @@ class ProgramaDetailView(DetailView):
 
 
 #Vista de eliminacion de programas ok
-class ProgramaDeleteView(DeleteView):
+class ProgramaDeleteView(AdminRequiredMixin, DeleteView):
     template_name = 'programas/delete_program.html'
     model = Programas
     success_url = reverse_lazy('settings_app:list-program')
 
 #Vista de actualizacion de programas ok
-class ProgramaUpdateView(UpdateView):
+class ProgramaUpdateView(AdminRequiredMixin, UpdateView):
     template_name = 'programas/update_program.html'
     model = Programas
     form_class = ProgramaForm
@@ -183,6 +188,7 @@ class ProgramaUpdateView(UpdateView):
             return response
 
 #Vista de listado de programas ok
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class Programalistview(ListView):
     model = Programas
     template_name = 'programas/list_programas.html'
@@ -226,8 +232,8 @@ class Programalistview(ListView):
 
 #------- Inventario asignaturas ---------
     
-
-class Inventariolistview(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class Inventariolistview(AdminRequiredMixin, ListView):
     model = Inventario
     template_name = 'inventario/inventarioList.html'
     context_object_name = 'inventario'
@@ -252,7 +258,7 @@ class Inventariolistview(ListView):
 
 
 #Vista de creacion de programas ok
-class InventarioCreateView(CreateView):
+class InventarioCreateView(AdminRequiredMixin, CreateView):
     model = Inventario
     form_class = InventarioRegisterForm
     template_name = 'inventario/inventarioRegister.html'
@@ -285,7 +291,7 @@ class InventarioCreateView(CreateView):
 
 
 #Vista de actualizacion de programas ok
-class InventarioUpdateView(UpdateView):
+class InventarioUpdateView(AdminRequiredMixin, UpdateView):
     model = Inventario
     template_name = 'inventario/InventarioUpdate.html'
     form_class = InventarioRegisterForm
@@ -313,7 +319,7 @@ class InventarioUpdateView(UpdateView):
             return response
         
 
-class InventarioDeleteView(DeleteView):
+class InventarioDeleteView(AdminRequiredMixin, DeleteView):
     template_name = 'inventario/inventarioDelete.html'
     model = Inventario
     success_url = reverse_lazy('settings_app:list-inventario')
@@ -502,7 +508,7 @@ def InventarioMasiveExport(request):
 
 
 #Vista de creacion de asignaturas ok
-class MateriasCreateView(CreateView):
+class MateriasCreateView(AdminRequiredMixin, CreateView):
     model = Materias
     form_class = MateriasForm
     template_name = 'materias/materiasRegister.html'
@@ -545,9 +551,10 @@ class MateriasCreateView(CreateView):
             return response
 
 #Vista que sirve para listar materias
-class Materialistview(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class Materialistview(AdminRequiredMixin, ListView):
     model = Materias
-    template_name = 'materias/materiasList.html'
+    template_name = 'materias/materiasList.html' 
     context_object_name = 'materias'
 
     def get_context_data(self, **kwargs):
@@ -564,7 +571,8 @@ class Materialistview(ListView):
         for i in Data:
             total=Banner.objects.filter(materia_id = i.pk).count()
             datos = {"pk": i.pk, "sede": i.sede, "docente": i.docente, "periodo": i.periodo,
-                     "jornada": i.jornada, "cierre":i.cierre, "is_active": i.is_active, "total": total }
+                     "jornada": i.jornada, "cierre":i.cierre, "is_active": i.is_active, "total": total,
+                      "slug":i.slug }
             datosBase.append(datos)
         return datosBase
     
@@ -578,6 +586,7 @@ class Materialistview(ListView):
 #cruzamos esto con las notas
     
 #Vista que sirve para listar notas del salon completo
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class Bannerlistview(ListView):
     model = Banner
     template_name = 'banner/bannerList.html'
@@ -719,7 +728,7 @@ class BannerCreateTaskView(CreateView):
             response.status_code = 400
             return response
 
-
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class ListBannerTaskDetailView(ListView):
     model = Banner
     template_name = 'banner/listBannerTaskDetail.html'

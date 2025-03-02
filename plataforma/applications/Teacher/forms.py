@@ -15,7 +15,7 @@ class TeacherForm(forms.ModelForm):
 
         model = Docente
         fields = ('__all__')
-        exclude =['fecha_reg', 'is_active']
+        exclude =['fecha_reg', 'is_active','codigo']
 
         widgets={
 
@@ -43,14 +43,14 @@ class TeacherForm(forms.ModelForm):
                 }
             ),
 
-            'codigo': NumberInput(
+            'nDocument': NumberInput(
                 attrs={
                     'autofocus': True,
                     'placeholder':"Ingrese el documento",
                     'autocomplete': 'off',
                     'class':'form-control',
                     "onkeydown":"noPuntoComa( event )",
-                    'id':'cedula'
+                    'id':'nDocument'
                     
                 }
             ),
@@ -145,7 +145,7 @@ class TeacherUpdateForm(forms.ModelForm):
 
         model = Docente
         fields = ('__all__')
-        exclude =['fecha_reg', 'is_active', 'username']
+        exclude =['fecha_reg', 'is_active', 'username', 'codigo']
 
         widgets={
 
@@ -173,14 +173,14 @@ class TeacherUpdateForm(forms.ModelForm):
                 }
             ),
 
-            'codigo': NumberInput(
+            'nDocument': NumberInput(
                 attrs={
                     'autofocus': True,
                     'placeholder':"Ingrese el documento",
                     'autocomplete': 'off',
                     'class':'form-control',
                     "onkeydown":"noPuntoComa( event )",
-                    'id':'cedula'
+                    'id':'nDocument'
                     
                 }
             ),

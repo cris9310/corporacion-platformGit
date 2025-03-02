@@ -4,7 +4,9 @@ from django.db.models import Sum, F
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from django.urls import reverse_lazy
-
+from django.utils.timezone import now
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
@@ -23,6 +25,7 @@ def RedirectUserView(request):
             reverse_lazy('dashboard_app:dashboard-admin')
             )
 
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class DashboardAdminView(AdminRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard_admin.html"
 
@@ -31,17 +34,21 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
         activos = Estudiante.objects.filter(is_active=True).count()
         
         #------------------------- ingresos y gastos del mes -------------------------------------
-        now = timezone.now()
-        mes = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        nowA = timezone.now()
+        mes = nowA.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         ingresosMensualidades = FacturasSub.objects.filter(created_at__gte=mes).aggregate(total_ingresos=Sum('pagado'))['total_ingresos'] or 0
         otrosIngresos = OtroIngreso.objects.filter(fecha__gte=mes).aggregate(total_ingresos=Sum('monto'))['total_ingresos'] or 0
         gastos = Gastos.objects.filter(fecha__gte=mes).aggregate(total_gastos=Sum('monto'))['total_gastos'] or 0
+        nomina = Nominas.objects.filter(fecha__gte=mes).aggregate(total_nomina=Sum('monto'))['total_nomina'] or 0
+        gastos = float(gastos) + float (nomina)
         totalIngresoMes = float(ingresosMensualidades) + float(otrosIngresos)
 
-        inicioAnio = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+        inicioAnio = nowA.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         ingresosAnualesMensualidades = FacturasSub.objects.filter(created_at__gte=inicioAnio).aggregate(total_ingresos=Sum('pagado'))['total_ingresos'] or 0
         otrosIngresosAnuales = OtroIngreso.objects.filter(fecha__gte=inicioAnio).aggregate(total_ingresos=Sum('monto'))['total_ingresos'] or 0
         gastosAnio = Gastos.objects.filter(fecha__gte=inicioAnio).aggregate(total_gastos=Sum('monto'))['total_gastos'] or 0
+        nominaAnio = Nominas.objects.filter(fecha__gte=inicioAnio).aggregate(total_nominas=Sum('monto'))['total_nominas'] or 0
+        gastosAnio = float(gastosAnio) + float(nominaAnio)
         totalIngresosAnio= ingresosAnualesMensualidades + otrosIngresosAnuales
 
         #------------------------indicador de cartera-----------------------------------------
@@ -51,11 +58,13 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
                 FacturasSub.objects.filter(facturas=F('id')).aggregate(pagado_total=Sum('pagado'))['pagado_total'] or 0
             )
         ).aggregate(total_vencido=Sum('saldo_pendiente'))['total_vencido'] or 0
-        monto_total = Facturas.objects.filter(due_at__lt=now).aggregate(total_facturado=Sum('monto'))['total_facturado'] or 0
-        indicador_cartera_vencida = str(round(((monto_vencido / monto_total)) * 100,2))+ " %"
+        monto_total = Facturas.objects.filter(due_at__lt=nowA).aggregate(total_facturado=Sum('monto'))['total_facturado'] or 0
+        indicador_cartera_vencida = (
+            f"{round((monto_vencido / monto_total) * 100, 2)} %" if monto_total > 0 else "0 %"
+        )
         #--------------------------------Gráficas de los ingresos y gastos-------------------------------------------------------
-       # Fecha de inicio del rango (mismo mes del año anterior)
-        inicio_rango = now.replace(year=now.year - 1, day=1, month=now.month)
+        current_time = now()
+        inicio_rango = current_time.replace(year=current_time.year - 1, day=1, month=1)
 
         # Generar todos los meses dentro del rango
         meses = [(inicio_rango + relativedelta(months=i)).strftime('%y/%m') for i in range(12)]
@@ -66,7 +75,7 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
 
         # Consultas para ingresos y gastos
         ingresos = (
-            FacturasSub.objects.filter(created_at__range=(inicio_rango, now))
+            FacturasSub.objects.filter(created_at__range=(inicio_rango, current_time))
             .annotate(mes=TruncMonth('created_at'))
             .values('mes')
             .annotate(total=Sum('pagado'))
@@ -74,7 +83,7 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
         )
 
         otros_ingresos = (
-            OtroIngreso.objects.filter(fecha__range=(inicio_rango, now))
+            OtroIngreso.objects.filter(fecha__range=(inicio_rango, current_time))
             .annotate(mes=TruncMonth('fecha'))
             .values('mes')
             .annotate(total=Sum('monto'))
@@ -82,38 +91,51 @@ class DashboardAdminView(AdminRequiredMixin, TemplateView):
         )
 
         gastos_grafico = (
-            Gastos.objects.filter(fecha__range=(inicio_rango, now))
+            Gastos.objects.filter(fecha__range=(inicio_rango, current_time))
             .annotate(mes=TruncMonth('fecha'))
             .values('mes')
             .annotate(total=Sum('monto'))
             .order_by('mes')
         )
 
-        # Convertir resultados a una lista
+        nominas_grafico = (
+            Nominas.objects.filter(fecha__range=(inicio_rango, current_time))
+            .annotate(mes=TruncMonth('fecha'))
+            .values('mes')
+            .annotate(total=Sum('monto'))
+            .order_by('mes')
+        )
+
+        # Convertir resultados de consultas a lista
         lista = []
 
-        for i in ingresos:
-            fecha = i['mes']
-            valor = {'mes': fecha.strftime('%y/%m'), 'valor': i['total'], 'concepto': 'ingresos'}
-            lista.append(valor)
+        for ingreso in ingresos:
+            lista.append({'mes': ingreso['mes'].strftime('%y/%m'), 'valor': ingreso['total'], 'concepto': 'ingresos'})
 
-        for i in otros_ingresos:
-            fecha = i['mes']
-            valor = {'mes': fecha.strftime('%y/%m'), 'valor': i['total'], 'concepto': 'ingresos'}
-            lista.append(valor)
+        for otro_ingreso in otros_ingresos:
+            lista.append({'mes': otro_ingreso['mes'].strftime('%y/%m'), 'valor': otro_ingreso['total'], 'concepto': 'ingresos'})
 
-        for i in gastos_grafico:
-            fecha = i['mes']
-            valor = {'mes': fecha.strftime('%y/%m'), 'valor': i['total'], 'concepto': 'gastos'}
-            lista.append(valor)
+        for gasto in gastos_grafico:
+            lista.append({'mes': gasto['mes'].strftime('%y/%m'), 'valor': gasto['total'], 'concepto': 'gastos'})
 
+        for nomina in nominas_grafico:
+            lista.append({'mes': nomina['mes'].strftime('%y/%m'), 'valor': nomina['total'], 'concepto': 'gastos'})
+
+        # Crear DataFrame base
         df_base = pd.DataFrame(lista_base)
 
-        df_datos = pd.DataFrame(lista)
+        # Validar si hay datos; si no, se agrega un registro base
+        if not lista:
+            lista.append({'mes': current_time.strftime('%y/%m'), 'valor': 0, 'concepto': 'gastos'})
 
+        df_datos = pd.DataFrame(lista)
         df_datos['valor'] = df_datos['valor'].astype(int)
+
+        # Combinar DataFrame base y datos calculados
         df_completo = pd.concat([df_base, df_datos]).groupby(['mes', 'concepto'])['valor'].sum().reset_index()
-        ingresosGastosGrafica= df_completo.to_json(orient="records")
+
+        # Convertir a JSON
+        ingresosGastosGrafica = df_completo.to_json(orient="records")
 
         #---------------------------franja de indicadores de programas------------
 

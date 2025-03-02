@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.db.models.functions import Coalesce
 from django.db.models import Count
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 
 from applications.Programs.models import *
@@ -19,7 +21,8 @@ from applications.User.mixins import *
 
 
 # Vista ok, se encarga de listar docentes, filtra activos, inactivos y todos.
-class Teacherlistview(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class Teacherlistview(AdminRequiredMixin,ListView):
     model = Docente
     template_name = 'docentes/list_teacher.html'
     context_object_name = 'teacher'
@@ -41,7 +44,7 @@ class Teacherlistview(ListView):
 
 
 # Vista que sirve crear docentes, se encuentra ok
-class TeacherCreateView(CreateView):
+class TeacherCreateView(AdminRequiredMixin, CreateView):
     model = Docente
     form_class = TeacherForm
     template_name = 'docentes/register_teacher.html'
@@ -51,9 +54,23 @@ class TeacherCreateView(CreateView):
 
         formulario = TeacherForm(self.request.POST)
         if formulario.is_valid():
-            formulario.save()
-            # Generador de código para un nuevo docente
             codigo = User.objects.code_generator()
+            create_teacher = Docente.objects.create(
+                codigo=codigo,
+                nacimiento=formulario.cleaned_data.get('nacimiento'),
+                nacionalidad = formulario.cleaned_data.get('nacionalidad'),
+                tDocument=CatalogsTypesDocuement.objects.get(
+                    nombre=formulario.cleaned_data.get("tDocument")),
+                nDocument=formulario.cleaned_data.get('nDocument'),
+                apellidos=formulario.cleaned_data.get('apellidos'),
+                nombres=formulario.cleaned_data.get('nombres'),
+                username=formulario.cleaned_data.get('username'),
+                direccion=formulario.cleaned_data.get('direccion'),
+                telefono=formulario.cleaned_data.get('telefono'),
+                email=formulario.cleaned_data.get('email'),
+                sexo=formulario.cleaned_data.get('sexo'),
+                
+            )
             crea_user = User.objects.create_user(
                 tipe=CatalogsTypesRol.objects.get(rol="Docente"),
                 codigo=codigo,
@@ -84,8 +101,7 @@ class TeacherCreateView(CreateView):
 
 # Vista para actualizar la información y el usuario del docente. Se encuentra ok.
 
-
-class TeacherUpdateView(UpdateView):
+class TeacherUpdateView(AdminRequiredMixin, UpdateView):
     model = Docente
     template_name = 'docentes/update_teacher.html'
     form_class = TeacherUpdateForm
@@ -164,8 +180,7 @@ class TeacherTopicsListview(ListView):
 
 
 # Vista que habilita o inhabilita docentes, se enceuntra ok
-
-class TeacherHabilitView(UpdateView):
+class TeacherHabilitView(AdminRequiredMixin,UpdateView):
     model = Docente
     template_name = 'docentes/update_habilitar.html'
     fields = '__all__'
@@ -200,7 +215,7 @@ class TeacherHabilitView(UpdateView):
             return HttpResponseRedirect(self.success_url)
 
 #Vista que elimina docentes, ok
-class TeacherDeleteView(DeleteView):
+class TeacherDeleteView(AdminRequiredMixin, DeleteView):
     template_name = 'docentes/delete_teacher.html'
     model = Docente
     success_url = reverse_lazy('teacher_app:teacher-list')

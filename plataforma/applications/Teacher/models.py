@@ -11,8 +11,9 @@ from applications.User.models import *
 
 class Docente(models.Model):
     slug = models.SlugField(unique=True, editable=False, blank=True)
+    codigo = models.CharField(unique=True, max_length=50, verbose_name='código')
     tDocument = models.ForeignKey(CatalogsTypesDocuement, on_delete=models.CASCADE, verbose_name='Tipo de documento')
-    codigo = models.CharField(unique=True, max_length=20, verbose_name='Número de cédula', validators=[validate_cero])
+    nDocument = models.CharField(unique=True, max_length=20, verbose_name='Número de cédula', validators=[validate_cero])
     nombres = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombres')
     apellidos = models.CharField( max_length=100, blank=False, null=False, verbose_name='Apellidos')
     username=models.CharField(max_length=50, unique=True, blank=False, null=False, verbose_name='Usuario', validators=[validate_blanco])

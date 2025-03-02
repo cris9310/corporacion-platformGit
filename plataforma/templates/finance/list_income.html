@@ -1,3 +1,4 @@
+
 {% extends "Base2.html" %}
 {% load  static %}
 
@@ -35,13 +36,13 @@
                         <i class="ri-bank-card-fill"></i>
                       &nbsp; Nuevo gasto
                     </a>
-                  </button>
-                <button  type="button" title="Crear ingreso" class="btn btn-sm" onclick="abrir_modal_general('{% url 'finance_app:finance-create-other-incomes' %}')">
-                  <a >
-                    <i class="ri-money-dollar-circle-fill"></i>
-                    &nbsp; Nuevo ingreso
-                  </a>
                 </button>
+                <button  type="button" title="Descargar datos para informe" class="btn btn-sm" onclick="window.location.href='{% url 'finance_app:download-report-rango' %}'" >
+                  <a >
+                    <i class="ri-database-fill"></i>
+                    &nbsp; Datos informe
+                  </a>
+              </button>
               </div>
             </div>
           </div>
@@ -53,6 +54,7 @@
                 <div class ="conteTabla">
   
                   {% if income %}
+                  
                   <table  id="table_general_finance" class="hover" style="width:100%; ">
                     <thead >
                       <th>Concepto</th>
@@ -60,9 +62,11 @@
                       <th>Fecha</th>
                       <th>Tipo</th>
                       <th>Monto</th>
+                      <th>Acciones</th>
                     </thead>
                     <tbody>
                       {% for i in income %}
+                      
                         <tr>
                             {% if i.factor == 'Gasto' %}
                             
@@ -71,12 +75,22 @@
                                 <td >{{i.fecha |date:"d/m/Y"}}</td>
                                 <td >{{i.tipo}}</td>
                                 <td ><span class="nonEstado2">- {{i.monto}}</span></td>
+                                {% if i.tipo == 'Nómina' %}
+                                <td ><a class="buscar-iconos" href="{% url 'finance_app:finance-generate-nominas' i.consecutivo %}" title="Descargar nómina" ><i class="ri-download-2-fill iconos"></i></a></td>
+                                {% else %}
+                                <td ><a class="buscar-iconos" href="{% url 'finance_app:finance-generate-recibos' i.consecutivo %}" title="Descargar recibo" ><i class="ri-download-2-fill iconos"></i></a></td>
+                                {% endif %}
                             {% else %}
                                 <td ><span class="estado"><i class="ri-arrow-up-fill"></i>&nbsp;{{i.factor}}</span></td>
                                 <td >{{i.consecutivo}}</td>
                                 <td >{{i.fecha |date:"d/m/Y"}}</td>
                                 <td >{{i.tipo}}</td>
                                 <td ><span class="estado">+ {{i.monto}}</span></td>
+                                {% if i.tipo == 'Nómina' %}
+                                <td ><a class="buscar-iconos" href="{% url 'finance_app:finance-generate-nominas' i.consecutivo %}" title="Descargar nómina" ><i class="ri-download-2-fill iconos"></i></a></td>
+                                {% else %}
+                                <td ><a class="buscar-iconos" href="{% url 'finance_app:finance-generate-recibos' i.consecutivo %}" title="Descargar recibo" ><i class="ri-download-2-fill iconos"></i></a></td>
+                                {% endif %}
                             {% endif %}
                           
                         </tr>
@@ -92,9 +106,11 @@
                     <th>Fecha</th>
                     <th>Tipo</th>
                     <th>Monto</th>
+                    <th>Acciones</th>
                   </thead>
                   <tbody>
                     <tr>
+                      <td > - </td >
                       <td > - </td >
                       <td > - </td >
                       <td > - </td >

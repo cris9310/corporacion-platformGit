@@ -1,0 +1,92 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Descargas | Portal CNE{% endblock title %}
+
+
+
+    
+
+{% block extracontent %}
+
+
+
+<div class="container-fluid ">
+    <div class="row encabezado">
+        <div class="titulo">
+          <span class=""><h2><i class="ri-database-line"></i> Descarga de datos</h2></span>
+        </div>
+        
+    </div>
+
+    <div class="container-fluid" style="margin-top: 15px">
+        <div class="row">
+          <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <div class="titulo2">
+                           Descarga por fechas
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="dataGeneralForm" action="{% url 'finance_app:download-report-rango' %}" >
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {% if form.fecha_inicio.errors %}
+                                    <div class="container text-danger">
+                                        {{ form.fecha_inicio.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.fecha_inicio.label_tag }}
+                                {{ form.fecha_inicio }}
+                            </div>
+                            <div class="mb-3">
+                                {% if form.fecha_fin.errors %}
+                                    <div class="container text-danger">
+                                        {{ form.fecha_fin.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.fecha_fin.label_tag }}
+                                {{ form.fecha_fin }}
+                            </div>
+                            <div class="modal-footer" style="margin-top: 15px;">
+              
+                                <button type="submit" id="button" class="btn">
+                                    Descargar
+                                </button>
+                              
+                            </div>
+                        </form>
+                    </div>
+                    
+                    
+                </div>
+          </div>
+          <div class="col-md-6 ms-auto"">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <div class="titulo2">
+                            Descarga día de hoy
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        Tenga en cuenta que en este caso el sistema toma la fecha del día en tránsito. En este caso se descargarán los datos con fecha de {{fecha_hoy}} 
+                    </div>
+                    <div class="modal-footer" style="margin-top: 15px;">
+              
+                        <button type="button" id="button" class="btn" onclick="window.location.href='{% url 'finance_app:download-report-daily' %}'">
+                            Descargar
+                        </button>
+                      
+                    </div>
+                </div>
+          </div>
+        </div>
+    </div>
+    
+  
+    
+</div>
+
+{% endblock extracontent %}
+

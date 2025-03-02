@@ -17,7 +17,7 @@
   <div class="card shadow">
     <div class="card-header">
       
-        <div class=" ">
+        <div class="elemento-x">
           
           <div class="progreso-content"> <strong >Cumplimiento de pagos:</strong></div>
           <div class="progress">
@@ -26,6 +26,16 @@
             </div>
           </div>
           
+        </div>
+        <div class="elemento-y">
+          <div class="col botones-miltiples">
+            <button  type="button" title="Crear ingreso" class="btn btn-sm" onclick="abrir_modal_general('{% url 'finance_app:finance-create-other-incomes' datos.codigo %}')">
+              <a >
+                <i class="ri-money-dollar-circle-fill"></i>
+                &nbsp; Nuevo ingreso
+              </a>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -166,33 +176,39 @@
   
   
   function format(d) {
-    // `d` is the original data object for the row
-    const f= d.map(function(dat){
-      var id = String(dat.pk) + "/'"
-      var link="'/finance/detail-sub/" + id;
-      var eliminar="'/finance/delete-sub/" + id;
+    const f = d.map(function(dat) {
+      var id = String(dat.pk);
+      var link = "/finance/detail-sub/" + id;
+      var eliminar = "/finance/delete-sub/" + id;
+      var consecutivo = String(dat.consecutivo);
+      var pago = "/finance/finance-generate-recibos/" + consecutivo;
+
       return (
-        
-        '<tbody>' +
-        '<td>' + dat.consecutivo+'</td>' + '<td>'+ dat.payed +'</td>' +'<td>' + dat.fecha+'</td>' +'<td ><a onclick="abrir_modal_edicion('+
-           link
-          +')" title="Editar"><i class="ri-eye-fill iconos"></i></a>   <a onclick="abrir_modal_edicion('+
-          eliminar
-         +')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a> </td>' + 
-        '</tbody>'   
+          '<tbody>' +
+          '<td>' + dat.consecutivo + '</td>' +
+          '<td>' + dat.payed + '</td>' +
+          '<td>' + dat.fecha + '</td>' +
+          '<td><a onclick="abrir_modal_edicion(\'' +
+          link +
+          '\')" title="Editar"><i class="ri-eye-fill iconos"></i></a> ' +
+          '<a onclick="abrir_modal_edicion(\'' +
+          eliminar +
+          '\')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a> ' +
+          '<a class="buscar-iconos" href="' +
+          pago +
+          '" title="Descargar nómina"><i class="ri-download-2-fill iconos"></i></a></td>' +
+          '</tbody>'
       );
-    });
-    return (
-        '<table cellpadding="5" cellspacing="0" class="hover" border="0" style="padding-left:50px;">'+
-        '<thead style="color:grey">'+
-        '<th>Consecutivo</th>'+ '<th>Valor pagado</th>'+ '<th>Fecha de pago</th>'+'<th>Consulta</th>'+
-        '</thead>'+
-        f
-        +'</table>'
-        
-         
-    );
-  }
+  });
+  return (
+      '<table cellpadding="5" cellspacing="0" class="hover" border="0" style="padding-left:50px;">' +
+      '<thead style="color:grey">' +
+      '<th>Consecutivo</th><th>Valor pagado</th><th>Fecha de pago</th><th>Consulta</th>' +
+      '</thead>' +
+      f.join("") + // Une todas las filas generadas
+      '</table>'
+  );
+}
 
   
   

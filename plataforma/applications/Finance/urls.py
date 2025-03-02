@@ -17,7 +17,7 @@ urlpatterns = [
     ),
 
     path(
-        'finance-create-other-incomes',
+        'finance-create-other-incomes/<pk>/',
         views.FinanceOtherIncomesCreateview.as_view(),
         name='finance-create-other-incomes'
     ),
@@ -60,6 +60,64 @@ urlpatterns = [
         views.FinanceAcademicInformeView.as_view(),
         name='download-report'
     ),
+    
+    path(
+        'finance-list-nominas/<pk>/',
+        views.FinanceNominaListUserView.as_view(),
+        name='finance-list-nominas'
+    ),
+    path(
+        'finance-create-nominas/<pk>/',
+        views.FinanceNominaView.as_view(),
+        name='finance-create-nominas'
+    ),
+    path(
+        'finance-detail-nominas/<pk>/',
+        views.FinanceNominaDetailView.as_view(),
+        name='finance-detail-nominas'
+    ),
+
+    path(
+        'finance-delete-nominas/<pk>/',
+        views.FinanceNominaDeleteView.as_view(),
+        name='finance-delete-nominas'
+    ),
+    path(
+        'finance-generate-nominas/<pk>/',
+        views.GenerarNominaView.as_view(),
+        name='finance-generate-nominas'
+    ),
+    path(
+        'finance-generate-recibos/<pk>/',
+        views.GenerarReciboView.as_view(),
+        name='finance-generate-recibos'
+    ),
+    path(
+        'download-report-daily/',
+        views.GenerarInformeDiarioDiaView.as_view(),
+        name='download-report-daily'
+    ),
+
+    path(
+        'download-report-init/',
+        views.FinanceInformeTemplateView.as_view(),
+        name='download-report-init'
+    ),
+
+    path(
+        'download-report-rango/',
+        views.GenerarInformeDiarioRangoView.as_view(),
+        name='download-report-rango'
+    ),
+
+    
+
+
+    
+
+    
+
+    
 
     
 

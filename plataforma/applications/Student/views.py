@@ -4,6 +4,7 @@ from .models import *
 from .forms import *
 from applications.Finance.models import *
 from applications.Programs.models import *
+from applications.User.mixins import *
 
 
 from django.views.generic import (TemplateView,
@@ -14,6 +15,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.db.models import Avg
 from django.db.models.base import Model as Model
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 
 import warnings
@@ -29,13 +32,14 @@ from dateutil.relativedelta import relativedelta
 
 
 # Vista ok
-class StudentTemplateView(TemplateView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class StudentTemplateView(AdminRequiredMixin,TemplateView): 
     template_name = "estudiantes/home_student.html"
 
 
 
 # Vista que sirve para la creación de estudiantes de manera individual, se encuentra ok
-class StudentCreateView(CreateView):
+class StudentCreateView(AdminRequiredMixin,CreateView):
     model = Estudiante
     form_class = StudentRegisterForm
     template_name = 'estudiantes/register_student.html'
@@ -223,7 +227,8 @@ class StudentCreateView(CreateView):
 
 
 # Esta vista lista a todos los estudiantes que se han creado, se encuentra ok.
-class Studentlistview(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class Studentlistview(AdminRequiredMixin,ListView):
     model = Estudiante
     template_name = 'estudiantes/list_student.html'
     context_object_name = 'student'
@@ -256,7 +261,7 @@ class Studentlistview(ListView):
 
 # Vista para cargar estudiantes de forma masiva se encuentra ok
 
-class StudentAsigView(View):
+class StudentAsigView(AdminRequiredMixin,View):
     
     #momstramos el form que hemos creado
     def get(self, request, *args, **kwargs):
@@ -520,8 +525,8 @@ class StudentAsigView(View):
 
 
 # Vista para listar estudiantes creados de forma masiva ok
-
-class StudentCargueListview(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class StudentCargueListview(AdminRequiredMixin,ListView):
     model = Estudiante
     template_name = 'estudiantes/masivos.html'
     context_object_name = 'student'
@@ -538,7 +543,7 @@ class StudentCargueListview(ListView):
     
 #Vista para actualizar estudiantes creados de manera masiva, la diferencia entre esta vista y la siguiente es que en esta
     # se crean las facturas, confirmando que si se va a matricular el estudiante, en el otro solo actualizamos datos
-class StudentMasiveUpdateView(UpdateView):
+class StudentMasiveUpdateView(AdminRequiredMixin,UpdateView):
     model = Estudiante
     template_name = 'estudiantes/update_student.html'
     form_class = StudentUpdateForm
@@ -674,7 +679,7 @@ class StudentMasiveUpdateView(UpdateView):
             return response
 
 #Vista para actualizar estudiantes creados de manera normal, uno a uno   
-class StudentUpdateView(UpdateView):
+class StudentUpdateView(AdminRequiredMixin,UpdateView):
     model = Estudiante
     template_name = 'estudiantes/update_student_normal.html'
     form_class = StudentUpdateForm
@@ -711,7 +716,7 @@ class StudentUpdateView(UpdateView):
 # Vista para generar plantilla de estudiantes, se encuentra ok
 
 
-def export_users_csv(request):
+def export_users_csv(request): 
 
     # Variables utilizadas para traerse la información creada en modelos y catálogos
     program = Programas.objects.all()
@@ -784,7 +789,7 @@ def export_users_csv(request):
     return response
 
 # Vista se encuentra ok, elimina estudiantes.
-class StudentDeleteView(DeleteView):
+class StudentDeleteView(AdminRequiredMixin,DeleteView):
     template_name = 'estudiantes/delete_student.html'
     model = Estudiante
     success_url = reverse_lazy('student_app:list-student')
@@ -801,7 +806,7 @@ class StudentDetailView(DetailView):
     model = Estudiante
 
 #Vista que muestra las materias que se pueden asignar al estudiante
-class StudentAssignListview(ListView):
+class StudentAssignListview(AdminRequiredMixin,ListView):
     model = Estudiante
     template_name = 'estudiantes/AssignCreate.html'
     success_url = reverse_lazy('student_app:list-student')
@@ -832,6 +837,7 @@ class StudentAssignListview(ListView):
 
 
 #Vista que muestra las asignaturas que ya tiene asignado el estudiante
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class StudentNotesListview(ListView):
     model = Banner
     template_name = 'estudiantes/ListNotesView.html'
@@ -925,6 +931,7 @@ class StudentNotesListview(ListView):
     
 
 #Vista que muestra el detalle de notas de la asignatura seleccionada de el estudiante
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class StudentNotesDetailListview(ListView):
     model = Banner
     template_name = 'estudiantes/ListNotesDetailView.html'
@@ -994,6 +1001,7 @@ class StudentNotesDeleteview(DeleteView):
 
 
 # Con esta vista mostramos los estudiantes aptos para graduarse, se encuentra ok
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class StudentListFinalily(ListView):
     model = Banner
     second_model = Programas
@@ -1039,7 +1047,7 @@ class StudentListFinalily(ListView):
 
 
 #Con esta vista graduamos a los estudiantes, se puede hacer de uno en uno o por multiples estudiantes **
-class StudentGraduateView(CreateView):
+class StudentGraduateView(AdminRequiredMixin, CreateView):
     model = Graduated
     form_class = GraduateRegisterForm
     template_name = 'estudiantes/list_aptos.html'
@@ -1071,6 +1079,7 @@ class StudentGraduateView(CreateView):
     
 
 #Listar graduados
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class GraduatedListView(ListView):
     model = Graduated
     template_name = 'estudiantes/GraduadoList.html'

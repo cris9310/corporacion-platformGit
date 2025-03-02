@@ -3,6 +3,7 @@
 
 from .models import *
 from .forms import *
+from .mixins import *
 from applications.Teacher.models import *
 from applications.Student.models import *
 
@@ -12,9 +13,11 @@ from django.views.generic import (CreateView, DeleteView, UpdateView,
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.contrib.auth.views import PasswordChangeView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 # Vista que crea usuarios, se encuentra ok
-class UserCreateView(CreateView):
+class UserCreateView(AdminRequiredMixin, CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'usuarios/register_user.html'
@@ -59,7 +62,8 @@ class UserCreateView(CreateView):
 
 
 # Muestra listado de usuarios creados, se encuentra ok
-class UserListView(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class UserListView(AdminRequiredMixin, ListView):
     model = User
     template_name = 'usuarios/list_users.html'
     context_object_name = 'users'
@@ -75,12 +79,12 @@ class UserListView(ListView):
             return queryset
 
 # Muestra el detalle de los usuarios creados, se encuentra ok
-class UserDetailView(DetailView):
+class UserDetailView(AdminRequiredMixin, DetailView):
     model = User
     template_name = 'usuarios/detail_users.html'
 
 # Vista que actualiza los usuarios creados, se encuentra ok
-class UserUpdateView(UpdateView):
+class UserUpdateView(AdminRequiredMixin, UpdateView):
     template_name = 'usuarios/update_user.html'
     model = User
     form_class = UserUpdateForm
@@ -109,14 +113,14 @@ class UserUpdateView(UpdateView):
             return response
 
 # Vista que elimina usuarios, se encuentra ok
-class UserDeleteView(DeleteView):
+class UserDeleteView(AdminRequiredMixin, DeleteView):
     template_name = 'usuarios/delete_user.html'
     model = User
     success_url = reverse_lazy('user_app:list-user')
 
 
 # Vista que habilita o inhabilita usuarios, se encuentra ok
-class UserEnableView(UpdateView):
+class UserEnableView(AdminRequiredMixin, UpdateView):
     model = User
     template_name = 'usuarios/update_enable.html'
     fields = '__all__'
@@ -144,7 +148,8 @@ class UserEnableView(UpdateView):
             response.status_code = 201
             return response
 
-class UserProfileDetailView(ListView):
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class UserProfileDetailView(AdminRequiredMixin, ListView):
     model = User
     template_name = 'usuarios/profile.html'
     context_object_name = 'consulta'

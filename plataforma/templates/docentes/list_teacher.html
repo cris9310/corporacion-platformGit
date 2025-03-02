@@ -49,7 +49,7 @@
                     <table id="table_id2"  class="hover" style="width:100%; "> 
                       <thead >
                         <th>Salones </th>
-                        <th>Nro. Documento</th>
+                        <th>Código</th>
                         <th>Nombre del Docente</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -75,9 +75,10 @@
           
                             {% if teach.estado == True and teach.is_active == True %}
                               <a  onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
+                              <a class="buscar-iconos" href="{% url 'finance_app:finance-list-nominas' teach.slug %}" title="Nóminas" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
                             {% elif teach.estado == True and teach.is_active == False %}
                               <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'habilitar')" title="Habilitar"><i class="ri-user-follow-fill iconos"></i></a>
-                            
+                              <a class="buscar-iconos" href="{% url 'finance_app:finance-list-nominas' teach.slug %}" title="Nóminas" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
                             {% elif teach.estado == False and teach.is_active == True %}
                               <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
                               <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-delete' teach.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
@@ -94,7 +95,7 @@
                   <table id="table_id2"  class="hover" style="width:100%; ">
                     <thead >
                         <th>Salones </th>
-                        <th>Nro. Documento</th>
+                        <th>Código</th>
                         <th>Nombre del Docente</th>
                         <th>Estado</th>
                         <th>Acciones</th>

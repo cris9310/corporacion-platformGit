@@ -11,7 +11,7 @@
       </button>
       </div>
       <div class="modal-body" spellcheck="true">
-        <form  method="post" id="dataGeneralForm" action="{% url 'finance_app:finance-create-other-incomes' pk %}" >{% csrf_token %}
+        <form  method="post" id="dataGeneralForm" action="{% url 'finance_app:finance-create-nominas' pk %}" >{% csrf_token %}
             <div id="errores" ></div>
             <div class="container-fluid" style="margin-top: 15px;"> 
                 <div class="row"  style="margin-top: 10px;">
@@ -24,35 +24,28 @@
                 <div class="row"  style="margin-top: 10px;">
                   <div class="col">
                   <div class="{{ form.user.id_for_label }}" ></div>
-                  <label for="{{ form.user.id_for_label }}">Código del estudiante:</label>
+                  <label for="{{ form.user.id_for_label }}">Código del usuario:</label>
                   {{ form.user }}
                   </div>
                 </div>
                 <div class="row"  style="margin-top: 10px;">
                     <div class="col">
                     <div class="{{ form.descripcion.id_for_label }}" ></div>
-                    <label for="{{ form.descripcion.id_for_label }}">Descripción del ingreso:</label>
+                    <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
                     {{ form.descripcion }}
                     </div>
                 </div>
                 <div class="row"  style="margin-top: 10px;">
                     <div class="col">
-                    <div class="{{ form.tipo.id_for_label }}" ></div>
-                    <label for="{{ form.tipo.id_for_label }}">Tipo de ingreso:</label>
-                    {{ form.tipo }}
-                    </div>
-                </div>
-                <div class="row"  style="margin-top: 10px;">
-                    <div class="col">
                     <div class="{{ form.fecha.id_for_label }}" ></div>
-                    <label for="{{ form.fecha.id_for_label }}">Fecha del ingreso:</label>
+                    <label for="{{ form.fecha.id_for_label }}">Fecha del Pago:</label>
                     {{ form.fecha }}
                     </div>
                 </div>
                 <div class="row"  style="margin-top: 10px;">
                     <div class="col">
                     <div class="{{ form.monto.id_for_label }}" ></div>
-                    <label for="{{ form.monto.id_for_label }}">Monto del ingreso:</label>
+                    <label for="{{ form.monto.id_for_label }}">Monto del pago:</label>
                     {{ form.monto }}
                     </div>
                 </div>
@@ -90,7 +83,7 @@
       $('#spinner-div-real').hide();
       var request = $.ajax({
         type: "POST",
-        url: "{% url 'finance_app:finance-create-other-incomes' pk %}",
+        url: "{% url 'finance_app:finance-create-nominas' pk %}",
         data: serializedData,
         success: function (response) {
           $("#edicion").modal("hide");

@@ -24,6 +24,13 @@
                 </div>
             </div>
             <div class="row"  style="margin-top: 10px;">
+              <div class="col">
+              <div class="{{ form.propietario.id_for_label }}" ></div>
+              <label for="{{ form.propietario.id_for_label }}">¿Quién recibe el gasto?:</label>
+              {{ form.propietario }}
+              </div>
+          </div>
+            <div class="row"  style="margin-top: 10px;">
                 <div class="col">
                 <div class="{{ form.descripcion.id_for_label }}" ></div>
                 <label for="{{ form.descripcion.id_for_label }}">Descripción del gasto:</label>
@@ -71,7 +78,6 @@
   
 {% block js %}
 <script type="text/javascript">
-  $('#materia').val("{{pk}}")
   $('#consecutivo').val("{{preconsecutivo}}")
   $("#consecutivo").prop('disabled', true);
   function sendUser() {

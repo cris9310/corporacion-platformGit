@@ -1,0 +1,149 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Nominas | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-user-2-fill"></i> Nóminas de {{datos.nombres}} {{datos.apellidos}} </h2></span>
+      </div>
+      
+  </div>
+  <div class="datos ">
+    
+    <div class="card information shadow" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title"><i class="ri-barcode-box-line"></i>&nbsp; Código del usuario:</p></strong>
+              <p class="card-text">&nbsp; {{datos.codigo}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title"><i class="ri-presentation-line"></i>&nbsp; Tipo de perfil:</strong>
+              <p class="card-text">&nbsp; {{datos.tipe}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title"><i class="ri-slideshow-line"></i>&nbsp; Fecha de creación:</strong>
+              <p class="card-text">&nbsp; {{datos.created_at |date:'d M Y'}} </p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
+  </div>
+
+  
+  <div class="card shadow">
+    <div class="card-header">
+        <div class="row">
+          
+          <div class="col filtro">
+          
+          
+          </div>
+          <div class="col-7 boton">
+            <button  type="button" title="Nueva nomina" class="btn btn-sm" onclick="abrir_modal_general('{% url 'finance_app:finance-create-nominas' datos.codigo %}')">
+              <a >
+                <i class="ri-add-box-fill"></i>
+                &nbsp; Crear nómina
+              </a>
+            </button>
+          </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if nominas %}
+                <table id="table_general"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Consecutivo</th>
+                    <th>Concepto</th>
+                    <th>Fecha pago</th>
+                    <th>Valor</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for nomina in nominas %}
+                      <tr>
+                        <td >{{nomina.consecutivo}}</td>
+                        <td>{{nomina.factor}}</td> 
+                        <td>{{nomina.fecha |date:'d M Y' }}</td>
+                        <td>{{nomina.monto}}</td>
+                        <td>
+                            <a  onclick="abrir_modal_edicion('{% url 'finance_app:finance-detail-nominas' nomina.pk  %}')" title="Ver"><i class="ri-eye-fill iconos"></i></a>
+                            <a onclick="abrir_modal_edicion('{% url 'finance_app:finance-delete-nominas' nomina.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                            <a class="buscar-iconos" href="{% url 'finance_app:finance-generate-nominas' nomina.consecutivo %}" title="Descargar nómina" ><i class="ri-download-2-fill iconos"></i></a>
+                        </td>
+                        
+
+                    </tr>
+                      
+                    {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_general"  class="hover" style="width:100%; ">
+                <thead >
+                    <th>Consecutivo</th>
+                    <th>Concepto</th>
+                    <th>Fecha pago</th>
+                    <th>Valor</th>
+                    <th>Acciones</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endblock extracontent %}
+
+{% block js %}
+<script>
+  var $=jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+
+</script>
+{% endblock js %}

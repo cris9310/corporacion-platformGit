@@ -75,6 +75,7 @@
                             <a  onclick="abrir_modal_edicion('{% url 'user_app:detail-user' i.pk  %}')" title="Ver"><i class="ri-eye-fill iconos"></i></a>
                             <a onclick="abrir_modal_edicion('{% url 'user_app:update-user' i.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
                             <a onclick="abrir_modal_edicion('{% url 'user_app:deleted-user' i.pk %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                            <a class="buscar-iconos" href="{% url 'finance_app:finance-list-nominas' i.pk %}" title="Nóminas" ><i class="ri-money-dollar-circle-fill iconos"></i></a>
                             {% if i.is_active  %}
                             <a  onclick="actulizar_eliminar('{% url 'user_app:enable-user' i.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
                             {% else %}

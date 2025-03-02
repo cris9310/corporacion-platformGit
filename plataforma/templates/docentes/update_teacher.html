@@ -20,9 +20,9 @@
                 {{ form.tDocument }}
               </div>
               <div class="col-md-6 ms-auto"">
-                <div class="{{ form.codigo.id_for_label }}" ></div>
-                <label for="{{ form.codigo.id_for_label }}">Número de documento:</label>
-                {{ form.codigo }}
+                <div class="{{ form.nDocument.id_for_label }}" ></div>
+                <label for="{{ form.nDocument.id_for_label }}">Número de documento:</label>
+                {{ form.nDocument }}
               </div>
             </div>
           </div>
@@ -102,10 +102,6 @@
 {% block js %}
 <script type="text/javascript">
 
-    $(document).ready(function() {
-        $('#cedula').prop('readonly',true);
-        
-    });
 
   function sendUser() {
     var serializedData = $("#dataGeneralForm").serialize();

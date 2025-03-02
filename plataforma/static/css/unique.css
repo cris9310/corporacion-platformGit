@@ -337,6 +337,26 @@ header .image-text .header-text {
     margin-right: 10px;
 }
 
+.card-header .elemento-y,
+.card-header .elemento-x {
+    transition: all 0.5s ease-in-out;
+}
+
+.card-header .elemento-x {
+    display: block;
+}
+
+.card-header .elemento-y {
+    display: none;
+}
+
+.card-header:hover .elemento-x {
+    display: none;
+}
+
+.card-header:hover .elemento-y {
+    display: block;
+}
 
 .card .btn {
     border-color: var(--primary-color) !important;
@@ -544,6 +564,12 @@ th.sorting {
 
 .titulo {
     font-size: 20px !important;
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.titulo2 {
+    font-size: 16px !important;
     font-weight: bold;
     color: var(--primary-color-dark);
 }

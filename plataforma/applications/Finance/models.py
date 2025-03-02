@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Max
+from django.utils.timezone import now
 
 from applications.User.models import *
 
@@ -42,17 +43,19 @@ class FacturasSub(models.Model):
     observacion=models.CharField(max_length=100, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     pagado =  models.DecimalField(max_digits= 25, decimal_places=0, null=False, blank=False)
-    created_at = models.DateTimeField(default=datetime.now)
+    created_at = models.DateTimeField(default=now)
+    
     def __str__(self):
-        return self.facturas
+        return str(self.facturas)
 
 
 class Gastos(models.Model):
+    propietario= models.CharField(max_length=200, blank=False, null=False)
     codigo = models.CharField(max_length=200, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     descripcion = models.CharField(max_length=255, null=False, blank=False)
     monto = models.DecimalField(max_digits=25, decimal_places=2, null=False, blank=False)
-    fecha = models.DateTimeField(default=datetime.now)
+    fecha = models.DateTimeField(default=now)
     tipo =  models.ForeignKey(CatalogsTypesGastos, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -65,11 +68,12 @@ class Gastos(models.Model):
 
 
 class OtroIngreso(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     codigo = models.CharField(max_length=200, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     descripcion = models.CharField(max_length=255, null=False, blank=False)
     monto = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
-    fecha = models.DateTimeField(default=datetime.now)
+    fecha = models.DateTimeField(default=now)
     tipo = models.ForeignKey(CatalogsTypesOtrosIngresos, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -78,3 +82,20 @@ class OtroIngreso(models.Model):
             self.codigo = int(max_codigo) + 1
         super().save(*args, **kwargs)
 
+
+class Nominas(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    codigo = models.CharField(max_length=200, blank=True, null=True)
+    consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
+    descripcion = models.CharField(max_length=255, null=False, blank=False)
+    monto = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
+    fecha = models.DateTimeField(default=now)
+
+    def save(self, *args, **kwargs):
+        if self.codigo is None:
+            max_codigo = Nominas.objects.aggregate(max_codigo=Max('codigo'))['max_codigo'] or 0
+            self.codigo = int(max_codigo) + 1
+        super().save(*args, **kwargs)
+    
+    def monto_formateado(self):
+        return "${:,.2f}".format(self.monto).replace(",", "X").replace(".", ",").replace("X", ".")

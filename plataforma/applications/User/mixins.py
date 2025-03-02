@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 #Mixin para verificar que si sea administrador el que quiere acceder a una vista y que esté logueado
-class AdminRequiredMixin(LoginRequiredMixin):
+class AdminRequiredMixin(LoginRequiredMixin): 
     def dispatch(self, request, *args, **kwargs):
        
         if not request.user.is_authenticated  or not self.is_admin(request.user):

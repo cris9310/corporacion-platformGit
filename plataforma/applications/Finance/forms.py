@@ -32,6 +32,14 @@ class SpendForm(forms.ModelForm):
                     "onkeydown":"noPuntoComa( event )"
                 }
             ),
+            'propietario': TextInput(
+                attrs={
+                    'placeholder':"¿quién recibe el pago?",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'propietario'
+                }
+            ),
             
             'descripcion': TextInput(
                 attrs={
@@ -71,7 +79,6 @@ class SpendForm(forms.ModelForm):
         else:
            return self.cleaned_data.get('consecutivo')
 
-
 #Formulario destinado a la creación de otros ingresos, está ok
 class OtherIncomesForm(forms.ModelForm):
 
@@ -92,6 +99,13 @@ class OtherIncomesForm(forms.ModelForm):
                     "onkeydown":"noPuntoComa( event )"
                 }
             ),
+            'user': TextInput(
+                attrs={
+                    'class':'form-control',
+                    'id': 'user'
+                }
+            ),
+
             'tipo': Select(
                 attrs={
                     'class':'form-control',
@@ -190,3 +204,75 @@ class FacturasForm(forms.ModelForm):
            self.add_error('consecutivo', 'Este consecutivo ya existe, por favor verifique.')
         else:
            return self.cleaned_data.get('consecutivo')
+        
+
+#Formulario para crear los pagos de las nóminas
+
+class NominasForm(forms.ModelForm):
+    
+    class Meta:
+
+        model = Nominas
+        fields = ('__all__')
+        exclude =['codigo']
+
+        widgets={
+
+            'consecutivo': NumberInput(
+                attrs={
+                    'type':'number',
+                    'class':'form-control',
+                    'id': 'consecutivo',
+                    "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+            'user': TextInput(
+                attrs={
+                    'class':'form-control',
+                    'id': 'user'
+                }
+            ),
+            'descripcion': TextInput(
+                attrs={
+                    'placeholder':"Ingrese las descripción",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'descripcion'
+                }
+            ),
+            "fecha":DateInput(
+                format=('%Y-%m-%d'),
+                attrs={
+                    "type": "date", 
+                    "class": "form-control",
+                    "id":"fecha"
+                },
+            ),
+            'monto': NumberInput(
+                attrs={
+                    'type':'number',
+                    'class':'form-control',
+                    'id': 'monto',
+                    "onkeydown":"noPuntoComa( event )"
+                }
+            ),
+
+        }
+
+class RangoFechasForm(forms.Form):
+    fecha_inicio = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'id': 'fecha_inicio'}),
+        label="Fecha inicio"
+    )
+    fecha_fin = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'id': 'fecha_fin'}),
+        label="Fecha fin"
+    )
+
+    def clean_fecha_fin(self):
+        fecha_inicio = self.cleaned_data.get('fecha_inicio')
+        fecha_fin = self.cleaned_data.get('fecha_fin')
+
+        if fecha_fin < fecha_inicio:
+            raise forms.ValidationError('La fecha final debe ser mayor que la fecha de inicio.')
+        return fecha_fin

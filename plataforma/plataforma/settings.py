@@ -108,6 +108,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'applications.User.middleware.RoleBasedSessionTimeoutMiddleware',
     'applications.User.middleware.ForcePasswordChangeMiddleware',
+    'applications.User.middleware.DisableCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'plataforma.urls'
