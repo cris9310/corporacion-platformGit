@@ -6,7 +6,136 @@
 {% block extracontent %}
 
 
+{% if request.user.tipe.rol == "Coordinador" %}
 
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-user-2-line"></i> Estudiantes</h2></span>
+      </div>
+      
+  </div>
+  
+  <div class="card shadow">
+    <div class="card-header">
+      <div class="row">
+        
+        <div class="col filtro">
+          
+        </div>
+        
+
+      </div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if student %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre del estudiante</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for estudiante in student %}
+                      <tr>
+                        <td >{{estudiante.codigo}}</td>
+                        <td>{{estudiante.apellidos}} {{estudiante.nombres}}</td>
+                        <td>{{estudiante.carrera}}</td>
+
+                        {% if estudiante.is_active == True and estudiante.estado == True  %}
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
+                        <td>
+                          
+                        <a class="buscar-iconos" href="{% url 'student_app:student-notes' estudiante.slug   %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
+                        
+                        </td>
+
+                        {% elif estudiante.is_active == False and estudiante.estado == True  %}
+                        
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                        <a class="buscar-iconos" href="{% url 'student_app:student-notes' estudiante.slug  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
+
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
+                        
+
+                        </td>
+
+                        {% elif estudiante.is_active == True and estudiante.estado == False %}
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
+                        <td>
+                        <a  class="buscar-iconos" title="Consultar" ><i class="ri-search-line nonEstado"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                        
+                      </td>
+
+                        {% else   %}
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                        <a class="buscar-iconos" href="#" title="Consultar" ><i class="ri-search-line iconos nonEstado"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'student_app:assign' estudiante.pk %}')" title="Asignar"><i class="ri-add-circle-fill iconos"></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'student_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i class="ri-eye-fill iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'student_app:delete-student-finally' estudiante.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                        
+                        </td>
+                        
+                        {% endif %}
+                          
+                    </tr>
+                      
+                    {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead >
+                  <th>Código</th>
+                  <th>Nombre del estudiante</th>
+                  <th>Programa</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+{% else %}
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
@@ -178,6 +307,8 @@
 
   </div>
 </div>
+
+{% endif %}
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 

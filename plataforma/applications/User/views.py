@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 
 # Vista que crea usuarios, se encuentra ok
-class UserCreateView(AdminRequiredMixin, CreateView):
+class UserCreateView(OnlyAdminRequiredMixin, CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'usuarios/register_user.html'
@@ -63,7 +63,7 @@ class UserCreateView(AdminRequiredMixin, CreateView):
 
 # Muestra listado de usuarios creados, se encuentra ok
 @method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
-class UserListView(AdminRequiredMixin, ListView):
+class UserListView(OnlyAdminRequiredMixin, ListView):
     model = User
     template_name = 'usuarios/list_users.html'
     context_object_name = 'users'
@@ -79,12 +79,12 @@ class UserListView(AdminRequiredMixin, ListView):
             return queryset
 
 # Muestra el detalle de los usuarios creados, se encuentra ok
-class UserDetailView(AdminRequiredMixin, DetailView):
+class UserDetailView(OnlyAdminRequiredMixin, DetailView):
     model = User
     template_name = 'usuarios/detail_users.html'
 
 # Vista que actualiza los usuarios creados, se encuentra ok
-class UserUpdateView(AdminRequiredMixin, UpdateView):
+class UserUpdateView(OnlyAdminRequiredMixin, UpdateView):
     template_name = 'usuarios/update_user.html'
     model = User
     form_class = UserUpdateForm
@@ -113,14 +113,14 @@ class UserUpdateView(AdminRequiredMixin, UpdateView):
             return response
 
 # Vista que elimina usuarios, se encuentra ok
-class UserDeleteView(AdminRequiredMixin, DeleteView):
+class UserDeleteView(OnlyAdminRequiredMixin, DeleteView):
     template_name = 'usuarios/delete_user.html'
     model = User
     success_url = reverse_lazy('user_app:list-user')
 
 
 # Vista que habilita o inhabilita usuarios, se encuentra ok
-class UserEnableView(AdminRequiredMixin, UpdateView):
+class UserEnableView(OnlyAdminRequiredMixin, UpdateView):
     model = User
     template_name = 'usuarios/update_enable.html'
     fields = '__all__'
@@ -149,7 +149,7 @@ class UserEnableView(AdminRequiredMixin, UpdateView):
             return response
 
 @method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
-class UserProfileDetailView(AdminRequiredMixin, ListView):
+class UserProfileDetailView(ListView):
     model = User
     template_name = 'usuarios/profile.html'
     context_object_name = 'consulta'
@@ -161,7 +161,7 @@ class UserProfileDetailView(AdminRequiredMixin, ListView):
                 queryset = Docente.objects.filter(codigo=self.request.user.pk)
                 return queryset
             else:
-                queryset = Docente.objects.filter(
+                queryset = Estudiante.objects.filter(
                     codigo=self.request.user.pk)
                 return queryset
         else:

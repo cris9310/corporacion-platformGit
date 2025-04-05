@@ -324,8 +324,6 @@ class InventarioDeleteView(AdminRequiredMixin, DeleteView):
     model = Inventario
     success_url = reverse_lazy('settings_app:list-inventario')
 
-#class InventarioMasiveCreateView(CreateView):
-
 class InventarioMasiveView(View):
 
     def get(self, request, *args, **kwargs):
@@ -623,7 +621,7 @@ class Bannerlistview(ListView):
         return estudiante
 
 #Vista que matricula estudiantes en las asignaturas
-class BannerCreateView(View):
+class BannerCreateView(AdminRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
 
@@ -655,7 +653,7 @@ class BannerCreateView(View):
         return HttpResponseRedirect(reverse_lazy('student_app:list-student'))
 
 #Vista que crea las tareas y actividades de los estudiantes
-class BannerCreateTaskView(CreateView):
+class BannerCreateTaskView( AdminTeacherRequiredMixin, CreateView):
     model = Banner
     form_class = BannerTaksForm
     template_name = 'banner/bannerRegisterTask.html'
@@ -751,7 +749,7 @@ class ListBannerTaskDetailView(ListView):
         return data
 
 #Vista que elimina las tareas
-class BannerTaskDeleteView(DeleteView):
+class BannerTaskDeleteView(AdminTeacherRequiredMixin, DeleteView):
     template_name = 'banner/BannerTaskDeleteView.html'
     model = Banner
 
@@ -778,7 +776,7 @@ class BannerTaskDeleteView(DeleteView):
     
 
 # vista que carga las notas al banner
-class BannerNoteMasive(View):
+class BannerNoteMasive(AdminTeacherRequiredMixin, View):
     
     #momstramos el form que hemos creado
     def get(self, request, *args, **kwargs):

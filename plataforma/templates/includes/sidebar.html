@@ -105,38 +105,32 @@
                         <i class="ri-dashboard-line icon"></i>
 
                         <span class="text nav-text">Dashboard</span>
+
                     </a>
                 </li>
                 <li class="" title="Docentes">
-                    <a href="{% url 'academico_app:list-teacher' %}">
+                    <a href="{% url 'teacher_app:teacher-list' %}">
                         <i class="ri-presentation-line icon"></i>
 
                         <span class="text nav-text">Docentes</span>
                     </a>
                 </li>
                 <li class="" title="Estudiantes">
-                    <a href="{% url 'academico_app:list-student' %}">
-                        <i class="ri-user-2-fill icon"></i>
+                    <a href="{% url 'student_app:home-student' %}">
+                        <i class="ri-user-2-line icon"></i>
 
                         <span class="text nav-text">Estudiantes</span>
                     </a>
                 </li>
                 <li class="" title="Financiero">
-                    <a href="{% url 'finance_app:finance-list-invoice' %}">
+                    <a href="{% url 'finance_app:finance-general-list-view' %}">
                         <i class="ri-money-dollar-box-line icon"></i>
 
                         <span class="text nav-text">Financiero</span>
                     </a>
                 </li>
-                <li class="" title="Usuarios">
-                    <a href="{% url 'academico_app:list-user' %}">
-                        <i class="ri-user-3-line icon"></i>
-
-                        <span class="text nav-text">Usuarios</span>
-                    </a>
-                </li>
                 <li class="" title="Parámetros">
-                    <a href="{% url 'academico_app:config' %}">
+                    <a href="{% url 'settings_app:config' %}">
                         <i class="ri-settings-3-line icon"></i>
 
                         <span class="text nav-text">Parámetros</span>
@@ -176,26 +170,21 @@
 
             <ul class="menu-links">
                 <li class="" title="Dashboard">
-                    <a href="{% url 'dashboard_app:dashboard-admin' %}">
+                    <a href="{% url 'student_app:student-my-notes' %}">
                         <i class="ri-dashboard-line icon"></i>
 
-                        <span class="text nav-text">Mis programas</span>
+                        <span class="text nav-text">Mi programa</span>
                     </a>
                 </li>
 
                 <li class="" title="Financiero">
-                    <a href="{% url 'finance_app:finance-list-invoice' %}">
+                    <a href="{% url 'finance_app:finance-list-my-pays' %}">
                         <i class="ri-money-dollar-box-line icon"></i>
 
                         <span class="text nav-text">Mis pagos</span>
                     </a>
                 </li>
-                <li class="" title="Usuarios">
-                    <a href="#">
-                        <i class="ri-school-line icon"></i>
-                        <span class="text nav-text">Gestiones académicas</span>
-                    </a>
-                </li>
+                
 
             </ul>
         </div>
@@ -229,17 +218,11 @@
         <div class="menu">
 
             <ul class="menu-links">
-                <li class="" title="Dashboard">
-                    <a href="{% url 'dashboard_app:dashboard-admin' %}">
-                        <i class="ri-dashboard-line icon"></i>
-
-                        <span class="text nav-text">Dashboard</span>
-                    </a>
-                </li>
+                
                 <li class="" title="Usuarios">
-                    <a href="#">
+                    <a href="{% url 'teacher_app:teacher-my-own-topic-list' %}"> 
                         <i class="ri-contacts-book-3-line icon"></i>
-                        <span class="text nav-text">Mis asignaturas</span>
+                        <span class="text nav-text">Mis cursos</span>
                     </a>
                 </li>
 
@@ -273,41 +256,20 @@
         <div class="menu">
 
             <ul class="menu-links">
-                <li class="" title="Dashboard">
-                    <a href="{% url 'dashboard_app:dashboard-admin' %}">
-                        <i class="ri-dashboard-line icon"></i>
-
-                        <span class="text nav-text">Dashboard</span>
-                    </a>
-                </li>
                 <li class="" title="Docentes">
-                    <a href="{% url 'academico_app:list-teacher' %}">
+                    <a href="{% url 'teacher_app:teacher-list-Coordinator' %}">
                         <i class="ri-presentation-line icon"></i>
 
                         <span class="text nav-text">Docentes</span>
                     </a>
                 </li>
                 <li class="" title="Estudiantes">
-                    <a href="{% url 'academico_app:list-student' %}">
+                    <a href="{% url 'student_app:list-student-coordinator' %}">
                         <i class="ri-user-2-fill icon"></i>
 
                         <span class="text nav-text">Estudiantes</span>
                     </a>
                 </li>
-                <li class="" title="Financiero">
-                    <a href="{% url 'finance_app:finance-list-invoice' %}">
-                        <i class="ri-money-dollar-box-line icon"></i>
-
-                        <span class="text nav-text">Financiero</span>
-                    </a>
-                </li>
-                <li class="" title="Habilitaciones">
-                    <a href="{% url 'academico_app:config' %}">
-                        <i class="ri-hand-coin-line icon"></i>
-                        <span class="text nav-text">Habilitaciones</span>
-                    </a>
-                </li>
-
             </ul>
         </div>
     </div>

@@ -46,6 +46,19 @@ urlpatterns = [
         name='teacher-topic-list'
     ),
 
+    path(
+        'teacher-my-own-topic-list/',
+        views.TeacherMyOwnTopicsListview.as_view(),
+        name='teacher-my-own-topic-list'
+    ),
+
+    path(
+        'teacher-list-Coordinator',
+        views.TeacherCoordinatorlistview.as_view(),
+        name='teacher-list-Coordinator'
+    ),
+    
+
     
 
     

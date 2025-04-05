@@ -20,10 +20,25 @@ from applications.Programs.models import *
 
 def RedirectUserView(request):
 
-    if request.user.is_authenticated and request.user.tipe.rol == 'Administrador':
+    if request.user.is_authenticated and request.user.tipe.rol == 'Administrador' or request.user.tipe.rol == 'Gestor':
         return HttpResponseRedirect(
             reverse_lazy('dashboard_app:dashboard-admin')
             )
+    elif request.user.is_authenticated and request.user.tipe.rol == 'Estudiante':
+        return HttpResponseRedirect(
+            reverse_lazy('student_app:student-my-notes')
+            )
+    
+    elif request.user.is_authenticated and request.user.tipe.rol == 'Docente':
+        return HttpResponseRedirect(
+            reverse_lazy('teacher_app:teacher-my-own-topic-list')
+            )
+    
+    else:
+        return HttpResponseRedirect(
+            reverse_lazy('teacher_app:teacher-list-Coordinator')
+        )
+    
 
 @method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
 class DashboardAdminView(AdminRequiredMixin, TemplateView):

@@ -88,14 +88,29 @@
                         <td>{{student.promedio}}</td>
                         {% endif %}
 
-                        {% if student.tiene == "si" %}
-                        <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.slug  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
-                        {% else %}
-                        <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
-                        <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.slug %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
-                        </td>
-                        {% endif %}
+                        {% if request.user.tipe.rol != "Estudiante" %}
+                          {% if student.tiene == "si" %}
+                            <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.slug  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                            {% else %}
+                            <td><a class="buscar-iconos" href="{% url 'student_app:student-notes-detail' student.pkmateria estudiante.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                              {% if request.user.tipe.rol != "Estudiante" %}
+                              <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.slug %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                              {% endif %}
+                            </td>
+                          {% endif %}
 
+                          {% else %}
+                            {% if student.tiene == "si" %}
+                            <td><a class="buscar-iconos" href="{% url 'student_app:student-my-notes-detail' student.pkmateria estudiante.slug  %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                            {% else %}
+                            <td><a class="buscar-iconos" href="{% url 'student_app:student-my-notes-detail' student.pkmateria estudiante.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a>
+                              {% if request.user.tipe.rol != "Estudiante" %}
+                              <a  onclick="abrir_modal_edicion('{% url 'student_app:student-notes-delete' student.pkmateria estudiante.slug %}')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                              {% endif %}
+                            </td>
+                            {% endif %}
+
+                        {% endif %}
                     </tr>
                       
                     {% endfor %}

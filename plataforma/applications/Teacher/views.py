@@ -231,3 +231,75 @@ class TeacherDeleteView(AdminRequiredMixin, DeleteView):
         messages.success(
             self.request, 'El docente ha sido eliminado correctamente')
         return HttpResponseRedirect(reverse_lazy('teacher_app:teacher-list'))
+    
+#Muestra solo vistas al docente que esta logueado
+
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class TeacherMyOwnTopicsListview(TeacherRequiredMixin,ListView):
+    model = Docente
+    second_model = Materias
+    template_name = 'docentes/list_materias_teacher.html'
+    context_object_name = 'teacherTp'
+
+    def dispatch(self, request, *args, **kwargs):
+        docente = Docente.objects.get(username=self.request.user)
+
+        if str(docente.username) != str(self.request.user):
+            logout(request)
+            previous_url = reverse('homepage_app:logout')
+            return redirect(previous_url)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        docente = Docente.objects.get(username=self.request.user)
+        cod = docente.slug
+        context = super(TeacherMyOwnTopicsListview, self).get_context_data(**kwargs)
+        context['topics'] = Docente.objects.filter(slug=cod)
+        context['Tmaterias'] = Materias.objects.filter(docente__slug=cod).count()
+        return context
+
+    def get_queryset(self):
+
+        docente = Docente.objects.get(username=self.request.user)
+        cod = docente.slug
+        data = []
+        for i in Materias.objects.filter(docente__slug=cod):
+            try:
+                info = Banner.objects.values("materia__materia__codigo").annotate(
+                    total=Coalesce(Count("materia"), 0)).filter(materia__materia__codigo=i.materia.codigo)
+                info1 = {"pk": i.pk, 'slug':i.slug, "codigo": i.materia.codigo, "programa": i.materia.programa,
+                            "materia": i.materia, "total": info[0]['total'], "periodo": i.periodo}
+                data.append(info1)
+
+            except:
+                info1 = {"pk": i.pk, 'slug':i.slug, "codigo": i.materia.codigo, "programa": i.materia.programa,
+                            "materia": i.materia, "total": 0, "periodo": i.periodo}
+                data.append(info1)
+        return data
+    
+
+
+#Vista que solo ve el coordinador
+
+# Vista ok, se encarga de listar docentes, filtra activos, inactivos y todos.
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class TeacherCoordinatorlistview(CoordinatorRequiredMixin,ListView):
+    model = Docente
+    template_name = 'docentes/list_teacher.html'
+    context_object_name = 'teacher'
+
+    def get_queryset(self):
+        data_teacher = []
+        data_prin = Docente.objects.all()
+        for i in data_prin:
+            if Materias.objects.filter(docente__slug=i.slug).exists():
+                data_json = {"pk": i.id, 'slug':i.slug, "codigo": i.codigo, "nombres": i.nombres,
+                                "apellidos": i.apellidos, "estado": True, "is_active": i.is_active}
+                data_teacher.append(data_json)
+            else:
+                data_json = {"pk": i.id, 'slug':i.slug, "codigo": i.codigo, "nombres": i.nombres,
+                                "apellidos": i.apellidos, "estado": False, "is_active": i.is_active}
+                data_teacher.append(data_json)
+        queryset = data_teacher
+        return queryset

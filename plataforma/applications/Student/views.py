@@ -806,7 +806,7 @@ class StudentDetailView(DetailView):
     model = Estudiante
 
 #Vista que muestra las materias que se pueden asignar al estudiante
-class StudentAssignListview(AdminRequiredMixin,ListView):
+class StudentAssignListview(AdminCoordinadorRequiredMixin,ListView): 
     model = Estudiante
     template_name = 'estudiantes/AssignCreate.html'
     success_url = reverse_lazy('student_app:list-student')
@@ -1124,3 +1124,181 @@ class StudentGraduatedDeleteview(DeleteView):
         estudiante = Graduated.objects.get(pk=self.kwargs['pk'] ).delete()
 
         return HttpResponseRedirect(reverse_lazy('student_app:list-graduated'))
+    
+    #Vistas donde solo ve e ingresa el estudiante
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class StudentMyNotesView(StudentRequiredMixin, ListView):
+    model = Banner
+    template_name = 'estudiantes/ListNotesView.html'
+    context_object_name = 'student'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        estudiante = Estudiante.objects.get(username=self.request.user )
+        context['estudiante'] = estudiante
+
+        datos = Banner.objects.filter(student__slug=estudiante.slug, materia__is_active=False).values("materia_id", 
+                                                                           "materia__an_creacion", 
+                                                                           "materia__materia__codigo").distinct().order_by(
+            'materia__materia__codigo','-materia__an_creacion'
+        )
+        dataLista=[]
+        mean=[]
+        pasadas=[]
+        for i in datos:
+            dataLista.append({"materia_id":i['materia_id'],"fecha": i['materia__an_creacion'], "codigo":i['materia__materia__codigo']})
+
+        df = pd.DataFrame(dataLista)
+        df["duplicado"]=df.duplicated("codigo")
+
+        values = [False]
+        df = df[df.duplicado.isin(values)]
+        if len(df)>0:
+            df = df['materia_id']
+
+            for i in df:
+                promedio = round (Banner.objects.filter(student__slug=estudiante.slug, materia_id=i ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+                mean.append( promedio )
+                if promedio >= 3.0:
+                    pasadas.append(1)
+                else:
+                    pasadas.append(0)
+            mean = round(sum(mean) / len(mean),2)
+            final = int(round((sum(pasadas)/int(estudiante.carrera.aceptado))*100,0))
+            context['promedio'] = mean
+            context['pasadas'] = final
+            return context
+        else:
+            context['promedio'] = 0.00
+            context['pasadas'] = 0
+        #promedio, cumplimiento
+            return context
+
+    def get_queryset(self):
+
+        data = []
+        estudianteDatos = Estudiante.objects.get(username=self.request.user )
+        # Obtener los datos sin usar distinct(), pero usando values() para reducir la carga de datos
+        estudiante = Banner.objects.filter(student__slug=estudianteDatos.slug).values(
+            'student__slug', 'materia_id', 'materia__materia__codigo', 
+            'materia__materia__nombre_materia', 'materia__is_active', 
+            'materia__periodo'
+        ).order_by('student__slug', 'materia_id')
+
+        # Crear un diccionario para asegurarnos de que no haya duplicados por 'materia_id'
+        materias_vistas = set()
+
+        for i in estudiante:
+            # Verificar si ya hemos procesado la materia
+            if i['materia_id'] not in materias_vistas:
+                # Agregar la materia al set para evitar duplicados
+                materias_vistas.add(i['materia_id'])
+                
+                # Calcular el promedio de calificaciones para esta materia
+                promedio = round(
+                    Banner.objects.filter(student__slug=estudianteDatos.slug, materia_id=i['materia_id']).aggregate(Avg('calificacion'))['calificacion__avg'], 
+                    2
+                )
+                
+                # Crear el diccionario con los datos de la materia
+                data_json = {
+                    'slug': i['student__slug'], 
+                    'pkmateria': i['materia_id'], 
+                    "codigo": i['materia__materia__codigo'], 
+                    "nombre": i['materia__materia__nombre_materia'],
+                    "estado": i['materia__is_active'], 
+                    "promedio": promedio, 
+                    'periodo':  Periodos.objects.get(pk=i['materia__periodo']).periodo,
+                    "tiene": "si" if promedio != 0.00 else "no"
+                }
+                
+                # Agregar los datos al arreglo
+                data.append(data_json)
+
+        return data
+    
+
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class StudentMyNotesDetailView(StudentRequiredMixin, ListView):
+    model = Banner
+    template_name = 'estudiantes/ListNotesDetailView.html'
+    context_object_name = 'student'
+
+    def dispatch(self, request, *args, **kwargs):
+        estudiante = Estudiante.objects.get(slug=self.kwargs['slug'])
+
+        if str(estudiante.username) != str(self.request.user):
+            logout(request)
+            previous_url = reverse('homepage_app:logout')
+            return redirect(previous_url)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        estudiante_data = Estudiante.objects.get(slug=self.kwargs['slug'])
+        context['estudiante'] = estudiante_data
+        data = [] 
+        estudiante = Materias.objects.filter(pk=self.kwargs['pk1'] )
+
+        for i in estudiante:
+            promedio = round (Banner.objects.filter(student__slug=self.kwargs['slug'], materia_id=self.kwargs['pk1'] ).aggregate(Avg('calificacion'))['calificacion__avg'],2)
+            
+            data_json = {
+                'pk': i.pk, "codigo": i.materia.codigo, "nombre": i.materia.nombre_materia,
+                "estado": i.is_active, "promedio": promedio
+            }
+            data.append(data_json)
+        context['informacion'] = data
+        return context
+    
+    def get_queryset(self):
+        data = []
+        estudiante = Banner.objects.filter(materia_id=self.kwargs['pk1'], student__slug=self.kwargs['slug']  )
+
+        for i in estudiante:
+            datos = {"estudiante": i.student.nombre + " " + i.student.apellidos, "cod_tarea": i.cod_tarea, "tarea": i.tarea.tipo, "calificacion": i.calificacion }
+            data.append(datos)
+        estudiante = pd.DataFrame(data, columns=['estudiante', 'tarea', "calificacion", "cod_tarea"])
+        estudiante["cod_tareaG"] = estudiante["cod_tarea"] + "-" + estudiante["tarea"]
+        estudiante = estudiante.pivot(index='estudiante', columns='cod_tareaG', values='calificacion')
+
+        return estudiante
+
+
+
+#Vista que solo ve el coordinador
+
+
+# Esta vista lista a todos los estudiantes que se han creado, se encuentra ok.
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class StudentCoordinatorlistview(CoordinatorRequiredMixin,ListView):
+    model = Estudiante
+    template_name = 'estudiantes/list_student.html'
+    context_object_name = 'student'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['programas'] = Programas.objects.all()
+        context['masivo'] = Estudiante.objects.filter(masivo=True).count()
+        
+        return context
+
+    def get_queryset(self):
+
+        data_student = []
+        data_prin = Estudiante.objects.filter(is_graduado=False).exclude(masivo=True)
+        for i in data_prin:
+            if Banner.objects.filter(student__slug=i.slug).exists():
+                data_json = {"pk": i.id, "slug":i.slug, "codigo": i.codigo, "nombres": i.nombre,
+                                "apellidos": i.apellidos, "estado": True, "carrera": i.carrera,
+                                "is_active": i.is_active, "is_matriculado": i.is_matriculado}
+                data_student.append(data_json)
+            else:
+                data_json = {"pk": i.id, "slug":i.slug, "codigo": i.codigo, "nombres": i.nombre,
+                                "apellidos": i.apellidos, "estado": False, "carrera": i.carrera,
+                                "is_active": i.is_active, "is_matriculado": i.is_matriculado}
+                data_student.append(data_json)
+        queryset = data_student
+        return queryset

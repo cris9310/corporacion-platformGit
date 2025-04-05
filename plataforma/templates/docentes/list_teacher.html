@@ -9,8 +9,106 @@
 
 {% block extracontent %}
 
+{% if request.user.tipe.rol == "Coordinador" %}
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-presentation-line"></i> Docentes</h2></span>
+      </div>
+      
+  </div>
+  
+
+  <div class="card shadow">
+      <div class="card-header">
+          
+        </div>
+    
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                  {% if teacher %}
+                  <table id="table_id2"  class="hover" style="width:100%; "> 
+                    <thead >
+                      <th>Salones </th>
+                      <th>Código</th>
+                      <th>Nombre del Docente</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                      {% for teach in teacher %}
+                      <tr>
+                        {% if teach.estado  %}
+                        <td ><a class="buscar-iconos" href="{% url 'teacher_app:teacher-topic-list' teach.slug %}" title="Consultar" ><i class="ri-search-line iconos"></i></a></td>
+                        {% else %}
+                        <td ><a  title="Consultar" ><i class="ri-search-line nonEstado"></i></a></td>
+                        {% endif %}
+                        <td><a">{{teach.codigo}}</a></td>
+                        <td>{{teach.apellidos}} {{teach.nombres}}</td>
+                        {% if teach.is_active %}
+                        <td><span class="estado"><i class="ri-checkbox-circle-fill"></i>&nbsp;Activo</span></td>
+                        {% else %}
+                        <td><span class="nonEstado"><i class="ri-close-circle-line"></i>&nbsp;Inactivo</span></td>
+                        {% endif %}
+                        <td>
+                          <a  onclick="abrir_modal_general('{% url 'teacher_app:teacher-detail' teach.pk %}')" title="Ver docente"><i class="ri-eye-fill iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'teacher_app:teacher-update' teach.pk %}')" title="Editar"><i class="ri-pencil-fill iconos"></i></a>
+        
+                          {% if teach.estado == True and teach.is_active == True %}
+                            <a  onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
+                          {% elif teach.estado == True and teach.is_active == False %}
+                            <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'habilitar')" title="Habilitar"><i class="ri-user-follow-fill iconos"></i></a>
+                          {% elif teach.estado == False and teach.is_active == True %}
+                            <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i class="ri-user-unfollow-fill iconos"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-delete' teach.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                          {% else %}
+                            <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-habilit' teach.pk  %}', 'habilitar')" title="Habilitar"><i class="ri-user-follow-fill iconos"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'teacher_app:teacher-delete' teach.pk %}', 'eliminar')" title="Eliminar"><i class="ri-delete-bin-fill iconos"></i></a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                {% endfor %}
+                    
+                  </table> 
+                {% else %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                      <th>Salones </th>
+                      <th>Código</th>
+                      <th>Nombre del Docente</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
 
 
+  </div>
+</div>
+
+{% else %}
 <div class="container-fluid ">
     <div class="row encabezado">
         <div class="titulo">
@@ -124,7 +222,7 @@
   
     </div>
   </div>
-  
+{% endif %}
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 

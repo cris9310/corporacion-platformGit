@@ -14,10 +14,12 @@
         <i class="ri-user-3-line icon mr-2 text-gray-400 icon"></i>
         <span class="text nav-text">Perfil</span> 
       </a>
+      {% if request.user.tipe.rol != "Estudiante" %}
       <a  class="dropdown-item" href="#">
         <i class="ri-wallet-line mr-2 text-gray-400 icon"></i>
         <span class="text nav-text">Nómina</span> 
       </a>
+      {% endif %}
       
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">

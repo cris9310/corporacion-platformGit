@@ -101,7 +101,23 @@ urlpatterns = [
         name='student-graduated-Delete'
     ),
 
+    path(
+        'student-my-notes',
+        views.StudentMyNotesView.as_view(),
+        name='student-my-notes'
+    ),
 
+    path(
+        'student-my-notes/student-my-notes-detail/<int:pk1>/<slug:slug>/',
+        views.StudentMyNotesDetailView.as_view(),
+        name='student-my-notes-detail'
+    ),
+
+    path(
+        'home-student/list-student-coordinator/',
+        views.StudentCoordinatorlistview.as_view(),
+        name='list-student-coordinator'
+    ),
 
     
 ]

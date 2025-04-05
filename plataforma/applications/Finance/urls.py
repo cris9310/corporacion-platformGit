@@ -110,6 +110,11 @@ urlpatterns = [
         name='download-report-rango'
     ),
 
+    path(
+        'finance-list-my-pays/',
+        views.FinanceInvoiceMyPayListview.as_view(),
+        name='finance-list-my-pays'
+    ),
     
 
 

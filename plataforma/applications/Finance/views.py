@@ -4,7 +4,7 @@ from django.views.generic import (TemplateView,
                                   FormView, CreateView, DeleteView, UpdateView,
                                   DetailView, ListView, View)
 from django.utils import timezone
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, FileResponse
 from django.shortcuts import render
 from django.utils.timezone import make_aware
 from django.utils.decorators import method_decorator
@@ -30,6 +30,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
 from io import BytesIO
 
 #Vista para crear gastos
@@ -582,88 +583,84 @@ class GenerarNominaView(View):
                 'apellidos': datosUser.apellidos,
                 'fechaIngreso': datosUser.created_at.strftime('%Y-%m-%d'),
             }
-        
-        concepto_datos = [
-            ["CONCEPTO", "VALOR", "DESCUENTOS"],
-            [factura['descripcion'], factura['monto'], ""],
-            ["DESCUENTOS", "", "52.000"],
-        ]
-
-        total = factura['monto']
-        logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img/home/logoazul.png"
         buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
-        normal_style = styles['Normal']
-        title_style = ParagraphStyle(
-            name='Title', parent=normal_style, fontSize=16, alignment=1, spaceAfter=10
-        )
-
+        doc = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
         elements = []
+        total = factura['monto']
+        styles = getSampleStyleSheet()
 
-        # Encabezado: Logo a la izquierda y datos de la empresa a la derecha
-        try:
-            logo = Image(logo_path, width=1.5 * inch, height=1.0 * inch)
-        except Exception as e:
-            logo = Paragraph("LOGO", title_style)
+        logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img/home/logoazul.png"  # Asegúrate de que la ruta sea correcta
+        logo = Image(logo_path, width=80, height=80) 
 
-        company_info = [
-            Paragraph("Corporación Nacional De Estudios", title_style),
-            Paragraph("NIT: 1.144.169.128-4", normal_style),
-            Paragraph("Dirección: Calle 31 # 20-12, colombina", normal_style),
-            Paragraph("Ciudad: Palmira - Valle", normal_style),
-            Paragraph("Teléfono: 2855359 - 3185824051", normal_style),
-            
+        title = Paragraph("<b>RECIBO DEL PAGO DE NÓMINA</b>", styles['Title'])
+        table_data = [[logo, title]]
+
+        table = Table(table_data, colWidths=[70, 400])  # Ajusta el ancho de las columnas
+        table.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinear verticalmente al centro
+            ('ALIGN', (1, 0), (1, 0), 'LEFT'),  # Alinear título a la izquierda
+        ]))
+
+        # Agregar tabla al documento
+        elements.append(table)
+        elements.append(Spacer(1, 10)) 
+        
+
+
+
+        # Encabezado de tabla
+        header_data = [
+            ["Corporación Nacional De Estudios", "Siglas: C.N.E Palmira", "Dirección: Calle 31 # 20-12, colombina"],
+            ["Dirección: Calle 31 # 20-12, colombina", "Ciudad: Palmira - Valle", "Teléfono: 2855359 - 3185824051"],
+            ["", "", ""],
+            ["Recibo número: " + str(factura['consecutivo']), "Código de Empleado: " + str(factura['codigo']),
+             "Fecha de Pago: " + str(factura['fecha'])],
+            ["Fecha de antiguedad: " + str(factura['fechaIngreso']), "Nombre del Empleado: " + str(factura['nombres']) +" " + str(factura['apellidos']),
+            ""],
+
+        ]
+        header_table = Table(header_data, colWidths=[200, 200, 200])
+        header_table.setStyle(TableStyle([
+            ('SPAN', (0, 2), (2, 2)),  # Esto hará que la celda en la fila 2 abarque las 3 columnas
+            ('SPAN', (0, 2), (2, 2)),
+            ('LINEBELOW', (0, 2), (-1, 2), 1, colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+        ]))
+        
+        elements.append(header_table)
+        elements.append(Spacer(1, 20))  # Espacio después de la tabla del encabezado
+        
+        # Tabla de conceptos con márgenes ajustados
+        data = [
+            ["CONCEPTOS", "ABONOS", "DESCUENTOS"],
+            [factura['descripcion'], factura['monto'], ""],
+            ["Ret.Seg.Soc.(C.C.)", "", "$ 52.000"],
         ]
         
-        header_table = Table(
-            [[logo, company_info]],
-            colWidths=[2 * inch, 4.5 * inch]
-        )
-        header_table.setStyle(TableStyle([
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
-            ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-        ]))
-        elements.append(header_table)
-        elements.append(Spacer(1, 0.2 * inch))
-
-        # Detalles del empleado
-        elements.append(Paragraph(f"Recibo número: {factura['consecutivo']}", normal_style))
-        elements.append(Paragraph(f"Código de Empleado: {factura['codigo']}", normal_style))
-        elements.append(Paragraph(f"Nombre: {factura['nombres']} {factura['apellidos']}", normal_style))
-        elements.append(Paragraph(f"Fecha de Ingreso: {factura['fechaIngreso']}", normal_style))
-        elements.append(Paragraph(f"Fecha de Pago: {factura['fecha']}", normal_style))
-        elements.append(Spacer(1, 0.2 * inch))
-
-        # Tabla de conceptos
-        table = Table(concepto_datos, colWidths=[200, 100, 100])
+        table = Table(data, colWidths=[200, 100, 100])
         table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+            ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
         ]))
+        
         elements.append(table)
         elements.append(Spacer(1, 0.2 * inch))
 
         # Total
+        normal_style = styles['Normal']
         elements.append(Paragraph(f"<strong>TOTAL:</strong> {total}", normal_style))
         elements.append(Spacer(1, 0.2 * inch))
 
         # Pie de página
         elements.append(Paragraph("Este desprendible es un documento informativo. No se requiere firma.", normal_style))
 
-        # Construir el PDF
         doc.build(elements)
         buffer.seek(0)
-
-        # Respuesta HTTP
-        response = HttpResponse(buffer, content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename="desprendible_nomina.pdf"'
-        return response
+        return FileResponse(buffer, as_attachment=True, filename="Desprendible_pago_"+str(factura['nombres'])+str(factura['apellidos'])+".pdf")
+    
 
 
 class GenerarReciboView(View):
@@ -689,85 +686,82 @@ class GenerarReciboView(View):
                     'fechaIngreso': datosEstudiante.fecha_reg.strftime('%Y-%m-%d'),
                 }
 
-                concepto_datos = [
-                ["CONCEPTO", "VALOR", "DESCUENTOS"],
-                [factura['descripcion'], factura['monto'], ""]
-                ]
-
-                total = factura['monto']
-                logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img\home/logoazul.png"
                 buffer = BytesIO()
-                doc = SimpleDocTemplate(buffer, pagesize=letter)
-                styles = getSampleStyleSheet()
-                normal_style = styles['Normal']
-                title_style = ParagraphStyle(
-                    name='Title', parent=normal_style, fontSize=16, alignment=1, spaceAfter=10
-                )
-
+                doc = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
                 elements = []
+                total = factura['monto']
+                styles = getSampleStyleSheet()
 
-                # Encabezado: Logo a la izquierda y datos de la empresa a la derecha
-                try:
-                    logo = Image(logo_path, width=1.5 * inch, height=1.0 * inch)
-                except Exception as e:
-                    logo = Paragraph("LOGO", title_style)
+                logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img/home/logoazul.png"  # Asegúrate de que la ruta sea correcta
+                logo = Image(logo_path, width=80, height=80) 
 
-                company_info = [
-                    Paragraph("Corporación Nacional De Estudios", title_style),
-                    Paragraph("NIT: 1.144.169.128-4", normal_style),
-                    Paragraph("Dirección: Calle 31 # 20-12, colombina", normal_style),
-                    Paragraph("Ciudad: Palmira - Valle", normal_style),
-                    Paragraph("Teléfono: 2855359 - 3185824051", normal_style),
-                    
+                title = Paragraph("<b>RECIBO DE PAGO</b>", styles['Title'])
+                table_data = [[logo, title]]
+
+                table = Table(table_data, colWidths=[70, 400])  # Ajusta el ancho de las columnas
+                table.setStyle(TableStyle([
+                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinear verticalmente al centro
+                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),  # Alinear título a la izquierda
+                ]))
+
+                # Agregar tabla al documento
+                elements.append(table)
+                elements.append(Spacer(1, 10)) 
+                
+
+
+
+                # Encabezado de tabla
+                header_data = [
+                    ["Corporación Nacional De Estudios", "Siglas: C.N.E Palmira", "Dirección: Calle 31 # 20-12, colombina"],
+                    ["Dirección: Calle 31 # 20-12, colombina", "Ciudad: Palmira - Valle", "Teléfono: 2855359 - 3185824051"],
+                    ["", "", ""],
+                    ["Recibo número: " + str(factura['consecutivo']), "Documento de identidad: " + str(factura['documento']),
+                    "Fecha de Pago: " + str(factura['fecha'])],
+                    ["Tipo de documento: " + str(factura['tipodocumento']), "Nombre del estudiante: " + str(factura['nombres']) +" " + str(factura['apellidos']),
+                    ""],
+
+                ]
+                header_table = Table(header_data, colWidths=[200, 200, 200])
+                header_table.setStyle(TableStyle([
+                    ('SPAN', (0, 2), (2, 2)),  # Esto hará que la celda en la fila 2 abarque las 3 columnas
+                    ('SPAN', (0, 2), (2, 2)),
+                    ('LINEBELOW', (0, 2), (-1, 2), 1, colors.black),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+                ]))
+                
+                elements.append(header_table)
+                elements.append(Spacer(1, 20))  # Espacio después de la tabla del encabezado
+                
+                # Tabla de conceptos con márgenes ajustados
+                data = [
+                    ["CONCEPTOS", "Valor", "DESCUENTOS"],
+                    [factura['descripcion'], factura['monto'], ""],
                 ]
                 
-                header_table = Table(
-                    [[logo, company_info]],
-                    colWidths=[2 * inch, 4.5 * inch]
-                )
-                header_table.setStyle(TableStyle([
-                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                    ('ALIGN', (0, 0), (0, 0), 'LEFT'),
-                    ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-                ]))
-                elements.append(header_table)
-                elements.append(Spacer(1, 0.2 * inch))
-
-                # Detalles del empleado
-                elements.append(Paragraph(f"Recibo número: {factura['consecutivo']}", normal_style))
-                elements.append(Paragraph(f"Nombre del estudiante: {factura['nombres']} {factura['apellidos']}", normal_style))
-                elements.append(Paragraph(f"Documento de identidad: {factura['documento']}", normal_style))
-                elements.append(Paragraph(f"Fecha de Pago: {factura['fecha']}", normal_style))
-                elements.append(Spacer(1, 0.2 * inch))
-
-                # Tabla de conceptos
-                table = Table(concepto_datos, colWidths=[200, 100, 100])
+                table = Table(data, colWidths=[200, 100, 100])
                 table.setStyle(TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                     ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                    ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
                 ]))
+                
                 elements.append(table)
                 elements.append(Spacer(1, 0.2 * inch))
 
                 # Total
+                normal_style = styles['Normal']
                 elements.append(Paragraph(f"<strong>TOTAL:</strong> {total}", normal_style))
                 elements.append(Spacer(1, 0.2 * inch))
 
                 # Pie de página
-                elements.append(Paragraph("Este recibo de pago es un documento informativo. No se requiere firma.", normal_style))
+                elements.append(Paragraph("Este desprendible es un documento informativo. No se requiere firma.", normal_style))
 
-                # Construir el PDF
                 doc.build(elements)
                 buffer.seek(0)
-
-                # Respuesta HTTP
-                response = HttpResponse(buffer, content_type='application/pdf')
-                response['Content-Disposition'] = 'inline; filename="desprendible_pago.pdf"'
-                return response
+                return FileResponse(buffer, as_attachment=True, filename="Desprendible_pago_"+str(factura['nombres'])+str(factura['apellidos'])+".pdf")
              
         except FacturasSub.DoesNotExist:
                 try:
@@ -782,84 +776,84 @@ class GenerarReciboView(View):
                         'tipo': gasto.tipo,
                     }
 
-                    concepto_datos = [
-                    ["CONCEPTO", "VALOR"],
-                    [factura['descripcion'], factura['monto']]
-                    ]
-
-                    total = factura['monto']
-                    logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img\home/logoazul.png"
                     buffer = BytesIO()
-                    doc = SimpleDocTemplate(buffer, pagesize=letter)
-                    styles = getSampleStyleSheet()
-                    normal_style = styles['Normal']
-                    title_style = ParagraphStyle(
-                        name='Title', parent=normal_style, fontSize=16, alignment=1, spaceAfter=10
-                    )
-
+                    doc = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
                     elements = []
+                    total = factura['monto']
+                    styles = getSampleStyleSheet()
 
-                    # Encabezado: Logo a la izquierda y datos de la empresa a la derecha
-                    try:
-                        logo = Image(logo_path, width=1.5 * inch, height=1.0 * inch)
-                    except Exception as e:
-                        logo = Paragraph("LOGO", title_style)
+                    logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img/home/logoazul.png"  # Asegúrate de que la ruta sea correcta
+                    logo = Image(logo_path, width=80, height=80) 
 
-                    company_info = [
-                        Paragraph("Corporación Nacional De Estudios", title_style),
-                        Paragraph("NIT: 1.144.169.128-4", normal_style),
-                        Paragraph("Dirección: Calle 31 # 20-12, colombina", normal_style),
-                        Paragraph("Ciudad: Palmira - Valle", normal_style),
-                        Paragraph("Teléfono: 2855359 - 3185824051", normal_style),
-                        
+                    title = Paragraph("<b>RECIBO DE PAGO</b>", styles['Title'])
+                    table_data = [[logo, title]]
+
+                    table = Table(table_data, colWidths=[70, 400])  # Ajusta el ancho de las columnas
+                    table.setStyle(TableStyle([
+                        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinear verticalmente al centro
+                        ('ALIGN', (1, 0), (1, 0), 'LEFT'),  # Alinear título a la izquierda
+                    ]))
+
+                    # Agregar tabla al documento
+                    elements.append(table)
+                    elements.append(Spacer(1, 10)) 
+                    
+
+
+
+                    # Encabezado de tabla
+                    header_data = [
+                        ["Corporación Nacional De Estudios", "Siglas: C.N.E Palmira", "Dirección: Calle 31 # 20-12, colombina"],
+                        ["Dirección: Calle 31 # 20-12, colombina", "Ciudad: Palmira - Valle", "Teléfono: 2855359 - 3185824051"],
+                        ["", "", ""],
+                        ["Recibo número: " + str(factura['consecutivo']), "Usuario: " + str(factura['usuario']),
+                        "Fecha de gasto: " + str(factura['fecha'])],
+                        ["Tipo de gasto: " + str(factura['tipo']), "",
+                        ""],
+
+                    ]
+                    header_table = Table(header_data, colWidths=[200, 200, 200])
+                    header_table.setStyle(TableStyle([
+                        ('SPAN', (0, 2), (2, 2)),  # Esto hará que la celda en la fila 2 abarque las 3 columnas
+                        ('SPAN', (0, 2), (2, 2)),
+                        ('LINEBELOW', (0, 2), (-1, 2), 1, colors.black),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+                    ]))
+                    
+                    elements.append(header_table)
+                    elements.append(Spacer(1, 20))  # Espacio después de la tabla del encabezado
+                    
+                    # Tabla de conceptos con márgenes ajustados
+                    data = [
+                        ["CONCEPTOS", "Valor", "DESCUENTOS"],
+                        [factura['descripcion'], factura['monto'], ""],
                     ]
                     
-                    header_table = Table(
-                        [[logo, company_info]],
-                        colWidths=[2 * inch, 4.5 * inch]
-                    )
-                    header_table.setStyle(TableStyle([
-                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                        ('ALIGN', (0, 0), (0, 0), 'LEFT'),
-                        ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-                    ]))
-                    elements.append(header_table)
-                    elements.append(Spacer(1, 0.2 * inch))
-
-                    # Detalles del empleado
-                    elements.append(Paragraph(f"Recibo número: {factura['consecutivo']}", normal_style))
-                    elements.append(Paragraph(f"A nombre de : {factura['usuario']}", normal_style))
-                    elements.append(Paragraph(f"Tipo de gasto: {factura['tipo']}", normal_style))
-                    elements.append(Spacer(1, 0.2 * inch))
-
-                    # Tabla de conceptos
-                    table = Table(concepto_datos, colWidths=[200, 100, 100])
+                    table = Table(data, colWidths=[200, 100, 100])
                     table.setStyle(TableStyle([
-                        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                         ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                        ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
                     ]))
+                    
                     elements.append(table)
                     elements.append(Spacer(1, 0.2 * inch))
 
                     # Total
+                    normal_style = styles['Normal']
                     elements.append(Paragraph(f"<strong>TOTAL:</strong> {total}", normal_style))
                     elements.append(Spacer(1, 0.2 * inch))
 
                     # Pie de página
-                    elements.append(Paragraph("Este recibo de gasto es un documento informativo. No se requiere firma.", normal_style))
+                    elements.append(Paragraph("Este desprendible es un documento informativo. No se requiere firma.", normal_style))
 
-                    # Construir el PDF
                     doc.build(elements)
                     buffer.seek(0)
+                    return FileResponse(buffer, as_attachment=True, filename="Desprendible_gasto_"+str(factura['usuario'])+".pdf")
+                
 
-                    # Respuesta HTTP
-                    response = HttpResponse(buffer, content_type='application/pdf')
-                    response['Content-Disposition'] = 'inline; filename="desprendible_gasto.pdf"'
-                    return response
                 except Gastos.DoesNotExist:
                     try:
                         # Intentar buscar en OtroIngreso
@@ -879,85 +873,84 @@ class GenerarReciboView(View):
                             'fechaIngreso': datosEstudiante.fecha_reg.strftime('%Y-%m-%d'),
                         }
 
-                        concepto_datos = [
-                        ["CONCEPTO", "VALOR"],
-                        [factura['descripcion'], factura['monto']]
-                        ]
-
-                        total = factura['monto']
-                        logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img\home/logoazul.png"
                         buffer = BytesIO()
-                        doc = SimpleDocTemplate(buffer, pagesize=letter)
-                        styles = getSampleStyleSheet()
-                        normal_style = styles['Normal']
-                        title_style = ParagraphStyle(
-                            name='Title', parent=normal_style, fontSize=16, alignment=1, spaceAfter=10
-                        )
-
+                        doc = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
                         elements = []
+                        total = factura['monto']
+                        styles = getSampleStyleSheet()
 
-                        # Encabezado: Logo a la izquierda y datos de la empresa a la derecha
-                        try:
-                            logo = Image(logo_path, width=1.5 * inch, height=1.0 * inch)
-                        except Exception as e:
-                            logo = Paragraph("LOGO", title_style)
+                        logo_path = "C:/Users/crist/OneDrive/Escritorio/corporacion-platformGit/corporacion-platformGit/plataforma/static/img/home/logoazul.png"  # Asegúrate de que la ruta sea correcta
+                        logo = Image(logo_path, width=80, height=80) 
 
-                        company_info = [
-                            Paragraph("Corporación Nacional De Estudios", title_style),
-                            Paragraph("NIT: 1.144.169.128-4", normal_style),
-                            Paragraph("Dirección: Calle 31 # 20-12, colombina", normal_style),
-                            Paragraph("Ciudad: Palmira - Valle", normal_style),
-                            Paragraph("Teléfono: 2855359 - 3185824051", normal_style),
-                            
+                        title = Paragraph("<b>RECIBO DE PAGO</b>", styles['Title'])
+                        table_data = [[logo, title]]
+
+                        table = Table(table_data, colWidths=[70, 400])  # Ajusta el ancho de las columnas
+                        table.setStyle(TableStyle([
+                            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinear verticalmente al centro
+                            ('ALIGN', (1, 0), (1, 0), 'LEFT'),  # Alinear título a la izquierda
+                        ]))
+
+                        # Agregar tabla al documento
+                        elements.append(table)
+                        elements.append(Spacer(1, 10)) 
+                        
+
+
+
+                        # Encabezado de tabla
+                        header_data = [
+                            ["Corporación Nacional De Estudios", "Siglas: C.N.E Palmira", "Dirección: Calle 31 # 20-12, colombina"],
+                            ["Dirección: Calle 31 # 20-12, colombina", "Ciudad: Palmira - Valle", "Teléfono: 2855359 - 3185824051"],
+                            ["", "", ""],
+                            ["Recibo número: " + str(factura['consecutivo']), "Documento de identidad: " + str(factura['documento']),
+                            "Fecha de Pago: " + str(factura['fecha'])],
+                            ["Tipo de documento: " + str(factura['tipodocumento']), "Nombre del estudiante: " + str(factura['nombres']) +" " + str(factura['apellidos']),
+                            "Código del estudiante: " + str(factura['codigo'])],
+
+                        ]
+                        header_table = Table(header_data, colWidths=[200, 200, 200])
+                        header_table.setStyle(TableStyle([
+                            ('SPAN', (0, 2), (2, 2)),  # Esto hará que la celda en la fila 2 abarque las 3 columnas
+                            ('SPAN', (0, 2), (2, 2)),
+                            ('LINEBELOW', (0, 2), (-1, 2), 1, colors.black),
+                            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+                        ]))
+                        
+                        elements.append(header_table)
+                        elements.append(Spacer(1, 20))  # Espacio después de la tabla del encabezado
+                        
+                        # Tabla de conceptos con márgenes ajustados
+                        data = [
+                            ["CONCEPTOS", "Valor", "DESCUENTOS"],
+                            [factura['descripcion'], factura['monto'], ""],
                         ]
                         
-                        header_table = Table(
-                            [[logo, company_info]],
-                            colWidths=[2 * inch, 4.5 * inch]
-                        )
-                        header_table.setStyle(TableStyle([
-                            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
-                            ('ALIGN', (1, 0), (1, 0), 'LEFT'),
-                        ]))
-                        elements.append(header_table)
-                        elements.append(Spacer(1, 0.2 * inch))
-
-                        # Detalles del empleado
-                        elements.append(Paragraph(f"Recibo número: {factura['consecutivo']}", normal_style))
-                        elements.append(Paragraph(f"Nombre del estudiante: {factura['nombres']} {factura['apellidos']}", normal_style))
-                        elements.append(Paragraph(f"Documento de identidad: {factura['documento']}", normal_style))
-                        elements.append(Paragraph(f"Fecha de Pago: {factura['fecha']}", normal_style))
-                        elements.append(Spacer(1, 0.2 * inch))
-
-                        # Tabla de conceptos
-                        table = Table(concepto_datos, colWidths=[200, 100, 100])
+                        table = Table(data, colWidths=[200, 100, 100])
                         table.setStyle(TableStyle([
-                            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                             ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                            ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
                         ]))
+                        
                         elements.append(table)
                         elements.append(Spacer(1, 0.2 * inch))
 
                         # Total
+                        normal_style = styles['Normal']
                         elements.append(Paragraph(f"<strong>TOTAL:</strong> {total}", normal_style))
                         elements.append(Spacer(1, 0.2 * inch))
 
                         # Pie de página
-                        elements.append(Paragraph("Este recibo de pago es un documento informativo. No se requiere firma.", normal_style))
+                        elements.append(Paragraph("Este desprendible es un documento informativo. No se requiere firma.", normal_style))
 
-                        # Construir el PDF
                         doc.build(elements)
                         buffer.seek(0)
+                        return FileResponse(buffer, as_attachment=True, filename="Desprendible_gasto_"+str(factura['nombres'])+str(factura['apellidos'])+".pdf")
 
-                        # Respuesta HTTP
-                        response = HttpResponse(buffer, content_type='application/pdf')
-                        response['Content-Disposition'] = 'inline; filename="desprendible_pago.pdf"'
-                        return response
+                        
                     except OtroIngreso.DoesNotExist:
                         # Si no se encuentra en ninguna tabla, devolver un error 404
                         return HttpResponse(f"Error inesperado gasto3", status=500)
@@ -1111,4 +1104,50 @@ class GenerarInformeDiarioRangoView(View):
             # Volver a renderizar la plantilla con el formulario y los errores
             return render(request, r"finance/informe_plantilla.html", {"form": form})
 
-    
+#vista para listar las facturas de los estudiantes, pendientes, abonadas y pagadas(Solo lo ve el estudiante).
+@method_decorator(cache_control(no_cache=True, must_revalidate=True, no_store=True), name='dispatch')
+class FinanceInvoiceMyPayListview(StudentRequiredMixin,ListView):
+    model = Facturas
+    template_name = 'finance/list_invoices.html'
+    context_object_name = 'invoice'
+
+    def dispatch(self, request, *args, **kwargs):
+        estudiante = Estudiante.objects.get(username=self.request.user)
+
+        if str(estudiante.username) != str(self.request.user):
+            logout(request)
+            previous_url = reverse('homepage_app:logout')
+            return redirect(previous_url)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(FinanceInvoiceMyPayListview, self).get_context_data(**kwargs)
+        estudiante = Estudiante.objects.get(username=self.request.user )
+        context["datos"] = Estudiante.objects.get(slug=estudiante.slug)
+        context['progreso'] = int(int(Facturas.objects.filter(user_id=Estudiante.objects.get(slug=estudiante.slug).codigo, estado_id=3).count())/int(Programas.objects.get(
+            id=Estudiante.objects.get(slug=estudiante.slug).carrera_id
+        ).cuotas+2)*100)
+        return context
+
+    def get_queryset(self):
+        info = []
+        estudiante = Estudiante.objects.get(username=self.request.user )
+        datos = Facturas.objects.filter(user_id=Estudiante.objects.get(
+            slug=estudiante.slug).codigo).order_by("codigo")
+        
+        fecha_hoy = timezone.now()
+        
+        for i in datos:
+            pagado = FacturasSub.objects.filter(
+                facturas_id=i.pk).aggregate(pagados=Sum("pagado"))
+            data = pagado['pagados'] if pagado['pagados'] is not None else 0
+            
+           
+            datos_final = {'pk': i.pk, 'slug':estudiante.slug, "codigo": i.codigo, 'descripcion': i.descripcion, "fecha": i.due_at,
+                        'estado': "Vencida" if i.due_at < fecha_hoy and (data < i.monto or data == 0) else i.estado, 
+                        'monto': f'$ {i.monto:,.0f}', 'pagado': f'$ {data if data else 0.0 :,.0f}'}
+
+            info.append(datos_final)
+
+        return info

@@ -6,6 +6,7 @@
 
 {% block extracontent %}
 
+{% if request.user.tipe.rol == "Administrador" %}
 <div class="container-fluid ">
   <div class="row encabezado">
       <div class="titulo">
@@ -138,9 +139,139 @@
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
+{% else %}
+
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="ri-user-2-fill"></i> Facturas de {{datos.nombre}} {{datos.apellidos}} - {{datos.codigo}} </h2></span>
+      </div>
+      
+  </div>
+  
+  <div class="card shadow">
+    <div class="card-header">
+      
+        <div class="">
+          
+          <div class="progreso-content"> <strong >Cumplimiento de pagos:</strong></div>
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progreso}}%">
+              {{progreso}} %
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if invoice %}
+                <table id="table_general_ex"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Vencimiento</th>
+                    <th>Estado</th>
+                    <th>Monto</th>
+                    <th>Pagado</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for student in  invoice %}
+                      <tr>
+                        {% if student.pagado != "$ 0" %}
+                        <td class='dt-control' defaultContent="" orderable='false' data= "null" >
+                          <input type="hidden" name="funt" id="funt" class="funt" value="{{student.pk}}">
+                          {{student.codigo}}
+                        </td>
+                        {% else %}
+                        <td class='dt-control-no' defaultContent="" orderable='false' data= "null" >
+                          {{student.codigo}}
+                        </td>
+                        {% endif %}
+                        <td>{{student.descripcion}}</td> 
+                        <td>{{student.fecha |date:"d/m/Y"}}</td> 
+                        {% if student.estado == "Vencida" %}
+
+                        <td><span class="nonEstado2"><i class="ri-close-circle-line"></i>&nbsp; Vencida </span></td>
+
+                        {% elif student.estado.estado == "Pagada" %}
+                        <td ><span class="estado"><i class="ri-checkbox-circle-line"></i>&nbsp;Pagada</span></td>
+
+                        {% elif student.estado.estado == "Abono" %}
+                        <td ><span class="iconos2"><i class="ri-error-warning-line"></i> &nbsp;Abonada</span></td>
+
+                        {% else %}
+                        <td ><span class="iconos2"><i class="ri-error-warning-line"></i> &nbsp;Pendiente</span></td>
+                        {% endif %}
+                        <td >{{student.monto}}</td>
+                        <td >{{student.pagado}}</td>
+                        {% if student.estado.estado == "Pagada" %}
+                        <td><span class="estado"><i class="ri-checkbox-circle-line"></i>&nbsp;ok</span></td>
+                        {% else %}
+                        <td ><span class="iconos2"><i class="ri-error-warning-line"></i> &nbsp;Pendiente</span></td>
+                        {% endif %}
+                    </tr>
+                      
+                    {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_general"  class="hover" style="width:100%; ">
+                <thead >
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Vencimiento</th>
+                    <th>Estado</th>
+                    <th>Monto</th>
+                    <th>Pagado</th>
+                    <th>Acciones</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+{% endif %}
+
 {% endblock extracontent %}
 
 {% block js %}
+
+{% if request.user.tipe.rol == "Administrador" %}
+
 <script>
   var $=jQuery.noConflict();
   var tabla = $('#table_general_ex').DataTable({
@@ -246,4 +377,113 @@
 
 
 </script>
+
+{% else %}
+
+<script>
+  var $=jQuery.noConflict();
+  var tabla = $('#table_general_ex').DataTable({
+
+
+    language: {
+      "decimal": "",
+      "emptyTable": "No hay información",
+      "info": "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+      "infoEmpty": "Mostrando 0 to 0 of 0 Registros",
+      "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+      "infoPostFix": "",
+      "thousands": ",",
+      "lengthMenu": "Items por rango: _MENU_",
+      "loadingRecords": "Cargando...",
+      "processing": "Procesando...",
+      "search": "Buscar:",
+      "zeroRecords": "Sin resultados encontrados",
+      "paginate": {
+        "first": "Primero",
+        "last": "Ultimo",
+        "next": "Siguiente",
+        "previous": "Anterior"
+      }
+    }
+
+  });
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function(){
+        $(this).modal('show');
+    });
+  }
+  
+  
+  function format(d) {
+    const f = d.map(function(dat) {
+      var id = String(dat.pk);
+      var link = "/finance/detail-sub/" + id;
+      var eliminar = "/finance/delete-sub/" + id;
+      var consecutivo = String(dat.consecutivo);
+      var pago = "/finance/finance-generate-recibos/" + consecutivo;
+
+      return (
+          '<tbody>' +
+          '<td>' + dat.consecutivo + '</td>' +
+          '<td>' + dat.payed + '</td>' +
+          '<td>' + dat.fecha + '</td>' +
+          '<td><a onclick="abrir_modal_edicion(\'' +
+          link +
+          '\')" title="Editar"><i class="ri-eye-fill iconos"></i></a> ' +
+          '<a class="buscar-iconos" href="' +
+          pago +
+          '" title="Descargar nómina"><i class="ri-download-2-fill iconos"></i></a></td>' +
+          '</tbody>'
+      );
+  });
+  return (
+      '<table cellpadding="5" cellspacing="0" class="hover" border="0" style="padding-left:50px;">' +
+      '<thead style="color:grey">' +
+      '<th>Consecutivo</th><th>Valor pagado</th><th>Fecha de pago</th><th>Consulta</th>' +
+      '</thead>' +
+      f.join("") + // Une todas las filas generadas
+      '</table>'
+  );
+}
+
+  
+  
+ 
+  tabla.on('click', 'td.dt-control', function () {
+    var tr = $(this).closest('tr');
+    var row = tabla.row(tr);
+    var valor = tr.find('input[name=funt]').val();
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+    } else {
+        // Open this row
+      var request = $.ajax({
+        type: "GET",
+        url: "{% url 'finance_app:detail-filter-sub' %}",
+        data: {
+            "info": valor,
+        },
+        
+      });
+      request.done(function(response) {
+        const infor = response.data.map(function(d) {
+          return d;
+        
+      });
+      row.child(format(infor)).show();
+      tr.addClass('shown');
+      });
+      
+    }
+  });
+
+
+
+</script>
+{% endif %}
+
+
 {% endblock js %}
+
